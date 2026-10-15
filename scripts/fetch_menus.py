@@ -199,9 +199,20 @@ def fetch_all(day: dt.date) -> int:
             print(f"  {len(entry['dishes'])} rätter")
             results.append(entry)
 
+        # Körs skriptet igen samma dag ska en meny som redan hittats inte ersättas av en miss
+        out_path = DATA / "menus" / f"{day.isoformat()}.json"
+        previous = {}
+        if out_path.exists():
+            previous = {r["id"]: r for r in json.loads(out_path.read_text())["restaurants"]}
+        kept = []
+        for i, r in enumerate(results):
+            if not r["found"] and previous.get(r["id"], {}).get("found"):
+                results[i] = previous[r["id"]]
+                kept.append(r["name"])
+
         summary = {r["name"]: [d["name"] for d in r["dishes"]] if r["found"] else (r["note"] or "ingen meny") for r in results}
         found = sum(r["found"] for r in results)
-        root.update(output=summary, metadata={"found": found, "total": len(results)})
+        root.update(output=summary, metadata={"found": found, "total": len(results), "kept_previous": kept})
 
         if not found:
             root.update(level="ERROR", status_message="Ingen meny hittades")
@@ -213,8 +224,8 @@ def fetch_all(day: dt.date) -> int:
         "fetched_at": dt.datetime.now(TZ).isoformat(timespec="seconds"),
         "restaurants": results,
     }
-    (DATA / "menus").mkdir(parents=True, exist_ok=True)
-    (DATA / "menus" / f"{day.isoformat()}.json").write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n")
     update_index(day)
     print(f"Sparade {day}.")
     return 0
