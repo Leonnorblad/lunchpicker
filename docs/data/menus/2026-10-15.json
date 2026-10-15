@@ -1,0 +1,165 @@
+{
+  "date": "2026-10-15",
+  "fetched_at": "2026-10-15T16:34:09+02:00",
+  "restaurants": [
+    {
+      "id": "reimers",
+      "name": "Reimers",
+      "source_url": "https://www.reimers.se/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Vildsvinsköttbullar",
+          "description": "Med potatismos, kantarellsås och rårörda lingon"
+        },
+        {
+          "label": null,
+          "name": "Fisksoppa",
+          "description": "Med tomat, vin, saffran, blomkål, broccoli och limeyoghurt"
+        },
+        {
+          "label": "Veckans sallad",
+          "name": "Sallad med fetaost",
+          "description": "Rostade betor, grönsaker och balsamicokräm"
+        },
+        {
+          "label": "Veckans vegetariska",
+          "name": "Krämig pumpasoppa",
+          "description": "Med krutonger och saltrostade pumpakärnor"
+        }
+      ],
+      "price": 145,
+      "note": null
+    },
+    {
+      "id": "matronan",
+      "name": "Matronan",
+      "source_url": "https://matronanfrosunda.kvartersmenyn.se/",
+      "found": true,
+      "dishes": [
+        {
+          "label": "Kött",
+          "name": "Nattbakad högrev",
+          "description": "Potatisgratäng, rödvinssås, bearnaise och grönt"
+        },
+        {
+          "label": "Fisk",
+          "name": "Havets Wallenbergare",
+          "description": "Brynt smör, citron, ärtor och mos"
+        },
+        {
+          "label": "Veg",
+          "name": "Sesampanerad halloumi",
+          "description": "Chili- och honungsvinegrette, bulgur och rostad pac choisallad"
+        }
+      ],
+      "price": null,
+      "note": null
+    },
+    {
+      "id": "lilla-angel",
+      "name": "Lilla Ängel",
+      "source_url": "https://www.lillaangel.com/frosunda/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Pannbiff",
+          "description": "Serveras med kantarellsås, potatismos och lingon."
+        },
+        {
+          "label": null,
+          "name": "Fiskgryta",
+          "description": "Med lax, torsk, räkor och aioli."
+        },
+        {
+          "label": "Veckans vegetariska alternativ",
+          "name": "Raggmunk",
+          "description": "Serveras med lingon och sallad."
+        },
+        {
+          "label": "Veckans vegetariska alternativ",
+          "name": "Vegetarisk pasta",
+          "description": null
+        }
+      ],
+      "price": 135,
+      "note": null
+    },
+    {
+      "id": "bra-mat-no8",
+      "name": "Bra Mat No8",
+      "source_url": "https://bramatno8.kvartersmenyn.se/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Chili con carne",
+          "description": "Med gräddfil, nachos och basmatiris"
+        },
+        {
+          "label": null,
+          "name": "Panerad fisk",
+          "description": "Med remouladsås och kokt potatis"
+        },
+        {
+          "label": null,
+          "name": "Spenat- och ricottagratäng",
+          "description": "Toppas med babyspenat och grana padano"
+        },
+        {
+          "label": null,
+          "name": "Pannkakor",
+          "description": "Med tillbehör"
+        }
+      ],
+      "price": null,
+      "note": null
+    },
+    {
+      "id": "sabis",
+      "name": "Sabis Ulriksdal",
+      "source_url": "https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Bengali curry på blomkål",
+          "description": "Rostade kikärtor, ris och papadums"
+        },
+        {
+          "label": null,
+          "name": "Viltsvinsbiffar",
+          "description": "Lingongräddsås, vitlöksrostad potatis, saltgurka och gelé"
+        },
+        {
+          "label": null,
+          "name": "Kokt fisk",
+          "description": "Ägg, räkor, pepparrot, brynt smör och kokt potatis"
+        },
+        {
+          "label": null,
+          "name": "Caesarsallad",
+          "description": "Svensk kyckling eller pannoumi, bacon, romansallad och grana padano"
+        },
+        {
+          "label": null,
+          "name": "Köttbullar på nöt och kalv",
+          "description": "Gräddsås, rårörda lingon, pressgurka och potatispuré"
+        }
+      ],
+      "price": 144,
+      "note": null
+    },
+    {
+      "id": "bruket",
+      "name": "Bruket",
+      "source_url": "https://restaurangbruket.se/lunch",
+      "found": false,
+      "dishes": [],
+      "price": null,
+      "note": "Lunchserveringen är stängd tills vidare och ingen veckomeny finns publicerad."
+    }
+  ]
+}

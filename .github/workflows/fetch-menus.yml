@@ -1,0 +1,67 @@
+name: Hämta lunchmenyer
+
+on:
+  schedule:
+    # Cron går alltid i UTC. Två tider täcker sommar- och vintertid;
+    # steget "Rätt tid?" ser till att hämtningen sker en gång, 07.15 svensk tid.
+    - cron: "15 5 * * 1-5"  # 07.15 sommartid (06.15 vintertid → hoppas över)
+    - cron: "15 6 * * 1-5"  # 07.15 vintertid (08.15 sommartid → redan hämtad)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-menus
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rätt tid?
+        id: gate
+        run: |
+          today=$(TZ=Europe/Stockholm date +%F)
+          hour=$(TZ=Europe/Stockholm date +%-H)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          elif [ "$hour" -lt 7 ]; then
+            echo "Klockan är $hour i Stockholm, för tidigt."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          elif [ -f "docs/data/menus/$today.json" ]; then
+            echo "Menyn för $today är redan hämtad."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.run == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - if: steps.gate.outputs.run == 'true'
+        run: pip install -r requirements.txt
+
+      - name: Hämta menyer
+        if: steps.gate.outputs.run == 'true'
+        run: python scripts/fetch_menus.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+          LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
+          LANGFUSE_BASE_URL: ${{ secrets.LANGFUSE_BASE_URL }}
+          LANGFUSE_TRACING_ENVIRONMENT: production
+
+      - name: Spara
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data
+          git diff --cached --quiet || git commit -m "Menyer $(TZ=Europe/Stockholm date +%F)"
+          git push

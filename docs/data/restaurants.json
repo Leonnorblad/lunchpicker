@@ -1,0 +1,32 @@
+[
+  {
+    "id": "reimers",
+    "name": "Reimers",
+    "menu_url": "https://www.reimers.se/lunch/"
+  },
+  {
+    "id": "matronan",
+    "name": "Matronan",
+    "menu_url": "https://matronanfrosunda.kvartersmenyn.se/"
+  },
+  {
+    "id": "lilla-angel",
+    "name": "Lilla Ängel",
+    "menu_url": "https://www.lillaangel.com/frosunda/lunch/"
+  },
+  {
+    "id": "bra-mat-no8",
+    "name": "Bra Mat No8",
+    "menu_url": "https://bramatno8.kvartersmenyn.se/"
+  },
+  {
+    "id": "sabis",
+    "name": "Sabis Ulriksdal",
+    "menu_url": "https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/"
+  },
+  {
+    "id": "bruket",
+    "name": "Bruket",
+    "menu_url": "https://restaurangbruket.se/lunch"
+  }
+]
