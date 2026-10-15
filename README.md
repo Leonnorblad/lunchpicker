@@ -18,6 +18,8 @@ Dagens lunchmenyer, omröstning 09.00–11.30 och lyckohjul kl 11.30.
 
 Redigera `docs/data/restaurants.json`. `menu_url` ska peka på en sida som visar veckans eller dagens meny (HTML, PDF eller bild). Lämnas den tom söker Luna på webben istället. Det är dyrare och mindre pålitligt.
 
+Sätt `"link_only": true` för ställen vars källa inte får eller kan hämtas automatiskt (t.ex. Kvartersmenyn, som blockerar servrar och ber att man hör av sig innan man återanvänder innehållet). De visas då med en länk "Se menyn ↗" och finns kvar i omröstningen.
+
 ## Lokalt
 
 Lägg nycklarna i `.env` (samma namn som ovan). Den filen pushas aldrig.

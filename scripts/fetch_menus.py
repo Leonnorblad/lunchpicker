@@ -191,6 +191,11 @@ def fetch_all(day: dt.date) -> int:
         for restaurant in restaurants:
             print(f"{restaurant['name']}…")
             entry = {"id": restaurant["id"], "name": restaurant["name"], "source_url": restaurant.get("menu_url") or None}
+            if restaurant.get("link_only"):  # Källan tillåter inte hämtning, sidan länkar dit istället
+                entry |= {"found": False, "dishes": [], "price": None, "note": None, "link_only": True}
+                print("  bara länk")
+                results.append(entry)
+                continue
             try:
                 entry |= extract_menu(client, restaurant, day)
             except Exception as error:  # En trasig källa ska inte stoppa resten
@@ -206,7 +211,7 @@ def fetch_all(day: dt.date) -> int:
             previous = {r["id"]: r for r in json.loads(out_path.read_text())["restaurants"]}
         kept = []
         for i, r in enumerate(results):
-            if not r["found"] and previous.get(r["id"], {}).get("found"):
+            if not r["found"] and not r.get("link_only") and previous.get(r["id"], {}).get("found"):
                 results[i] = previous[r["id"]]
                 kept.append(r["name"])
 

@@ -59,7 +59,7 @@ function restaurantsFor(menu) {
   const list = menu?.restaurants ?? state.restaurants;
   return list.map((r) => {
     const index = state.restaurants.findIndex((x) => x.id === r.id);
-    return { ...r, color: COLORS[index >= 0 ? index : COLORS.length - 1] };
+    return { ...r, source_url: r.source_url ?? r.menu_url, color: COLORS[index >= 0 ? index : COLORS.length - 1] };
   });
 }
 
@@ -165,7 +165,13 @@ function renderHeader(date) {
 }
 
 function dishList(r) {
-  if (!r.dishes?.length) return el("p", { class: "empty" }, r.note || "Ingen meny hittad");
+  if (!r.dishes?.length) {
+    const link = r.source_url && el("a", {
+      class: "menu-link", href: r.source_url, target: "_blank", rel: "noopener",
+      onclick: (e) => e.stopPropagation(),  // Klick på länken ska inte räknas som röst
+    }, "Se menyn ↗");
+    return el("p", { class: "empty" }, r.note, r.note && link && " · ", link || (!r.note && "Ingen meny hittad"));
+  }
   return el("ul", { class: "dishes" },
     r.dishes.map((d) => el("li", { class: "dish" },
       d.label && el("span", { class: "label" }, d.label),
@@ -192,13 +198,21 @@ function renderMenus(date, restaurants, phase) {
         el("span", { class: "dot" }),
         el("h2", {}, r.name),
         myVote === r.id ? el("span", { class: "check" }, "✓") : r.price && el("span", { class: "price" }, `${r.price} kr`),
-        !voting && r.source_url && el("a", { class: "source", href: r.source_url, target: "_blank", rel: "noopener", "aria-label": "Källa" }, "↗"),
+        !voting && r.dishes?.length > 0 && r.source_url && el("a", { class: "source", href: r.source_url, target: "_blank", rel: "noopener", "aria-label": "Källa" }, "↗"),
       ),
       dishList(r),
     ];
     const attrs = { class: `card${myVote === r.id ? " picked" : ""}`, style: `--c:${r.color}` };
     return el("li", {}, voting
-      ? el("button", { ...attrs, disabled: !!myVote, onclick: () => vote(date, r.id) }, content)
+      ? el("div", {
+          ...attrs,
+          class: `${attrs.class} votable`,
+          role: "button",
+          tabindex: myVote ? "-1" : "0",
+          "aria-disabled": myVote ? "true" : "false",
+          onclick: () => vote(date, r.id),
+          onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); vote(date, r.id); } },
+        }, content)
       : el("div", attrs, content));
   });
 

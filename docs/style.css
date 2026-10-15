@@ -79,9 +79,9 @@ main { max-width: 640px; margin: 0 auto; padding: 0 16px 48px; }
   background: var(--surface);
   text-align: left;
 }
-button.card { cursor: pointer; transition: border-color .15s, transform .15s, opacity .2s; }
-button.card:hover:not(:disabled) { border-color: var(--c); transform: translateY(-1px); }
-button.card:disabled { cursor: default; }
+.card.votable { cursor: pointer; transition: border-color .15s, transform .15s, opacity .2s; }
+.card.votable:hover:not([aria-disabled="true"]), .card.votable:focus-visible { border-color: var(--c); transform: translateY(-1px); outline: none; }
+.card.votable[aria-disabled="true"] { cursor: default; }
 .card.picked { border-color: var(--c); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 18%, transparent); }
 .cards.voted .card:not(.picked) { opacity: .5; }
 
@@ -109,6 +109,8 @@ button.card:disabled { cursor: default; }
 }
 .empty { margin: 8px 0 0 20px; color: var(--muted); font-size: 14px; }
 .source { color: var(--muted); text-decoration: none; font-size: 14px; }
+.menu-link { color: var(--text); font-weight: 600; text-decoration: none; }
+.menu-link:hover { text-decoration: underline; }
 
 /* Hjulet */
 .result { display: grid; justify-items: center; gap: 20px; }

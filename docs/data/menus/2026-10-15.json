@@ -39,7 +39,7 @@
       "found": false,
       "dishes": [],
       "price": null,
-      "note": "Menyn som hittades gäller vecka 37, inte vecka 42."
+      "note": null
     },
     {
       "id": "lilla-angel",
@@ -78,7 +78,7 @@
       "found": false,
       "dishes": [],
       "price": null,
-      "note": "Källan visar vecka 35, 2026, inte vecka 42."
+      "note": null
     },
     {
       "id": "sabis",

@@ -7,7 +7,8 @@
   {
     "id": "matronan",
     "name": "Matronan",
-    "menu_url": "https://matronanfrosunda.kvartersmenyn.se/"
+    "menu_url": "https://matronanfrosunda.kvartersmenyn.se/",
+    "link_only": true
   },
   {
     "id": "lilla-angel",
@@ -17,7 +18,8 @@
   {
     "id": "bra-mat-no8",
     "name": "Bra Mat No8",
-    "menu_url": "https://bramatno8.kvartersmenyn.se/"
+    "menu_url": "https://bramatno8.kvartersmenyn.se/",
+    "link_only": true
   },
   {
     "id": "sabis",
