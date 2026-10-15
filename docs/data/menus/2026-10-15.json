@@ -1,6 +1,6 @@
 {
   "date": "2026-10-15",
-  "fetched_at": "2026-10-15T16:34:09+02:00",
+  "fetched_at": "2026-10-15T16:41:15+02:00",
   "restaurants": [
     {
       "id": "reimers",
@@ -11,12 +11,12 @@
         {
           "label": null,
           "name": "Vildsvinsköttbullar",
-          "description": "Med potatismos, kantarellsås och rårörda lingon"
+          "description": "Potatismos, kantarellsås och rårörda lingon"
         },
         {
           "label": null,
           "name": "Fisksoppa",
-          "description": "Med tomat, vin, saffran, blomkål, broccoli och limeyoghurt"
+          "description": "Tomat, vin, saffran, blomkål, broccoli och limeyoghurt"
         },
         {
           "label": "Veckans sallad",
@@ -26,7 +26,7 @@
         {
           "label": "Veckans vegetariska",
           "name": "Krämig pumpasoppa",
-          "description": "Med krutonger och saltrostade pumpakärnor"
+          "description": "Krutonger och saltrostade pumpakärnor"
         }
       ],
       "price": 145,
@@ -36,26 +36,10 @@
       "id": "matronan",
       "name": "Matronan",
       "source_url": "https://matronanfrosunda.kvartersmenyn.se/",
-      "found": true,
-      "dishes": [
-        {
-          "label": "Kött",
-          "name": "Nattbakad högrev",
-          "description": "Potatisgratäng, rödvinssås, bearnaise och grönt"
-        },
-        {
-          "label": "Fisk",
-          "name": "Havets Wallenbergare",
-          "description": "Brynt smör, citron, ärtor och mos"
-        },
-        {
-          "label": "Veg",
-          "name": "Sesampanerad halloumi",
-          "description": "Chili- och honungsvinegrette, bulgur och rostad pac choisallad"
-        }
-      ],
+      "found": false,
+      "dishes": [],
       "price": null,
-      "note": null
+      "note": "Menyn som hittades gäller vecka 37, inte vecka 42."
     },
     {
       "id": "lilla-angel",
@@ -64,12 +48,12 @@
       "found": true,
       "dishes": [
         {
-          "label": null,
+          "label": "Kött",
           "name": "Pannbiff",
           "description": "Serveras med kantarellsås, potatismos och lingon."
         },
         {
-          "label": null,
+          "label": "Fisk",
           "name": "Fiskgryta",
           "description": "Med lax, torsk, räkor och aioli."
         },
@@ -91,31 +75,10 @@
       "id": "bra-mat-no8",
       "name": "Bra Mat No8",
       "source_url": "https://bramatno8.kvartersmenyn.se/",
-      "found": true,
-      "dishes": [
-        {
-          "label": null,
-          "name": "Chili con carne",
-          "description": "Med gräddfil, nachos och basmatiris"
-        },
-        {
-          "label": null,
-          "name": "Panerad fisk",
-          "description": "Med remouladsås och kokt potatis"
-        },
-        {
-          "label": null,
-          "name": "Spenat- och ricottagratäng",
-          "description": "Toppas med babyspenat och grana padano"
-        },
-        {
-          "label": null,
-          "name": "Pannkakor",
-          "description": "Med tillbehör"
-        }
-      ],
+      "found": false,
+      "dishes": [],
       "price": null,
-      "note": null
+      "note": "Källan visar vecka 35, 2026, inte vecka 42."
     },
     {
       "id": "sabis",
@@ -125,28 +88,28 @@
       "dishes": [
         {
           "label": null,
-          "name": "Bengali curry på blomkål",
-          "description": "Rostade kikärtor, ris och papadums"
+          "name": "Bengalisk blomkålscurry",
+          "description": "Med rostade kikärtor, ris och papadums"
         },
         {
           "label": null,
           "name": "Viltsvinsbiffar",
-          "description": "Lingongräddsås, vitlöksrostad potatis, saltgurka och gelé"
+          "description": "Med lingongräddsås, vitlöksrostad potatis, saltgurka och gelé"
         },
         {
           "label": null,
           "name": "Kokt fisk",
-          "description": "Ägg, räkor, pepparrot, brynt smör och kokt potatis"
+          "description": "Med ägg, räkor, pepparrot, brynt smör och kokt potatis"
         },
         {
           "label": null,
           "name": "Caesarsallad",
-          "description": "Svensk kyckling eller pannoumi, bacon, romansallad och grana padano"
+          "description": "Med svensk kyckling eller pannoumi, bacon, romansallad och grana padano"
         },
         {
           "label": null,
           "name": "Köttbullar på nöt och kalv",
-          "description": "Gräddsås, rårörda lingon, pressgurka och potatispuré"
+          "description": "Med gräddsås, rårörda lingon, pressgurka och potatispuré"
         }
       ],
       "price": 144,
