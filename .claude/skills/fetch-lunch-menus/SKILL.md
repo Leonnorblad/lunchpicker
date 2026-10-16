@@ -66,7 +66,10 @@ Titta på raden `URL:` som `page_text.py` skriver ut. Har sidan skickat dig vida
 
 **Kopiera ordagrant.** Namn och beskrivningar ska stå exakt som i källan: samma ord, stavning och böjning. Rätta inte grammatik, skriv inte om och översätt inte. Det enda du får ändra är det som står i punkterna nedan.
 
+Brukets sida (Mashie): dagens datum står först ("16 okt" / "Fredag") och följs av rätterna under rubriker som "Gröna smaker", "Klassiska smaker" och "Världens smaker". Varje rätt står två gånger, och raderna "Klimatpåverkan", "Energifördelning …", "Andel av dagligt behov" och "Stäng" hör inte till menyn. Resten av veckan står längre ned.
+
 - `name`: rättens namn. VERSALER skrivs om till normal versalisering, annars som i källan.
+- Mellanslag kring skiljetecken rättas: "ricotta , spenat" blir "ricotta, spenat", "mozzarella& tomat" blir "mozzarella & tomat", och ett bindestreck mellan rätt och tillbehör ("Cannelloni- ricotta") är en delning som " med ". Orden ändras inte.
 - `description`: tillbehören eller beskrivningen som i källan. Ta bort inledande "Serveras med" eller "Med" och avslutande punkt, och gör om första bokstaven till versal. Annars `null`.
 - **Rätt och tillbehör på samma rad delas upp**, så att alla restauranger visas likadant (namnet stort, tillbehören i kursiv under). Dela vid första " med ", " serveras med " eller kommatecken efter själva rätten:
   `"Stekt fläskfilé med kantarellsås, potatismos & timjansrostad morot"` → `name: "Stekt fläskfilé"`, `description: "Kantarellsås, potatismos & timjansrostad morot"`.

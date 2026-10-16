@@ -1,6 +1,6 @@
 {
   "date": "2026-10-16",
-  "fetched_at": "2026-10-16T14:59:38+02:00",
+  "fetched_at": "2026-10-16T15:16:08+02:00",
   "restaurants": [
     {
       "id": "reimers",
@@ -166,11 +166,23 @@
       "id": "bruket",
       "name": "Bruket",
       "source_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se",
-      "found": false,
-      "dishes": [],
+      "found": true,
+      "dishes": [
+        {
+          "label": "Gröna smaker",
+          "name": "Cannelloni",
+          "description": "Ricotta, spenat, mozzarella & tomat sallad",
+          "type": "vegetarisk"
+        },
+        {
+          "label": "Världens smaker",
+          "name": "Nattbakad Karre ”ramen”",
+          "description": "Gari, pak choi, risnudlar, sojabönor, rättika & ägg",
+          "type": "kott"
+        }
+      ],
       "price": null,
-      "note": null,
-      "link_only": true
+      "note": null
     }
   ]
 }

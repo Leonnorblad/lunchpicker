@@ -47,7 +47,7 @@ och byt mellan ljust och mörkt läge med knappen uppe till vänster.
 | <img src="docs/logos/lilla-angel.png" width="28"> | **Lilla Ängel** | [lillaangel.com](https://www.lillaangel.com/frosunda/lunch/) |
 | <img src="docs/logos/bra-mat-no8.png" width="28"> | **Bra Mat No8** | [bramat8.se](https://www.bramat8.se/lunch) |
 | <img src="docs/logos/sabis.png" width="28"> | **Sabis Ulriksdal** | [sabis.se](https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/) |
-| | **Bruket** | Bara en länk till [menyn hos Compass Group](https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se), som inte tillåter att den visas här |
+| | **Bruket** | [Compass Group](https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se) |
 
 Hittas ingen meny en dag står det så, med en länk till restaurangens sida. Inga rätter hittas på.
 

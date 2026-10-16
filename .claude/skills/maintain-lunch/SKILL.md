@@ -81,7 +81,7 @@ Ingen byggprocess, inga beroenden: statiska filer i `docs/`, vanlig JavaScript o
 | `name` | Krävs. Visas på sidan. |
 | `menu_url` | Restaurangens egen menysida. Tom = Claude söker på webben (sämre). |
 | `logo` | Valfri. `logos/<id>.png`. Utan logga visas initialen. |
-| `link_only` | Valfri `true`: menyn hämtas inte, sidan visar "Se menyn ↗" och restaurangen finns kvar i omröstningen. För källor vars villkor inte tillåter återgivning. |
+| `link_only` | Valfri `true`: menyn hämtas inte, sidan visar "Se dagens meny ↗" och restaurangen finns kvar i omröstningen. För källor som inte får läsas alls. |
 
 Restaurangernas källor och villkor just nu:
 
@@ -92,7 +92,7 @@ Restaurangernas källor och villkor just nu:
 | `lilla-angel` | lillaangel.com/frosunda/lunch | "Alltid på Lilla Ängel" är fast sortiment. |
 | `bra-mat-no8` | bramat8.se/lunch | Visar både denna och nästa vecka. "Från 140 kr". |
 | `sabis` | sabis.se (Sabis Ulriksdal) | Pris per rätt i texten, vissa rätter dyrare. |
-| `bruket` | Compass Group/Mashie | `link_only`: Compass villkor tillåter bara länkar. restaurangbruket.se går till fel företag. |
+| `bruket` | compass.mashie.matildaplatform.com (Compass Group) | Hämtas som de andra (ägarens beslut för ett hobbyprojekt, trots att Compass villkor bara uttryckligen tillåter länkar). Varje rätt står två gånger på sidan. Inget pris. restaurangbruket.se går till fel företag. |
 
 **Använd aldrig kvartersmenyn.se**: den blockerar robotar och ber att man hör av sig innan man återanvänder innehållet.
 

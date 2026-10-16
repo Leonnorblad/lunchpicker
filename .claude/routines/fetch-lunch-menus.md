@@ -24,6 +24,7 @@ matronan.se
 www.bramat8.se
 bramat8.se
 abacus.jasoncameron.dev
+compass.mashie.matildaplatform.com
 ```
 
 Lägger du till en restaurang i `docs/data/restaurants.json` måste dess domän också läggas till här. `abacus.jasoncameron.dev` behövs för att arkivera rösterna till statistiken.
