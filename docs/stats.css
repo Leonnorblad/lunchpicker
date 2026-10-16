@@ -1,0 +1,201 @@
+/* Statistiksidan. Bygger på style.css (färger, typsnitt, .logo). */
+
+.stats-page main { max-width: 860px; padding-bottom: 80px; }
+
+.stats-top { position: relative; max-width: 860px; margin: 0 auto; padding: 22px 16px 26px; text-align: center; }
+.stats-top h1 { margin: 0; font: 500 52px/1 var(--serif); letter-spacing: -0.01em; }
+.range { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+.back {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+}
+.back:hover { background: var(--hover); color: var(--text); }
+.back svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 560px) {
+  .back { position: static; margin-bottom: 14px; }
+  .stats-top h1 { font-size: 44px; }
+}
+
+.demo-banner {
+  margin: 0 0 18px;
+  padding: 10px 16px;
+  border: 1px dashed color-mix(in srgb, #b9800f 60%, var(--line));
+  border-radius: 12px;
+  background: color-mix(in srgb, #b9800f 8%, var(--surface));
+  text-align: center;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+/* Paneler */
+.panel {
+  margin-top: 16px;
+  padding: 24px 24px 26px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+.panel-head { margin-bottom: 18px; }
+.panel-head h2 { margin: 0; font: 600 26px/1.15 var(--serif); }
+.panel-head p { margin: 4px 0 0; color: var(--muted); font-size: 13.5px; }
+.empty-state { margin: 0; padding: 26px 0 8px; text-align: center; color: var(--muted); font: italic 500 18px var(--serif); }
+
+/* Nyckeltal */
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 720px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+.tile, .record {
+  padding: 16px 18px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.tile-label { margin: 0; color: var(--muted); font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.tile-value { margin: 6px 0 0; font: 600 36px/1 var(--serif); font-variant-numeric: lining-nums tabular-nums; overflow-wrap: anywhere; }
+.tile-note { margin: 6px 0 0; color: var(--muted); font-size: 12.5px; }
+
+/* Topplista */
+.leaderboard { margin: 0; padding: 0; list-style: none; }
+.lb-row {
+  display: grid;
+  grid-template-columns: 22px 44px 1fr 74px 82px 74px;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.lb-row:first-child { border-top: 0; }
+.lb-rank { color: var(--faint); font: 600 20px var(--serif); text-align: center; }
+.lb-row.first .lb-rank { color: var(--text); }
+.lb-name { font: 600 19px/1.2 var(--serif); }
+.lb-bar { height: 6px; margin-top: 7px; border-radius: 3px; background: var(--hover); overflow: hidden; }
+.lb-bar span { display: block; height: 100%; border-radius: 3px; background: var(--c); transition: width .6s cubic-bezier(.2, .7, .2, 1); }
+.lb-num { display: grid; justify-items: end; line-height: 1.15; }
+.lb-num strong { font: 600 20px var(--serif); font-variant-numeric: lining-nums tabular-nums; }
+.lb-num span { color: var(--muted); font-size: 11.5px; }
+.lb-num.muted strong { color: var(--muted); }
+@media (max-width: 600px) {
+  .lb-row { grid-template-columns: 18px 36px 1fr 60px; gap: 10px; }
+  .lb-row .logo { width: 36px; height: 36px; }
+  .lb-num.muted { display: none; }
+}
+
+/* Kalender */
+.cal { display: grid; grid-template-columns: 44px repeat(5, minmax(0, 1fr)); gap: 6px; }
+.cal-head { color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; text-align: center; }
+.cal-week { align-self: center; color: var(--faint); font-size: 12px; font-variant-numeric: tabular-nums; }
+.cal-cell {
+  display: grid;
+  place-items: center;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--c);
+  color: #fff;
+  font: 600 20px var(--serif);
+  cursor: default;
+  outline: none;
+  transition: transform .12s;
+}
+.cal-cell:hover, .cal-cell:focus-visible { transform: scale(1.06); }
+.cal-cell img { width: 30px; height: 30px; padding: 3px; border-radius: 50%; background: #fff; object-fit: contain; }
+.cal-cell.empty { background: transparent; border: 1px dashed var(--line); }
+
+/* Diagram */
+.chart { display: block; width: 100%; height: auto; overflow: visible; }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .axis { stroke: var(--faint); stroke-width: 1; }
+.chart .tick { fill: var(--muted); font: 500 10.5px var(--sans); font-variant-numeric: tabular-nums; }
+.chart .seg { stroke: var(--surface); stroke-width: 1; }
+.chart .col:hover .seg { filter: brightness(1.08); }
+.chart .hit { fill: transparent; }
+.chart .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .cross { stroke: var(--faint); stroke-width: 1; stroke-dasharray: 3 3; }
+.chart .dot { stroke: var(--surface); stroke-width: 2; }
+.chart .end-label { fill: var(--text); font: 500 11px var(--sans); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 14px; padding: 0; list-style: none; font-size: 12.5px; color: var(--muted); }
+.legend li { display: inline-flex; align-items: center; gap: 6px; }
+.key { width: 10px; height: 10px; border-radius: 3px; background: var(--c); flex: none; }
+
+/* Värmekarta: neutral bläckskala (restaurangfärgerna betyder alltid en restaurang) */
+.heat { display: grid; grid-template-columns: minmax(110px, auto) repeat(5, minmax(0, 1fr)); gap: 5px; align-items: center; }
+.heat-head { color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; text-align: center; }
+.heat-head small { color: var(--faint); font-weight: 500; letter-spacing: 0; }
+.heat-name { font: 600 17px var(--serif); padding-right: 8px; }
+.heat-cell {
+  display: grid;
+  place-items: center;
+  height: 38px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text) calc(7% + var(--a) * 68%), var(--surface));
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.heat-cell.dark { color: var(--surface); }
+.heat-cell.zero { background: var(--hover); color: var(--faint); font-weight: 500; }
+
+/* Rekord */
+.records { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 720px) { .records { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 460px) { .records { grid-template-columns: 1fr; } }
+.record { position: relative; overflow: hidden; }
+.record[style]::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--c); }
+.record-value { margin: 6px 0 0; font: 600 24px/1.15 var(--serif); }
+
+/* Staplar för menyerna */
+.bars { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.bar-row { display: grid; grid-template-columns: 130px 1fr 52px 78px; align-items: center; gap: 12px; }
+.bar-name { font: 600 17px var(--serif); }
+.bar-track { height: 8px; border-radius: 4px; background: var(--hover); overflow: hidden; }
+.bar-track span { display: block; height: 100%; border-radius: 4px; background: var(--c); }
+.bar-value { text-align: right; font-size: 13px; font-variant-numeric: tabular-nums; }
+.bar-value.muted { color: var(--muted); }
+@media (max-width: 560px) { .bar-row { grid-template-columns: 96px 1fr 44px; } .bar-value.muted { display: none; } }
+
+.price-list { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0 0 18px; padding: 0; list-style: none; font-size: 13.5px; }
+.price-list li { display: inline-flex; align-items: center; gap: 7px; }
+.price-list strong { font: 600 18px var(--serif); font-variant-numeric: lining-nums; }
+
+/* Tabellvy */
+.table-view summary { cursor: pointer; font-weight: 500; }
+.table-view[open] summary { margin-bottom: 14px; }
+.table-wrap { overflow-x: auto; }
+.table-view table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table-view th, .table-view td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+.table-view th { color: var(--muted); font-weight: 600; font-size: 11.5px; }
+.table-view td.num, .table-view th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+
+.footnote { margin: 28px auto 0; max-width: 560px; text-align: center; color: var(--faint); font-size: 12.5px; }
+
+/* Tooltip */
+.tip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  min-width: 160px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgb(0 0 0 / .14);
+  font-size: 12.5px;
+  pointer-events: none;
+}
+.tip strong { display: block; margin-bottom: 6px; font-weight: 600; }
+.tip-row { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 8px; padding: 1px 0; }
+.tip-key { width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+.tip-label { color: var(--muted); }
+.tip-value { font-weight: 600; font-variant-numeric: tabular-nums; }

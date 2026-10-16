@@ -4,6 +4,7 @@ Dagens lunchmenyer, omröstning 09.00–11.30 och lyckohjul kl 11.30.
 
 - **Menyer:** en [Claude Code-rutin](#claude-code-rutinen) körs varje vardagsmorgon. Den hämtar varje restaurangs menysida, plockar ut dagens rätter, sparar dem i `docs/data/menus/<datum>.json` och pushar till `main`.
 - **Sida:** `docs/` publiceras med GitHub Pages.
+- **Statistik:** knappen uppe till höger öppnar `statistik.html` med topplista, hjulets val dag för dag, röster över tid och mer. `statistik.html?exempel` visar sidan med påhittad data.
 - **Röster:** räknare hos [Abacus](https://abacus.jasoncameron.dev). Ingen databas och ingen nyckel. Hjulet räknas fram på samma sätt i varje webbläsare (utifrån datum och röster), så alla ser samma resultat.
 
 ## Kom igång
@@ -18,6 +19,7 @@ Menyerna hämtas av en [Claude Code-rutin](https://code.claude.com/docs/en/routi
 
 - **Skill:** [`.claude/skills/fetch-lunch-menus/SKILL.md`](.claude/skills/fetch-lunch-menus/SKILL.md). Går också att köra lokalt i Claude Code: `/fetch-lunch-menus` (bara spara) eller `/fetch-lunch-menus publicera`.
 - **Sparande:** `scripts/save_menu.py` kontrollerar Claudes utkast, behåller tidigare hittade menyer och skriver filerna. `python3 scripts/save_menu.py --check <fil>` kontrollerar en befintlig menyfil.
+- **Röstarkiv:** `scripts/archive_votes.py` sparar avslutade dagars röster i `docs/data/votes.json`. Skillen kör det varje morgon. Sidan och statistiken läser arkivet före Abacus, så gamla dagar är fasta även om `namespace` byts.
 - **Rutinens inställningar och prompt:** [`.claude/routines/fetch-lunch-menus.md`](.claude/routines/fetch-lunch-menus.md).
 - **Köra om:** *Run now* på rutinens sida på claude.ai/code/routines. Det går att köra om samma dag: en meny som redan hittats skrivs aldrig över av en miss.
 

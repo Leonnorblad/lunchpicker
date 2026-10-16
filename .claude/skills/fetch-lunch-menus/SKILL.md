@@ -75,6 +75,15 @@ Titta på raden `URL:` som `page_text.py` skriver ut. Har sidan skickat dig vida
 
 ## 4. Spara
 
+Arkivera först de avslutade dagarnas röster (statistiksidan läser dem därifrån). Det går snabbt och gör inget om allt redan finns:
+
+```bash
+python3 scripts/archive_votes.py
+```
+
+Misslyckas det (t.ex. för att `abacus.jasoncameron.dev` inte går att nå), fortsätt ändå och skriv det i rapporten. Nästa körning tar de dagar som saknas.
+
+
 Skriv ett utkast till en fil utanför repot (`${TMPDIR:-/tmp}/lunch-utkast.json`) med alla restauranger som **inte** är `link_only`. Bara `id` och `dishes` krävs. Fält du inte har kan utelämnas, och `found` räknas fram ur `dishes`:
 
 ```json

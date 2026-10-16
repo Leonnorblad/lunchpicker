@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Statistik · Lunch</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="stats.css">
+</head>
+<body class="stats-page">
+  <header class="stats-top">
+    <a class="back" href="./">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      Dagens lunch
+    </a>
+    <p class="eyebrow">Lunch</p>
+    <h1>Statistik</h1>
+    <p id="range" class="range"></p>
+  </header>
+  <main id="stats"></main>
+  <div id="tip" class="tip" role="tooltip" hidden></div>
+  <script src="config.js"></script>
+  <script src="core.js"></script>
+  <script src="stats.js"></script>
+</body>
+</html>
