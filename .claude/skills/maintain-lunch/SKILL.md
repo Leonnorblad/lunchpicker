@@ -139,7 +139,8 @@ Claude GitHub App måste vara installerad på repot, annars nekas pushen. Ändra
 ```
 
 - Restaurangerna står i `restaurants.json`-ordning **vid sparandet**. Den ordningen styr hjulets tårtbitar för den dagen.
-- `price` på restaurangen = ordinarie lunchpris. `price` på en rätt finns bara när den rätten kostar något annat.
+- `price` på restaurangen = ordinarie lunchpris. `price` på en rätt finns bara när den rätten kostar något annat, eller när
+  sidan har pris per kategori (Matronan: Dagens kött/fisk/veg). Kortets metarad visar restaurangens pris, annars spannet av rätternas priser.
 - `type` på en rätt (valfri): `kott`, `fagel`, `fisk`, `vegetarisk` eller `vegansk`. Visas som en ikon efter namnet. Oklart (flera val, efterrätt) har inget fält.
   Modellen sätter det enligt reglerna i `fetch-lunch-menus`. `label` sparas men visas inte.
 - `note` visas för besökarna. Bara sådant restaurangen själv meddelar ("Stängt idag"), aldrig tekniska problem.
@@ -219,6 +220,8 @@ fylld "Dagens val"-etikett (`.card.won`).
 Layout: under 900 px är menyerna en enda lista (mobil). Från 900 px (`@media (min-width: 900px)` sist i `style.css`) ligger
 de i ett rutnät med `minmax(340px, 1fr)`: två kolumner på mindre skärmar, tre på stora, max 1180 px. Dagväljaren och
 bekräftelseraden är alltid högst 588 px och centrerade; ljust/mörkt- och statistikknappen sitter i sidhuvudets hörn.
+Restauranger utan rätter (`link_only` eller ingen meny hittad) sorteras sist och visas på datorn som en smal rad över hela
+bredden (`li.compact`) med förklaring och länk, i stället för ett tomt kort.
 Testa alltid både 375 px, ca 1000 px och 1280 px.
 
 ### Lägga till en typikon

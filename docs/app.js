@@ -77,8 +77,9 @@ function dishList(r) {
     const link = r.source_url && el("a", {
       class: "menu-link", href: r.source_url, target: "_blank", rel: "noopener",
       onclick: (e) => e.stopPropagation(),  // Klick på länken ska inte räknas som röst
-    }, "Se menyn ↗");
-    return el("p", { class: "empty" }, r.note, r.note && link && " · ", link || (!r.note && "Ingen meny hittad"));
+    }, r.link_only ? "Se dagens meny ↗" : "Se menyn ↗");
+    const text = r.note ?? (r.link_only ? "Menyn finns på restaurangens sida." : "Ingen meny hittad idag.");
+    return el("p", { class: "empty" }, el("span", {}, text), link);
   }
   return el("ul", { class: "dishes" },
     r.dishes.map((d) => el("li", { class: "dish" },
@@ -108,7 +109,14 @@ function cardContent(r, { extra, source }) {
   ];
 }
 
-const priceTag = (r) => r.price && el("span", { class: "price" }, `${r.price} kr`);
+// Restaurangens pris, annars spannet av rätternas egna priser (t.ex. Matronan: 125–139 kr).
+function priceTag(r) {
+  const dishPrices = (r.dishes ?? []).map((d) => d.price).filter(Boolean);
+  if (r.price) return el("span", { class: "price" }, `${r.price} kr`);
+  if (!dishPrices.length) return null;
+  const lo = Math.min(...dishPrices), hi = Math.max(...dishPrices);
+  return el("span", { class: "price" }, lo === hi ? `${lo} kr` : `${lo}–${hi} kr`);
+}
 
 function renderMenus(date, restaurants, phase) {
   const main = $("main");
@@ -130,14 +138,15 @@ function renderMenus(date, restaurants, phase) {
     show(date);
   };
 
-  const cards = restaurants.map((r) => {
+  const withMenuFirst = [...restaurants].sort((a, b) => !a.dishes?.length - !b.dishes?.length);
+  const cards = withMenuFirst.map((r) => {
     const content = cardContent(r, {
       extra: myVote === r.id ? el("span", { class: "check" }, "Din röst") : priceTag(r),
       source: !voting,
     });
     const classes = ["card", myVote === r.id && "picked", state.pending === r.id && "selected"].filter(Boolean).join(" ");
     const attrs = { class: classes, style: `--c:${r.color}` };
-    return el("li", {}, voting
+    return el("li", { class: r.dishes?.length ? null : "compact" }, voting
       ? el("div", {
           ...attrs,
           class: `${classes} votable`,
@@ -226,11 +235,12 @@ async function renderResult(date, restaurants, { live, renderId }) {
   // Alla menyer under hjulet: vinnaren först, sedan flest röster, annars samma ordning som förut.
   const order = (r) => restaurants.indexOf(r);
   const ranked = [...restaurants].sort((a, b) =>
-    (b.id === winner.id) - (a.id === winner.id) || (counts[b.id] || 0) - (counts[a.id] || 0) || order(a) - order(b));
+    (b.id === winner.id) - (a.id === winner.id) || !a.dishes?.length - !b.dishes?.length ||
+    (counts[b.id] || 0) - (counts[a.id] || 0) || order(a) - order(b));
   const cards = el("ul", { class: "cards" }, ranked.map((r) => {
     const won = r.id === winner.id;
     const votes = counts[r.id] || 0;
-    return el("li", { class: won ? "won" : null }, el("div", { class: `card${won ? " won" : ""}`, style: `--c:${r.color}` },
+    return el("li", { class: [won && "won", !r.dishes?.length && "compact"].filter(Boolean).join(" ") || null }, el("div", { class: `card${won ? " won" : ""}`, style: `--c:${r.color}` },
       cardContent(r, {
         extra: [
           won && el("span", { class: "badge" }, "Dagens val"),

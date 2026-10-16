@@ -222,7 +222,8 @@ main { max-width: 620px; margin: 0 auto; padding: 0 16px 64px; }
 .dish-price { margin-left: 8px; color: var(--muted); font: 500 13px var(--sans); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .dish-desc { margin: 3px 0 0; color: var(--muted); font: italic 500 16.5px/1.35 var(--serif); }
 .note { color: var(--muted); font: italic 500 16px var(--serif); }
-.empty { margin: 16px 0 0; color: var(--muted); font-size: 13.5px; }
+.empty { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; margin: 14px 0 0; color: var(--muted); font-size: 13.5px; }
+.empty .menu-link { white-space: nowrap; }
 .menu-link { font-weight: 500; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
 .menu-link:hover { text-decoration-color: currentColor; }
 
@@ -353,6 +354,13 @@ main { max-width: 620px; margin: 0 auto; padding: 0 16px 64px; }
   }
   .cards > li + li { border-top: 1px solid var(--line); }
   .cards > li > .card { flex: 1; }
+  /* Restauranger utan meny: en smal rad över hela bredden i stället för ett tomt kort */
+  .cards > li.compact { grid-column: 1 / -1; }
+  .cards > li.compact .card { display: flex; align-items: center; gap: 24px; padding: 18px 28px; }
+  .cards > li.compact .card-head { display: flex; align-items: center; gap: 14px; }
+  .cards > li.compact .card-head h2 { font-size: 23px; }
+  .cards > li.compact .meta:not(:has(> *)) { display: none; }
+  .cards > li.compact .empty { flex: 1; justify-content: flex-end; margin: 0; }
   .status { margin-bottom: 22px; }
   .wheel { width: 340px; }
 }

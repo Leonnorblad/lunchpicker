@@ -83,6 +83,7 @@ Titta på raden `URL:` som `page_text.py` skriver ut. Har sidan skickat dig vida
   - Utelämna `type` bara när rätten har flera val av olika slag ("kyckling eller pannoumi"), är en efterrätt eller verkligen inte går att avgöra. Gissa aldrig: hellre ingen ikon än fel ikon.
 - `price` på restaurangen: ordinarie lunchpris i hela kronor. Leta efter det: det står ofta i rubriken ("Pris 144:-", "Dagens lunch 135 kr"), vid öppettiderna eller sist på sidan. Utelämna det bara om det verkligen inte står någonstans.
 - `price` på en rätt: bara när just den rätten kostar något annat än ordinarie pris (t.ex. köttbullar 154 kr när lunchen annars är 144 kr), eller när sidan bara har pris per rätt. Ange då ordinarie pris på restaurangen som det vanligaste priset.
+- **Pris per kategori:** står priset per sorts rätt, ofta i en egen lista ("Dagens kött 129 kr", "Dagens fisk 139 kr", "Dagens veg 125 kr"), sätt `price` på varje dagens rätt efter dess `type` och utelämna restaurangens `price`. Sidan visar då spannet, t.ex. 125–139 kr. Sådana rader är priser, inte fast sortiment, även om de står i en "Hela veckan"-lista.
 - `note`: visas för besökarna på sidan. Mycket kort, på svenska, och bara om restaurangen själv meddelar något avvikande ("Stängt idag", "Lunchen stängd tills vidare"). Tekniska saker, som en fel `menu_url`, en omdirigering eller en blockerad adress, skriver du bara i rapporten. Annars `null`.
 
 ## 4. Spara
