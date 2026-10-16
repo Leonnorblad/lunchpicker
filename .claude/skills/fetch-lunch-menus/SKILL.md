@@ -45,8 +45,8 @@ Hittar du inte dagens meny i texten, prova i den här ordningen och sluta när d
 
 1. En länk i listan längst ned (veckomeny som PDF, en undersida "Lunch", en iframe).
 2. Rå-HTML:en (`curl -sL -A "Mozilla/5.0" "<url>"`). Sidor som renderas med JavaScript har ofta menyn som JSON i ett `<script>`, eller hämtar den från en API-adress som syns i källkoden.
-3. WebFetch på samma adress.
-4. WebSearch på `<name> lunch Solna vecka <vecka>`. Lita bara på restaurangens egen sida eller en källa som tydligt visar rätt vecka.
+3. WebSearch på `<name> lunch Solna vecka <vecka>`. Lita bara på restaurangens egen sida eller en källa som tydligt visar rätt vecka. Hämta sedan den sidan med `page_text.py`.
+4. WebFetch, bara om inget annat fungerar. Den returnerar en sammanfattning från en annan modell, inte sidans text, så namn kan ha kortats eller skrivits om. Be den citera menyn ordagrant, och skriv i rapporten att menyn kom via WebFetch.
 
 Går en adress inte att nå (403, `host_not_allowed`, timeout) är det oftast nätverket i miljön. Gå vidare till nästa steg och nämn det i rapporten.
 
@@ -64,12 +64,13 @@ Titta på raden `URL:` som `page_text.py` skriver ut. Har sidan skickat dig vida
 
 ### Fälten
 
-- `name`: rättens namn, kort, med normal versalisering (inte VERSALER).
-- `description`: tillbehören eller beskrivningen som i källan, utan inledande "Serveras med" eller "Med" och utan avslutande punkt. Annars `null`.
+**Kopiera ordagrant.** Namn och beskrivningar ska stå exakt som i källan: samma ord, stavning och böjning. Rätta inte grammatik, skriv inte om och översätt inte. Det enda du får ändra är det som står i punkterna nedan.
+
+- `name`: rättens namn. VERSALER skrivs om till normal versalisering, annars som i källan.
+- `description`: tillbehören eller beskrivningen som i källan. Ta bort inledande "Serveras med" eller "Med" och avslutande punkt, och gör om första bokstaven till versal. Annars `null`.
 - `label`: kategorin som källan själv skriver ut, ordagrant ("Kött", "Fisk", "Veckans vegetariska alternativ"). Hitta inte på någon egen. Annars `null`.
 - `price`: ordinarie lunchpris i hela kronor om det framgår, annars `null`. Kostar en enskild rätt något annat, lägg priset sist i dess `description`: `"Gräddsås och lingon (154 kr)"`. Rätter har inget eget prisfält, och `save_menu.py` underkänner okända fält.
-- `note`: mycket kort, bara om något är avvikande. Annars `null`.
-- Allt på svenska.
+- `note`: mycket kort, på svenska, bara om något är avvikande. Annars `null`.
 
 ## 4. Spara
 
