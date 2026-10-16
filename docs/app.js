@@ -102,7 +102,7 @@ function cardContent(r, { extra, source }) {
       el("h2", {}, r.name),
       el("div", { class: "meta" },
         extra,
-        source && r.dishes?.length > 0 && r.source_url && el("a", { class: "source", href: r.source_url, target: "_blank", rel: "noopener", "aria-label": "Källa" }, "Källa ↗"),
+        source && r.dishes?.length > 0 && r.source_url && el("a", { class: "source", href: r.source_url, target: "_blank", rel: "noopener", "aria-label": `Menyn hos ${r.name}` }, "Meny ↗"),
       ),
     ),
     dishList(r),

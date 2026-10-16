@@ -209,7 +209,7 @@ Byt `namespace` i `config.js`. Arkiverade dagar ligger kvar.
 ### Ändra design
 Tokens i `:root` i `style.css` (båda mörka blocken). Typsnitt: Cormorant Garamond (rubriker, rätter, kursiva tillbehör) och
 Inter (allt annat), från Google Fonts i båda HTML-filerna. Restaurangkorten ska se likadana ut: logga i rund vit bricka med
-färgad ring, namn, en metarad (pris · källa · röster), rätter centrerade med namnet stort (följt av eventuell typikon och
+färgad ring, namn, en metarad (pris · "Meny ↗" till restaurangens sida · röster), rätter centrerade med namnet stort (följt av eventuell typikon och
 eget pris) och tillbehören i kursiv under. Under korten visas en teckenförklaring för dagens ikoner.
 Färg betyder alltid en restaurang; därför är typikonerna i textens dämpade färg och värmekartan i en neutral skala.
 
