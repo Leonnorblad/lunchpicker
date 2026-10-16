@@ -8,6 +8,18 @@ const SPIN_TURNS = 6;
 const $ = (id) => document.getElementById(id);
 const state = { restaurants: [], dates: [], date: null, phase: null, menus: {}, counts: {}, renderId: 0 };
 
+// ---------- Testläge ----------
+// ?tid=11.29 låtsas att klockan är 11.29 idag och låter den gå vidare därifrån (?datum=2026-10-16 byter dag).
+// Röster hamnar i ett eget namnområde per sidladdning, så de riktiga rösterna påverkas inte.
+
+const params = new URLSearchParams(location.search);
+const TEST = /^\d{1,2}[.:]\d{2}([.:]\d{2})?$/.test(params.get("tid") ?? "") && {
+  start: (([h, m, s = 0]) => h * 3600 + m * 60 + s)(params.get("tid").split(/[.:]/).map(Number)),
+  date: /^\d{4}-\d{2}-\d{2}$/.test(params.get("datum") ?? "") ? params.get("datum") : null,
+  loadedAt: Date.now(),
+};
+const NAMESPACE = TEST ? `${CFG.namespace}-test-${Math.random().toString(36).slice(2, 8)}` : CFG.namespace;
+
 // ---------- Tid ----------
 
 function stockholmNow() {
@@ -16,6 +28,9 @@ function stockholmNow() {
     hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23",
   }).formatToParts(new Date());
   const p = Object.fromEntries(parts.map((x) => [x.type, x.value]));
+  if (TEST) {
+    return { date: TEST.date ?? `${p.year}-${p.month}-${p.day}`, seconds: TEST.start + Math.floor((Date.now() - TEST.loadedAt) / 1000) };
+  }
   return { date: `${p.year}-${p.month}-${p.day}`, seconds: +p.hour * 3600 + +p.minute * 60 + +p.second };
 }
 
@@ -35,11 +50,15 @@ function phaseFor(date) {
 
 // ---------- Lagring i webbläsaren ----------
 
-const store = {
-  get(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } },
-  set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} },
-  remove(key) { try { localStorage.removeItem(key); } catch {} },
-};
+// I testläget sparas inget mellan laddningar, så varje test börjar från noll.
+const memory = new Map();
+const store = TEST
+  ? { get: (key) => memory.get(key) ?? null, set: (key, value) => memory.set(key, value), remove: (key) => memory.delete(key) }
+  : {
+      get(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } },
+      set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} },
+      remove(key) { try { localStorage.removeItem(key); } catch {} },
+    };
 
 // ---------- Data ----------
 
@@ -63,7 +82,7 @@ function restaurantsFor(menu) {
   });
 }
 
-const counterUrl = (action, date, id) => `${CFG.counterApi}/${action}/${CFG.namespace}/${date}_${id}`;
+const counterUrl = (action, date, id) => `${CFG.counterApi}/${action}/${NAMESPACE}/${date}_${id}`;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Läser en räknare. 404 betyder att ingen har röstat; vid 429/nätverksfel försöker vi igen.
@@ -182,6 +201,21 @@ function dishList(r) {
   );
 }
 
+// Rubrikrad och rätter för ett menykort. `extra` hamnar till höger om namnet.
+function cardContent(r, { extra, source }) {
+  return [
+    el("div", { class: "card-head" },
+      el("span", { class: "dot" }),
+      el("h2", {}, r.name),
+      extra,
+      source && r.dishes?.length > 0 && r.source_url && el("a", { class: "source", href: r.source_url, target: "_blank", rel: "noopener", "aria-label": "Källa" }, "↗"),
+    ),
+    dishList(r),
+  ];
+}
+
+const priceTag = (r) => r.price && el("span", { class: "price" }, `${r.price} kr`);
+
 function renderMenus(date, restaurants, phase) {
   const main = $("main");
   const voting = phase === "voting";
@@ -193,15 +227,10 @@ function renderMenus(date, restaurants, phase) {
   else if (isToday) status = `Röstningen öppnar ${clock(CFG.voteOpens)}`;
 
   const cards = restaurants.map((r) => {
-    const content = [
-      el("div", { class: "card-head" },
-        el("span", { class: "dot" }),
-        el("h2", {}, r.name),
-        myVote === r.id ? el("span", { class: "check" }, "✓") : r.price && el("span", { class: "price" }, `${r.price} kr`),
-        !voting && r.dishes?.length > 0 && r.source_url && el("a", { class: "source", href: r.source_url, target: "_blank", rel: "noopener", "aria-label": "Källa" }, "↗"),
-      ),
-      dishList(r),
-    ];
+    const content = cardContent(r, {
+      extra: myVote === r.id ? el("span", { class: "check" }, "✓") : priceTag(r),
+      source: !voting,
+    });
     const attrs = { class: `card${myVote === r.id ? " picked" : ""}`, style: `--c:${r.color}` };
     return el("li", {}, voting
       ? el("div", {
@@ -278,24 +307,35 @@ async function renderResult(date, restaurants, { live, renderId }) {
 
   const { slices, winner, total, rotation } = spinWheel(date, restaurants, counts);
   const svg = wheelSvg(slices);
-  const winnerBlock = el("div", { class: `winner${live ? " hidden" : ""}` },
-    el("h2", {}, winner.name),
-    dishList(winner),
-  );
-  const legend = el("ul", { class: "legend" },
-    [...slices].sort((a, b) => b.share - a.share).map((s) =>
-      el("li", { class: s.id === winner.id ? "won" : null, style: `--c:${s.color}` },
-        el("span", { class: "dot" }),
-        el("span", { class: "name" }, s.name),
-        el("span", { class: "share" }, total ? `${s.votes} ${s.votes === 1 ? "röst" : "röster"} · ${Math.round(s.share * 100)} %` : "–"),
-      )),
+  // Alla menyer under hjulet: vinnaren först, sedan flest röster, annars samma ordning som förut.
+  const order = (r) => restaurants.indexOf(r);
+  const ranked = [...restaurants].sort((a, b) =>
+    (b.id === winner.id) - (a.id === winner.id) || (counts[b.id] || 0) - (counts[a.id] || 0) || order(a) - order(b));
+  const cards = el("ul", { class: "cards" }, ranked.map((r) => {
+    const won = r.id === winner.id;
+    const votes = counts[r.id] || 0;
+    return el("li", {}, el("div", { class: `card${won ? " picked" : ""}`, style: `--c:${r.color}` },
+      cardContent(r, {
+        extra: [
+          won && el("span", { class: "badge" }, "Valt"),
+          total > 0 && el("span", { class: "votes" }, `${votes} ${votes === 1 ? "röst" : "röster"}`),
+          priceTag(r),
+        ],
+        source: true,
+      }),
+    ));
+  }));
+
+  // Under en direktsänd snurr visas namnet och listan först när hjulet stannat, så att ordningen inte avslöjar vinnaren.
+  const reveal = el("div", { class: `reveal${live ? " hidden" : ""}` },
+    el("h2", { class: "winner" }, winner.name),
+    !total && el("p", { class: "status" }, "Inga röster – alla hade lika chans"),
+    cards,
   );
 
   main.replaceChildren(el("section", { class: "result" },
     el("div", { class: "wheel" }, svg, el("div", { class: "hub" }), el("div", { class: "pointer" })),
-    winnerBlock,
-    !total && el("p", { class: "status" }, "Inga röster – alla hade lika chans"),
-    legend,
+    reveal,
   ));
 
   if (!live) {
@@ -306,7 +346,7 @@ async function renderResult(date, restaurants, { live, renderId }) {
   svg.getBoundingClientRect();  // Tvinga fram startläget innan animationen
   svg.classList.add("spinning");
   svg.style.transform = `rotate(${rotation}deg)`;
-  svg.addEventListener("transitionend", () => winnerBlock.classList.remove("hidden"), { once: true });
+  svg.addEventListener("transitionend", () => reveal.classList.remove("hidden"), { once: true });
 }
 
 async function show(date, { live = false } = {}) {
@@ -380,6 +420,18 @@ async function init() {
     if (state.dates.includes(date) && date !== state.date) show(date);
   });
   setInterval(tick, 1000);
+
+  if (TEST) {
+    const banner = el("div", { class: "test-banner" });
+    document.body.append(banner);
+    const pad = (n) => String(n).padStart(2, "0");
+    const update = () => {
+      const s = stockholmNow().seconds;
+      banner.textContent = `Testläge · klockan ${pad(Math.floor(s / 3600) % 24)}.${pad(Math.floor(s / 60) % 60)}.${pad(s % 60)} · rösterna räknas inte`;
+    };
+    update();
+    setInterval(update, 1000);
+  }
 
   await show(start);
 }

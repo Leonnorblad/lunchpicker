@@ -39,6 +39,17 @@ python3 -m http.server -d docs 8000   # sidan på http://localhost:8000
 
 Menyerna hämtas lokalt med `/fetch-lunch-menus` i Claude Code (sparar bara) eller `/fetch-lunch-menus publicera` (pushar också till `main`). `--date 2026-10-16` hämtar ett annat datum.
 
+### Testa röstning och hjul
+
+Lägg till `?tid=` för att låtsas att klockan är något annat idag. Klockan går vidare därifrån, så sidan byter läge av sig själv.
+
+- `?tid=08.59.50`: före röstningen, som öppnar efter tio sekunder.
+- `?tid=10.00`: under röstningen.
+- `?tid=11.29.40`: rösta och se hjulet snurra kl 11.30.
+- `&datum=2026-10-15`: en annan dag.
+
+I testläget visas en gul etikett längst ned. Rösterna hamnar i egna räknare som är nya vid varje sidladdning, så de riktiga rösterna påverkas inte. Inget sparas i webbläsaren.
+
 ## Bra att veta
 
 - Röstspärren (en röst per dag, bara 09.00–11.30) finns i webbläsaren, inte på servern. Det räcker för kollegor, men det går att fuska.

@@ -141,13 +141,37 @@ main { max-width: 640px; margin: 0 auto; padding: 0 16px 48px; }
   border: 3px solid var(--bg);
 }
 
-.winner { text-align: center; transition: opacity .4s, transform .4s; }
-.winner.hidden { opacity: 0; transform: translateY(6px); }
-.winner h2 { margin: 0; font-size: 30px; letter-spacing: -0.02em; }
-.winner .dishes { margin: 8px 0 0; text-align: center; }
+.reveal { width: 100%; transition: opacity .4s, transform .4s; }
+.reveal.hidden { opacity: 0; transform: translateY(6px); }
+.winner { margin: 0 0 6px; text-align: center; font-size: 30px; letter-spacing: -0.02em; }
+.reveal .status { margin-bottom: 20px; }
+.reveal .cards { margin-top: 20px; }
+.reveal .status + .cards { margin-top: 0; }
 
-.legend { width: 100%; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
-.legend li { display: flex; align-items: center; gap: 10px; padding: 10px 2px; border-bottom: 1px solid var(--line); font-size: 15px; }
-.legend .name { flex: 1; }
-.legend .share { color: var(--muted); font-variant-numeric: tabular-nums; }
-.legend li.won .name { font-weight: 700; }
+.badge {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--c);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+.votes { color: var(--muted); font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* Testläge (?tid=11.29) */
+.test-banner {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  z-index: 3;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #f5a524;
+  color: #17171a;
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgb(0 0 0 / .25);
+  font-variant-numeric: tabular-nums;
+}

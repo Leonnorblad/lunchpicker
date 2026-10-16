@@ -70,7 +70,7 @@ Titta på raden `URL:` som `page_text.py` skriver ut. Har sidan skickat dig vida
 - `description`: tillbehören eller beskrivningen som i källan. Ta bort inledande "Serveras med" eller "Med" och avslutande punkt, och gör om första bokstaven till versal. Annars `null`.
 - `label`: kategorin som källan själv skriver ut, ordagrant ("Kött", "Fisk", "Veckans vegetariska alternativ"). Hitta inte på någon egen. Annars `null`.
 - `price`: ordinarie lunchpris i hela kronor om det framgår, annars `null`. Kostar en enskild rätt något annat, lägg priset sist i dess `description`: `"Gräddsås och lingon (154 kr)"`. Rätter har inget eget prisfält, och `save_menu.py` underkänner okända fält.
-- `note`: mycket kort, på svenska, bara om något är avvikande. Annars `null`.
+- `note`: visas för besökarna på sidan. Mycket kort, på svenska, och bara om restaurangen själv meddelar något avvikande ("Stängt idag", "Lunchen stängd tills vidare"). Tekniska saker, som en fel `menu_url`, en omdirigering eller en blockerad adress, skriver du bara i rapporten. Annars `null`.
 
 ## 4. Spara
 
