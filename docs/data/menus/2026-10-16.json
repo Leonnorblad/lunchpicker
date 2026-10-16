@@ -1,6 +1,6 @@
 {
   "date": "2026-10-16",
-  "fetched_at": "2026-10-16T14:30:30+02:00",
+  "fetched_at": "2026-10-16T14:40:27+02:00",
   "restaurants": [
     {
       "id": "reimers",
@@ -16,17 +16,20 @@
         {
           "label": null,
           "name": "Ångad kummel",
-          "description": "Kokt potatis, kapriskräm och grönkål"
+          "description": "Kokt potatis, kapriskräm och grönkål",
+          "type": "fisk"
         },
         {
           "label": "Veckans sallad",
-          "name": "Sallad med fetaost, rostade betor, grönsaker och balsamicokräm",
-          "description": null
+          "name": "Sallad med fetaost",
+          "description": "Rostade betor, grönsaker och balsamicokräm",
+          "type": "vegetarisk"
         },
         {
           "label": "Veckans vegetariska",
           "name": "Krämig pumpasoppa",
-          "description": "Krutonger och saltrostade pumpakärnor"
+          "description": "Krutonger och saltrostade pumpakärnor",
+          "type": "vegetarisk"
         }
       ],
       "price": 145,
@@ -46,12 +49,14 @@
         {
           "label": null,
           "name": "Fish Taco",
-          "description": "Ris i tortillabröd, mango salsa & gräddfil"
+          "description": "Ris i tortillabröd, mango salsa & gräddfil",
+          "type": "fisk"
         },
         {
           "label": null,
           "name": "Vegetarisk grönsaksgryta",
-          "description": "Ris, fetaost & rostade frön"
+          "description": "Ris, fetaost & rostade frön",
+          "type": "vegetarisk"
         }
       ],
       "price": null,
@@ -71,12 +76,14 @@
         {
           "label": null,
           "name": "Lax",
-          "description": "Krämig citronsås, kokt potatis och gröna ärtor"
+          "description": "Krämig citronsås, kokt potatis och gröna ärtor",
+          "type": "fisk"
         },
         {
           "label": "Veckans vegetariska alternativ",
           "name": "Raggmunk",
-          "description": "Lingon och sallad"
+          "description": "Lingon och sallad",
+          "type": "vegetarisk"
         }
       ],
       "price": 135,
@@ -96,7 +103,8 @@
         {
           "label": null,
           "name": "Ugnsbakad fetaost",
-          "description": "Tomat, oliver och citron serveras med smördegssnurra"
+          "description": "Tomat, oliver och citron serveras med smördegssnurra",
+          "type": "vegetarisk"
         },
         {
           "label": "Fredagsgottis",
@@ -116,7 +124,8 @@
         {
           "label": null,
           "name": "Tempura friterade grönsaker",
-          "description": "Sojasås, chilimajo, koriander och ris"
+          "description": "Sojasås, chilimajo, koriander och ris",
+          "type": "vegetarisk"
         },
         {
           "label": null,
@@ -126,7 +135,8 @@
         {
           "label": null,
           "name": "Citronstekt fisk",
-          "description": "Couscous sallad, picklad fänkål och saffrans majonnäs"
+          "description": "Couscous sallad, picklad fänkål och saffrans majonnäs",
+          "type": "fisk"
         },
         {
           "label": null,
