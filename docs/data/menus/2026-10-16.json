@@ -1,0 +1,130 @@
+{
+  "date": "2026-10-16",
+  "fetched_at": "2026-10-16T13:35:58+02:00",
+  "restaurants": [
+    {
+      "id": "reimers",
+      "name": "Reimers",
+      "source_url": "https://www.reimers.se/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Pankopanerad fläskschnitzel",
+          "description": "Klyftpotatis, soltorkat tomatsmör och skysås"
+        },
+        {
+          "label": null,
+          "name": "Ångad kummel",
+          "description": "Kokt potatis, kapriskräm och grönkål"
+        },
+        {
+          "label": "Veckans sallad",
+          "name": "Sallad med fetaost",
+          "description": "Rostade betor, grönsaker och balsamicokräm"
+        },
+        {
+          "label": "Veckans vegetariska",
+          "name": "Krämig pumpasoppa",
+          "description": "Krutonger och saltrostade pumpakärnor"
+        }
+      ],
+      "price": 145,
+      "note": null
+    },
+    {
+      "id": "matronan",
+      "name": "Matronan",
+      "source_url": "https://matronanfrosunda.kvartersmenyn.se/",
+      "found": false,
+      "dishes": [],
+      "price": null,
+      "note": null,
+      "link_only": true
+    },
+    {
+      "id": "lilla-angel",
+      "name": "Lilla Ängel",
+      "source_url": "https://www.lillaangel.com/frosunda/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Entrecôte",
+          "description": "Serveras med potatismos och svampsås."
+        },
+        {
+          "label": null,
+          "name": "Lax",
+          "description": "Serveras med krämig citronsås, kokt potatis och gröna ärtor."
+        },
+        {
+          "label": "Veckans vegetariska alternativ",
+          "name": "Raggmunk",
+          "description": "Serveras med lingon och sallad."
+        },
+        {
+          "label": "Veckans vegetariska alternativ",
+          "name": "Vegetarisk pasta",
+          "description": null
+        }
+      ],
+      "price": 135,
+      "note": null
+    },
+    {
+      "id": "bra-mat-no8",
+      "name": "Bra Mat No8",
+      "source_url": "https://bramatno8.kvartersmenyn.se/",
+      "found": false,
+      "dishes": [],
+      "price": null,
+      "note": null,
+      "link_only": true
+    },
+    {
+      "id": "sabis",
+      "name": "Sabis Ulriksdal",
+      "source_url": "https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Tempurafriterade grönsaker",
+          "description": "Sojasås, chilimajo, koriander och ris"
+        },
+        {
+          "label": null,
+          "name": "Tunnbrödsrulle med chorizo",
+          "description": "Räksallad och rostad lök"
+        },
+        {
+          "label": null,
+          "name": "Citronstekt fisk",
+          "description": "Couscoussallad, picklad fänkål och saffransmajonnäs"
+        },
+        {
+          "label": null,
+          "name": "Caesarsallad",
+          "description": "Svensk kyckling eller pannoumi, bacon, romansallad och grana padano"
+        },
+        {
+          "label": null,
+          "name": "Köttbullar på nöt och kalv",
+          "description": "Gräddsås, rårörda lingon, pressgurka och potatispuré (154 kr)"
+        }
+      ],
+      "price": 144,
+      "note": null
+    },
+    {
+      "id": "bruket",
+      "name": "Bruket",
+      "source_url": "https://restaurangbruket.se/lunch",
+      "found": false,
+      "dishes": [],
+      "price": null,
+      "note": "Lunchserveringen är stängd tills vidare och ingen veckomeny finns publicerad."
+    }
+  ]
+}
