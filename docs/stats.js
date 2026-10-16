@@ -514,4 +514,6 @@ async function init() {
   }
 }
 
-init();
+// Avstängd i config.js: sidan går inte att nå, man skickas till startsidan.
+if (CFG.showStats) init();
+else location.replace("./");

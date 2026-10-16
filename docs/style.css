@@ -69,6 +69,7 @@ a { color: inherit; }
   color: var(--muted);
   transition: background .15s, color .15s;
 }
+.stats-link[hidden] { display: none; }
 .stats-link:hover { background: var(--hover); color: var(--text); }
 .stats-link svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .day { display: flex; align-items: center; justify-content: space-between; gap: 12px; }

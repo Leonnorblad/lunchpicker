@@ -298,6 +298,7 @@ async function init() {
   const fromHash = location.hash.slice(1);
   const start = state.dates.includes(fromHash) ? fromHash : state.dates.filter((d) => d <= today).pop() ?? state.dates[0];
 
+  document.querySelector(".stats-link").hidden = !CFG.showStats;
   $("prev").addEventListener("click", () => go(-1));
   $("next").addEventListener("click", () => go(1));
   document.addEventListener("keydown", (e) => {

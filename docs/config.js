@@ -5,4 +5,7 @@ window.LUNCH = {
   namespace: "ulriksdal-lunch-3n17fuma",
   voteOpens: "09:00",
   spinAt: "11:30",
+  // Statistiksidan (knappen uppe till höger och statistik.html). Rösterna arkiveras
+  // varje morgon oavsett, så allt finns med när den slås på.
+  showStats: false,
 };
