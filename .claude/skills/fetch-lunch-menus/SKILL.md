@@ -72,7 +72,13 @@ Titta på raden `URL:` som `page_text.py` skriver ut. Har sidan skickat dig vida
   `"Stekt fläskfilé med kantarellsås, potatismos & timjansrostad morot"` → `name: "Stekt fläskfilé"`, `description: "Kantarellsås, potatismos & timjansrostad morot"`.
   Dela inte där "med" hör till rättens namn ("Sallad med fetaost", "Fiskgryta med räkor" när det är hela rätten). Är du osäker, låt raden vara hel i `name`. Orden i sig ändras aldrig.
   Dela inte heller när det enda som blir kvar är något allmänt som "med tillbehör": `"Äppelpaj med tillbehör"` är hela namnet.
-- `label`: kategorin som källan själv skriver ut, ordagrant ("Kött", "Fisk", "Veckans vegetariska alternativ"). Hitta inte på någon egen. Annars `null`.
+- `label`: kategorin som källan själv skriver ut, ordagrant ("Veckans sallad", "Fredagsgottis"). Hitta inte på någon egen. Annars utelämna. Den sparas men visas inte på sidan.
+- `type`: vad rätten är, visas som en ikon. Du avgör det utifrån rättens namn, beskrivning och kategori:
+  - `fisk`: fisk eller skaldjur är huvudingrediensen (lax, kummel, torsk, räkor, fish taco).
+  - `fagel`: kyckling, kalkon, anka eller annan fågel.
+  - `vegetarisk`: inget kött, ingen fisk, inga skaldjur och ingen fågel (ost, ägg och mjölk går bra). Också när källan kallar rätten vegetarisk eller "veg".
+  - `vegansk`: bara när källan själv säger veganskt/vegan, eller det är helt uppenbart att rätten saknar animaliska produkter. Är du osäker: `vegetarisk`.
+  - Utelämna `type` för kött (fläsk, nöt, kalv, lamm, vilt, korv, bacon) och när rätten har flera val av olika slag ("kyckling eller pannoumi"), är en efterrätt eller inte går att avgöra. Gissa aldrig: hellre ingen ikon än fel ikon.
 - `price` på restaurangen: ordinarie lunchpris i hela kronor. Leta efter det: det står ofta i rubriken ("Pris 144:-", "Dagens lunch 135 kr"), vid öppettiderna eller sist på sidan. Utelämna det bara om det verkligen inte står någonstans.
 - `price` på en rätt: bara när just den rätten kostar något annat än ordinarie pris (t.ex. köttbullar 154 kr när lunchen annars är 144 kr), eller när sidan bara har pris per rätt. Ange då ordinarie pris på restaurangen som det vanligaste priset.
 - `note`: visas för besökarna på sidan. Mycket kort, på svenska, och bara om restaurangen själv meddelar något avvikande ("Stängt idag", "Lunchen stängd tills vidare"). Tekniska saker, som en fel `menu_url`, en omdirigering eller en blockerad adress, skriver du bara i rapporten. Annars `null`.
@@ -98,9 +104,9 @@ Skriv ett utkast till en fil utanför repot (`${TMPDIR:-/tmp}/lunch-utkast.json`
       "id": "sabis",
       "price": 144,
       "dishes": [
-        {"name": "Citronstekt fisk", "description": "Couscoussallad och saffransmajonnäs"},
+        {"name": "Citronstekt fisk", "description": "Couscous sallad och saffrans majonnäs", "type": "fisk"},
         {"name": "Köttbullar på nöt och kalv", "description": "Gräddsås och rårörda lingon", "price": 154},
-        {"label": "Veckans vegetariska", "name": "Krämig pumpasoppa"}
+        {"label": "Veckans vegetariska", "name": "Krämig pumpasoppa", "type": "vegetarisk"}
       ]
     },
     {"id": "bruket", "dishes": [], "note": "Lunchen stängd tills vidare"}

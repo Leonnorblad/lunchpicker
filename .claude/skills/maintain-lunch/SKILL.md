@@ -104,7 +104,8 @@ Restaurangernas källor och villkor just nu:
 | `core.js` | `SPIN_TURNS` | Varv hjulet snurrar i animationen. Påverkar inte vem som vinner. |
 | `style.css` | `:root`-variablerna | Designtokens. Mörkt läge finns i **två** block (systemets mörka läge och `data-theme="dark"`), ändra båda. |
 | `stats.js` | `WEEKDAYS` | Kolumnrubriker i statistiken. |
-| `save_menu.py` | `DISH_KEYS`, `ROW_KEYS` | Tillåtna fält i utkastet. |
+| `save_menu.py` | `DISH_KEYS`, `ROW_KEYS`, `DISH_TYPES` | Tillåtna fält i utkastet, och tillåtna värden för `type`. |
+| `app.js` | `DISH_TYPES` | Ikonerna för `type`: namn och SVG-banor (24×24, linjer). Samma nycklar som i `save_menu.py`. |
 | `archive_votes.py` | `PAUSE` | 0,4 s mellan anrop till Abacus. |
 
 ### Rutinen (molnet)
@@ -127,7 +128,8 @@ Claude GitHub App måste vara installerad på repot, annars nekas pushen. Ändra
     {
       "id": "sabis", "name": "Sabis Ulriksdal", "source_url": "https://…", "found": true, "price": 144, "note": null,
       "dishes": [
-        {"label": null, "name": "Köttbullar på nöt och kalv", "description": "Gräddsås, rårörda lingon", "price": 154}
+        {"label": null, "name": "Köttbullar på nöt och kalv", "description": "Gräddsås, rårörda lingon", "price": 154},
+        {"label": null, "name": "Citronstekt fisk", "description": "Couscous sallad", "type": "fisk"}
       ]
     },
     {"id": "bruket", "name": "Bruket", "source_url": "https://…", "found": false, "dishes": [], "price": null, "note": null, "link_only": true}
@@ -137,6 +139,8 @@ Claude GitHub App måste vara installerad på repot, annars nekas pushen. Ändra
 
 - Restaurangerna står i `restaurants.json`-ordning **vid sparandet**. Den ordningen styr hjulets tårtbitar för den dagen.
 - `price` på restaurangen = ordinarie lunchpris. `price` på en rätt finns bara när den rätten kostar något annat.
+- `type` på en rätt (valfri): `fisk`, `fagel`, `vegetarisk` eller `vegansk`. Visas som en ikon efter namnet. Kött och oklart har inget fält.
+  Modellen sätter det enligt reglerna i `fetch-lunch-menus`. `label` sparas men visas inte.
 - `note` visas för besökarna. Bara sådant restaurangen själv meddelar ("Stängt idag"), aldrig tekniska problem.
 - Skriv **aldrig** menyfiler för hand. Gör ett utkast (formatet står överst i `save_menu.py`) och kör `save_menu.py`.
   Den flyttar också ett pris sist i beskrivningen, "(154 kr)", till rättens `price`.
@@ -203,8 +207,15 @@ Byt `namespace` i `config.js`. Arkiverade dagar ligger kvar.
 ### Ändra design
 Tokens i `:root` i `style.css` (båda mörka blocken). Typsnitt: Cormorant Garamond (rubriker, rätter, kursiva tillbehör) och
 Inter (allt annat), från Google Fonts i båda HTML-filerna. Restaurangkorten ska se likadana ut: logga i rund vit bricka med
-färgad ring, namn, en metarad (pris · källa · röster), rätter centrerade med kategori i kapitäler, namn och kursiv beskrivning.
-Färg betyder alltid en restaurang; värmekartan använder därför en neutral skala.
+färgad ring, namn, en metarad (pris · källa · röster), rätter centrerade med namnet stort (följt av eventuell typikon och
+eget pris) och tillbehören i kursiv under. Under korten visas en teckenförklaring för dagens ikoner.
+Färg betyder alltid en restaurang; därför är typikonerna i textens dämpade färg och värmekartan i en neutral skala.
+
+### Lägga till en typikon
+1. `save_menu.py`: lägg till värdet i `DISH_TYPES`.
+2. `app.js`: lägg till i `DISH_TYPES` med `label` och `paths` (24×24, bara linjer, rundade ändar, samma stil som de andra).
+   Rita ikonen stort och litet bredvid de andra innan du bestämmer dig: den ska gå att känna igen i 17 px.
+3. `fetch-lunch-menus`: beskriv när värdet ska sättas under `type`.
 
 ### Lägga till ett fält i menydatan
 1. `save_menu.py`: lägg till i `DISH_KEYS`/`ROW_KEYS`, `normalize_dish`/`build` och kontrollerna.

@@ -13,7 +13,7 @@ Utkastets format (bara id och dishes krävs, fält som saknas blir null):
 
     {"date": "2026-10-16", "restaurants": [
       {"id": "reimers", "price": 145,
-       "dishes": [{"name": "Pumpasoppa", "label": "Veg"},
+       "dishes": [{"name": "Pumpasoppa", "type": "vegetarisk"},
                   {"name": "Köttbullar", "description": "Gräddsås och lingon", "price": 154}]},
       {"id": "bruket", "dishes": [], "note": "Stängt idag"}
     ]}
@@ -42,7 +42,8 @@ class Invalid(Exception):
     pass
 
 
-DISH_KEYS = {"label", "name", "description", "price"}
+DISH_KEYS = {"label", "name", "description", "price", "type"}
+DISH_TYPES = {"fisk", "fagel", "vegetarisk", "vegansk"}  # Visas som ikoner. Kött och oklart: inget fält.
 ROW_KEYS = {"id", "found", "dishes", "price", "note"}
 
 
@@ -66,6 +67,8 @@ def normalize_dish(dish, where: str) -> dict:
             out["description"] = out["description"][:m.start()].strip(" ,") or None
     if price is not None:
         out["price"] = price
+    if dish.get("type") is not None:
+        out["type"] = dish["type"]
     return out
 
 
@@ -80,6 +83,8 @@ def check_dish(dish, where: str) -> None:
         if dish[key] is not None and (not isinstance(dish[key], str) or not dish[key].strip()):
             raise Invalid(f"{where}: {key} ska vara text eller null")
     check_price(dish.get("price"), where)
+    if "type" in dish and dish["type"] not in DISH_TYPES:
+        raise Invalid(f"{where}: type ska vara en av {sorted(DISH_TYPES)} eller utelämnas, fick {dish['type']!r}")
 
 
 def check_result(r: dict, where: str) -> None:

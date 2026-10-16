@@ -17,6 +17,56 @@ function renderHeader(date) {
   document.title = `Lunch · ${weekday} ${day}`;
 }
 
+// Ikoner för rättens typ (fältet "type"). Tunna linjer i textens färg: färg betyder alltid en restaurang.
+const DISH_TYPES = {
+  fisk: { label: "Fisk", paths: [
+    "M2.5 12c2.6-3.6 6-5.2 9.5-5.2 3.1 0 5.4 1.6 7 3.2l2.5-2.2v8.4L19 14c-1.6 1.6-3.9 3.2-7 3.2-3.5 0-6.9-1.6-9.5-5.2z",
+    "M7.2 11.2h.01",
+  ] },
+  fagel: { label: "Fågel", paths: [
+    "M8.8 15.2C8 11 9 6 13.5 4.2c4-1.6 8 1.3 7.1 5.4-.8 3.8-6.1 6-11.8 5.6z",
+    "M8.8 15.2 5.4 18.6",
+    "M5.4 18.6c-.8-.9-2.3-.8-2.8.3-.5 1.1.4 2.3 1.5 2.1-.2 1.1 1 2 2.1 1.5 1.1-.5 1.2-2 .3-2.8",
+  ] },
+  vegetarisk: { label: "Vegetarisk", paths: [
+    "M20 4C10.5 4 4.5 8.8 4.5 15.6c0 1.6.3 3 .9 4.4",
+    "M20 4c0 9.4-5.4 15-12.6 15-1 0-2-.1-2.9-.4",
+    "M5.4 20C7.6 14.4 11.2 10.6 16 8.2",
+  ] },
+  vegansk: { label: "Vegansk", paths: [
+    "M12 21v-9",
+    "M12 12c0-3.6-2.5-6-7-6 0 4 2.5 6 7 6z",
+    "M12 10c0-3.6 2.5-6 7-6 0 4-2.5 6-7 6z",
+  ] },
+};
+
+function dishIcon(type) {
+  const icon = DISH_TYPES[type];
+  if (!icon) return null;
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("class", "dish-icon");
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", icon.label);
+  const title = document.createElementNS(ns, "title");
+  title.textContent = icon.label;
+  svg.append(title, ...icon.paths.map((d) => {
+    const path = document.createElementNS(ns, "path");
+    path.setAttribute("d", d);
+    return path;
+  }));
+  return svg;
+}
+
+// Teckenförklaring för de ikoner som syns den dagen.
+function iconLegend(restaurants) {
+  const used = new Set(restaurants.flatMap((r) => (r.dishes ?? []).map((d) => d.type)));
+  const types = Object.keys(DISH_TYPES).filter((t) => used.has(t));
+  if (!types.length) return null;
+  return el("ul", { class: "icon-legend" }, types.map((t) => el("li", {}, dishIcon(t), DISH_TYPES[t].label)));
+}
+
 function dishList(r) {
   if (!r.dishes?.length) {
     const link = r.source_url && el("a", {
@@ -27,9 +77,9 @@ function dishList(r) {
   }
   return el("ul", { class: "dishes" },
     r.dishes.map((d) => el("li", { class: "dish" },
-      d.label && el("span", { class: "dish-label" }, d.label),
       el("div", { class: "dish-line" },
         el("span", { class: "dish-name" }, d.name),
+        dishIcon(d.type),
         d.price && el("span", { class: "dish-price" }, `${d.price} kr`),
       ),
       d.description && el("p", { class: "dish-desc" }, d.description),
@@ -105,6 +155,7 @@ function renderMenus(date, restaurants, phase) {
   main.replaceChildren(...[
     status && el("p", { class: "status", id: "status" }, status),
     el("ul", { class: "cards" }, cards),
+    iconLegend(restaurants),
     confirm,
   ].filter(Boolean));
 }
@@ -190,6 +241,7 @@ async function renderResult(date, restaurants, { live, renderId }) {
     el("h2", { class: "winner" }, winner.name),
     !total && el("p", { class: "status" }, "Inga röster – alla hade lika chans"),
     cards,
+    iconLegend(restaurants),
   );
 
   main.replaceChildren(el("section", { class: "result" },
