@@ -20,6 +20,7 @@
   text-decoration: none;
   transition: background .15s, color .15s;
 }
+.theme-toggle.right { left: auto; right: 16px; top: 18px; }
 .back:hover { background: var(--hover); color: var(--text); }
 .back svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 @media (max-width: 560px) {
@@ -109,6 +110,18 @@
 .cal-cell:hover, .cal-cell:focus-visible { transform: scale(1.06); }
 .cal-cell img { width: 30px; height: 30px; padding: 3px; border-radius: 50%; background: #fff; object-fit: contain; }
 .cal-cell.empty { background: transparent; border: 1px dashed var(--line); }
+.cal-cell.skipped { background: var(--hover); color: var(--faint); font: 500 15px var(--sans); }
+
+/* Filter */
+.filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin: 0 0 14px; padding: 0 4px; }
+.filters-note { color: var(--faint); font-size: 12.5px; }
+.switch { display: inline-flex; align-items: center; gap: 10px; font-size: 13.5px; cursor: pointer; user-select: none; }
+.switch input { position: absolute; opacity: 0; pointer-events: none; }
+.switch-track { position: relative; width: 34px; height: 20px; border-radius: 999px; background: var(--line); transition: background .15s; }
+.switch-track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); box-shadow: 0 1px 2px rgb(0 0 0 / .2); transition: transform .15s; }
+.switch input:checked + .switch-track { background: var(--text); }
+.switch input:checked + .switch-track::after { transform: translateX(14px); }
+.switch input:focus-visible + .switch-track { outline: 2px solid var(--text); outline-offset: 2px; }
 
 /* Diagram */
 .chart { display: block; width: 100%; height: auto; overflow: visible; }

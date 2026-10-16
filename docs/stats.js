@@ -121,7 +121,7 @@ async function loadDemoDays() {
       const price = found ? basePrice[i] + (offset < 20 ? 5 : 0) : null;
       return { ...r, found, dishes, price };
     });
-    const voters = 6 + Math.floor(rand("voters", date) * 14);
+    const voters = rand("office", date) < 0.18 ? 0 : 6 + Math.floor(rand("voters", date) * 14);  // Ibland är ingen på kontoret
     const counts = Object.fromEntries(list.map((r) => [r.id, 0]));
     for (let v = 0; v < voters; v++) {
       const weights = list.map((r, i) => popularity[i] * (r.found ? 1 : 0.4) * (0.5 + rand("w", date, v, r.id)));
@@ -135,6 +135,11 @@ async function loadDemoDays() {
 }
 
 // ---------- Beräkningar ----------
+
+// Dagar då ingen röstade (t.ex. när ingen är på kontoret) valde hjulet helt slumpmässigt.
+// De räknas inte som vinster om man inte själv slår på det i filtret.
+const filter = { includeEmpty: store.get("stats:includeEmpty") === true };
+const isCounted = (day) => filter.includeEmpty || day.total > 0;
 
 function summarize(days) {
   const byId = new Map();
@@ -162,6 +167,7 @@ function summarize(days) {
       if (r.found && r.price) e.prices.push({ date: day.date, price: r.price });
       if (votes > 0 && (!e.bestDay || votes > e.bestDay.votes)) e.bestDay = { date: day.date, votes };
     }
+    if (!isCounted(day)) continue;  // Menyerna ovan räknas alla dagar, vinsterna bara de som räknas
     const w = entity(day.winner);
     w.wins++;
     w.winDates.push(day.date);
@@ -177,7 +183,8 @@ function summarize(days) {
   const upsets = votedDays.filter((d) => d.winner.votes < Math.max(...d.slices.map((s) => s.votes)));
   const luckiest = votedDays.reduce((best, d) => (!best || d.winner.share < best.winner.share ? d : best), null);
   const busiest = days.reduce((best, d) => (!best || d.total > best.total ? d : best), null);
-  return { days, entities, totalVotes, votedDays, upsets, luckiest, busiest, current: run };
+  const counted = days.filter(isCounted);
+  return { days, counted, entities, totalVotes, votedDays, upsets, luckiest, busiest, current: run };
 }
 
 // ---------- Rendering ----------
@@ -200,9 +207,10 @@ function tiles(s) {
     el("p", { class: "tile-value" }, value),
     note && el("p", { class: "tile-note" }, note));
   return el("div", { class: "tiles" },
-    tile("Dagar med hjul", String(s.days.length), s.days.length ? `${fmtDay(s.days[0].date)} – ${fmtDay(s.days.at(-1).date)}` : null),
-    tile("Röster totalt", String(s.totalVotes), s.votedDays.length ? `${plural(s.votedDays.length, "dag", "dagar")} med röster` : "Ingen har röstat än"),
-    tile("Röster per dag", s.days.length ? (s.totalVotes / s.days.length).toFixed(1).replace(".", ",") : "–", "i snitt"),
+    tile(filter.includeEmpty ? "Dagar med hjul" : "Dagar med röster", String(s.counted.length),
+      filter.includeEmpty ? `varav ${s.votedDays.length} med röster` : `av ${plural(s.days.length, "dag", "dagar")} med hjul`),
+    tile("Röster totalt", String(s.totalVotes), s.votedDays.length ? null : "Ingen har röstat än"),
+    tile("Röster per dag", s.votedDays.length ? (s.totalVotes / s.votedDays.length).toFixed(1).replace(".", ",") : "–", "de dagar någon röstade"),
     tile(leaders.length > 1 ? "Delad etta" : "Mest vald",
       leaders.length === 0 ? "–" : leaders.length <= 2 ? leaders.map((e) => e.name).join(" & ") : `${leaders.length} ställen`,
       leaders.length ? `${plural(maxWins, "gång", "gånger")}${leaders.length > 1 ? " var" : ""}` : null),
@@ -224,11 +232,13 @@ function leaderboard(s) {
         el("div", { class: "lb-bar" }, el("span", { style: `width:${(e.wins / maxWins) * 100}%` })),
       ),
       el("div", { class: "lb-num" }, el("strong", {}, String(e.wins)), el("span", {}, e.wins === 1 ? "vinst" : "vinster")),
-      el("div", { class: "lb-num muted" }, el("strong", {}, s.days.length ? pct(e.wins / s.days.length) : "–"), el("span", {}, "av dagarna")),
+      el("div", { class: "lb-num muted" }, el("strong", {}, s.counted.length ? pct(e.wins / s.counted.length) : "–"), el("span", {}, "av dagarna")),
       el("div", { class: "lb-num muted" }, el("strong", {}, String(e.votes)), el("span", {}, e.votes === 1 ? "röst" : "röster")),
     );
   });
-  return section("Topplista", "Hur ofta hjulet har landat på varje ställe.", el("ol", { class: "leaderboard" }, rows));
+  return section("Topplista", filter.includeEmpty
+    ? "Hur ofta hjulet har landat på varje ställe, alla dagar."
+    : "Hur ofta hjulet har landat på varje ställe, de dagar någon röstade.", el("ol", { class: "leaderboard" }, rows));
 }
 
 function calendar(s) {
@@ -246,6 +256,13 @@ function calendar(s) {
       el("span", { class: "cal-week" }, `v. ${w.week}`),
       w.days.map((d) => {
         if (!d) return el("span", { class: "cal-cell empty" });
+        if (!isCounted(d)) {
+          return el("span", {
+            class: "cal-cell skipped", tabindex: "0", "aria-label": `${fmtLong(d.date)}: ingen röstade`,
+            onpointerenter: (ev) => showTip(ev, fmtLong(d.date), [[null, "Ingen röstade", "räknas inte"]]),
+            onpointermove: moveTip, onpointerleave: hideTip,
+          }, "–");
+        }
         const e = s.entities.find((x) => x.id === d.winner.id);
         return el("span", {
           class: "cal-cell", style: `--c:${d.winner.color}`, tabindex: "0",
@@ -258,7 +275,7 @@ function calendar(s) {
       }),
     ]),
   );
-  return section("Hjulets val, dag för dag", "Varje ruta är en dag. Färgen är restaurangen hjulet landade på.", grid);
+  return section("Hjulets val, dag för dag", "Varje ruta är en dag. Färgen är restaurangen hjulet landade på, grått betyder att ingen röstade.", grid);
 }
 
 // Staplade staplar: röster per dag och restaurang.
@@ -385,11 +402,11 @@ function cumulativeVotes(s) {
 }
 
 function cumulativeWins(s) {
-  if (s.days.length < 2) return null;
-  const dates = s.days.map((d) => d.date);
+  if (s.counted.length < 2) return null;
+  const dates = s.counted.map((d) => d.date);
   const series = s.entities.filter((e) => e.listed > 0).map((e) => {
     let acc = 0;
-    return { entity: e, points: s.days.map((d) => ({ date: d.date, value: (acc += d.winner.id === e.id ? 1 : 0) })) };
+    return { entity: e, points: s.counted.map((d) => ({ date: d.date, value: (acc += d.winner.id === e.id ? 1 : 0) })) };
   });
   return section("Kapplöpningen", "Antal gånger varje ställe har valts, dag för dag.",
     legend(s), lineChart({ series, dates, label: "Ackumulerade vinster per restaurang", step: true }));
@@ -397,10 +414,10 @@ function cumulativeWins(s) {
 
 // Värmekarta: vinster per restaurang och veckodag. En nyans, ljus till mörk.
 function weekdayHeatmap(s) {
-  if (!s.days.length) return null;
+  if (!s.counted.length) return null;
   const list = s.entities.filter((e) => e.listed > 0);
   const max = Math.max(1, ...list.flatMap((e) => e.weekdayWins));
-  const daysPerWeekday = WEEKDAYS.map((_, i) => s.days.filter((d) => weekdayIndex(d.date) === i).length);
+  const daysPerWeekday = WEEKDAYS.map((_, i) => s.counted.filter((d) => weekdayIndex(d.date) === i).length);
   return section("Vinster per veckodag", "Mörkare ruta, fler vinster den veckodagen.",
     el("div", { class: "heat" },
       el("span", {}), WEEKDAYS.map((w, i) => el("span", { class: "heat-head" }, w, el("small", {}, ` ${daysPerWeekday[i]}`))),
@@ -476,6 +493,21 @@ function table(s) {
     )));
 }
 
+function filterBar(days) {
+  const empty = days.filter((d) => d.total === 0).length;
+  return el("div", { class: "filters" },
+    el("label", { class: "switch" },
+      el("input", {
+        type: "checkbox", checked: filter.includeEmpty,
+        onchange: (e) => { filter.includeEmpty = e.target.checked; store.set("stats:includeEmpty", filter.includeEmpty); render(summarize(days)); },
+      }),
+      el("span", { class: "switch-track" }),
+      "Räkna även dagar utan röster",
+    ),
+    el("span", { class: "filters-note" }, empty ? `${plural(empty, "dag", "dagar")} utan röster` : "Alla dagar har röster"),
+  );
+}
+
 function render(s) {
   const first = s.days[0], last = s.days.at(-1);
   $("range").textContent = s.days.length
@@ -483,6 +515,7 @@ function render(s) {
     : "Inga avslutade dagar än";
   $("stats").replaceChildren(...[
     DEMO && el("p", { class: "demo-banner" }, "Exempeldata – inte riktiga siffror. ", el("a", { href: "statistik.html" }, "Visa de riktiga")),
+    s.days.length && filterBar(s.days),
     tiles(s),
     leaderboard(s),
     calendar(s),
@@ -496,6 +529,7 @@ function render(s) {
     s.days.length && table(s),
     el("p", { class: "footnote" },
       "Röster räknas per webbläsare och dag. Vinnaren räknas fram med samma hjul som på startsidan, så den stämmer med det hjulet visade. ",
+      "Dagar då ingen röstade räknas inte som vinster om du inte slår på det ovan, eftersom hjulet då valde helt slumpmässigt. ",
       "Rätterna är fritext och jämförs inte mellan dagar."),
   ].filter(Boolean));
 }

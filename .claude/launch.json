@@ -6,6 +6,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "-d", "docs", "8000"],
       "port": 8000
+    },
+    {
+      "name": "lunch-fresh",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "-d", "docs", "8001"],
+      "port": 8001
     }
   ]
 }

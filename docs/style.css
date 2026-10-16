@@ -11,8 +11,9 @@
   color-scheme: light;
 }
 
+/* Mörkt läge: följer systemet, om man inte valt själv med knappen (data-theme på <html>). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #131312;
     --surface: #1a1918;
     --text: #edebe6;
@@ -22,6 +23,16 @@
     --hover: #211f1e;
     color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --bg: #131312;
+  --surface: #1a1918;
+  --text: #edebe6;
+  --muted: #9c988f;
+  --faint: #6d6a64;
+  --line: #2a2826;
+  --hover: #211f1e;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -70,6 +81,31 @@ a { color: inherit; }
   transition: background .15s, color .15s;
 }
 .stats-link[hidden] { display: none; }
+.theme-toggle {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.theme-toggle:hover { background: var(--hover); color: var(--text); }
+.theme-toggle svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.theme-toggle .sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .sun { display: block; }
+  :root:not([data-theme="light"]) .theme-toggle .moon { display: none; }
+}
 .stats-link:hover { background: var(--hover); color: var(--text); }
 .stats-link svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .day { display: flex; align-items: center; justify-content: space-between; gap: 12px; }

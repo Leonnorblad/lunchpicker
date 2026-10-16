@@ -189,6 +189,20 @@ function el(tag, attrs = {}, ...children) {
   return node;
 }
 
+// Knappen för ljust/mörkt läge. Valet sparas i webbläsaren; utan val följer sidan systemet.
+function setupThemeToggle() {
+  const button = document.querySelector(".theme-toggle");
+  if (!button) return;
+  button.addEventListener("click", () => {
+    const root = document.documentElement;
+    const current = root.dataset.theme ?? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    root.dataset.theme = next;
+    try { localStorage.setItem("theme", next); } catch {}
+  });
+}
+setupThemeToggle();
+
 function isoWeek(d) {
   const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));  // Torsdagen samma vecka avgör året

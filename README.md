@@ -4,7 +4,8 @@ Dagens lunchmenyer, omröstning 09.00–11.30 och lyckohjul kl 11.30.
 
 - **Menyer:** en [Claude Code-rutin](#claude-code-rutinen) körs varje vardagsmorgon. Den hämtar varje restaurangs menysida, plockar ut dagens rätter, sparar dem i `docs/data/menus/<datum>.json` och pushar till `main`.
 - **Sida:** `docs/` publiceras med GitHub Pages.
-- **Statistik:** är avstängd tills vidare (`showStats: false` i `docs/config.js`), men rösterna arkiveras ändå. Påslagen öppnar knappen uppe till höger `statistik.html` med topplista, hjulets val dag för dag, röster över tid och mer. `statistik.html?exempel` visar sidan med påhittad data.
+- **Statistik:** är avstängd tills vidare (`showStats: false` i `docs/config.js`), men rösterna arkiveras ändå. Påslagen öppnar knappen uppe till höger `statistik.html` med topplista, hjulets val dag för dag, röster över tid och mer. `statistik.html?exempel` visar sidan med påhittad data. Dagar då ingen röstade (t.ex. när ingen är på kontoret) räknas inte som vinster, eftersom hjulet då valde helt slumpmässigt. Ett filter överst tar med dem.
+- **Ljust/mörkt:** följer systemet. Knappen uppe till vänster byter, och valet sparas i webbläsaren.
 - **Röster:** räknare hos [Abacus](https://abacus.jasoncameron.dev). Ingen databas och ingen nyckel. Hjulet räknas fram på samma sätt i varje webbläsare (utifrån datum och röster), så alla ser samma resultat.
 
 ## Kom igång
