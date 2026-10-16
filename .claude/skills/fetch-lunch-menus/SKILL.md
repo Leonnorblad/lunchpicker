@@ -74,11 +74,13 @@ Titta på raden `URL:` som `page_text.py` skriver ut. Har sidan skickat dig vida
   Dela inte heller när det enda som blir kvar är något allmänt som "med tillbehör": `"Äppelpaj med tillbehör"` är hela namnet.
 - `label`: kategorin som källan själv skriver ut, ordagrant ("Veckans sallad", "Fredagsgottis"). Hitta inte på någon egen. Annars utelämna. Den sparas men visas inte på sidan.
 - `type`: vad rätten är, visas som en ikon. Du avgör det utifrån rättens namn, beskrivning och kategori:
+  - `kott`: fläsk, nöt, kalv, lamm, vilt, korv, bacon, köttbullar (fläskschnitzel, entrecôte, kalvtritip, chorizo).
   - `fisk`: fisk eller skaldjur är huvudingrediensen (lax, kummel, torsk, räkor, fish taco).
   - `fagel`: kyckling, kalkon, anka eller annan fågel.
   - `vegetarisk`: inget kött, ingen fisk, inga skaldjur och ingen fågel (ost, ägg och mjölk går bra). Också när källan kallar rätten vegetarisk eller "veg".
   - `vegansk`: bara när källan själv säger veganskt/vegan, eller det är helt uppenbart att rätten saknar animaliska produkter. Är du osäker: `vegetarisk`.
-  - Utelämna `type` för kött (fläsk, nöt, kalv, lamm, vilt, korv, bacon) och när rätten har flera val av olika slag ("kyckling eller pannoumi"), är en efterrätt eller inte går att avgöra. Gissa aldrig: hellre ingen ikon än fel ikon.
+  - Det som är huvudsaken i rätten avgör: en tunnbrödsrulle med chorizo är `kott`, en sallad med bacon som tillbehör också.
+  - Utelämna `type` bara när rätten har flera val av olika slag ("kyckling eller pannoumi"), är en efterrätt eller verkligen inte går att avgöra. Gissa aldrig: hellre ingen ikon än fel ikon.
 - `price` på restaurangen: ordinarie lunchpris i hela kronor. Leta efter det: det står ofta i rubriken ("Pris 144:-", "Dagens lunch 135 kr"), vid öppettiderna eller sist på sidan. Utelämna det bara om det verkligen inte står någonstans.
 - `price` på en rätt: bara när just den rätten kostar något annat än ordinarie pris (t.ex. köttbullar 154 kr när lunchen annars är 144 kr), eller när sidan bara har pris per rätt. Ange då ordinarie pris på restaurangen som det vanligaste priset.
 - `note`: visas för besökarna på sidan. Mycket kort, på svenska, och bara om restaurangen själv meddelar något avvikande ("Stängt idag", "Lunchen stängd tills vidare"). Tekniska saker, som en fel `menu_url`, en omdirigering eller en blockerad adress, skriver du bara i rapporten. Annars `null`.

@@ -19,14 +19,19 @@ function renderHeader(date) {
 
 // Ikoner för rättens typ (fältet "type"). Tunna linjer i textens färg: färg betyder alltid en restaurang.
 const DISH_TYPES = {
-  fisk: { label: "Fisk", paths: [
-    "M2.5 12c2.6-3.6 6-5.2 9.5-5.2 3.1 0 5.4 1.6 7 3.2l2.5-2.2v8.4L19 14c-1.6 1.6-3.9 3.2-7 3.2-3.5 0-6.9-1.6-9.5-5.2z",
-    "M7.2 11.2h.01",
+  kott: { label: "Kött", paths: [
+    "M4 12.5C4 8 7.6 4.5 12.6 4.5c4.6 0 7.9 2.7 7.9 6.4 0 3-2.1 4.6-4.4 5.1-1.5.3-2.4 1-3.1 2.2-.9 1.6-2.4 2.8-4.6 2.8C5.6 21 4 18.6 4 15.6z",
+    "M7 12.6c0-3 2.5-5.3 5.6-5.3",
+    "M14.6 11.2a1.6 1.6 0 1 0-3.2 0 1.6 1.6 0 1 0 3.2 0",
   ] },
   fagel: { label: "Fågel", paths: [
     "M8.8 15.2C8 11 9 6 13.5 4.2c4-1.6 8 1.3 7.1 5.4-.8 3.8-6.1 6-11.8 5.6z",
     "M8.8 15.2 5.4 18.6",
     "M5.4 18.6c-.8-.9-2.3-.8-2.8.3-.5 1.1.4 2.3 1.5 2.1-.2 1.1 1 2 2.1 1.5 1.1-.5 1.2-2 .3-2.8",
+  ] },
+  fisk: { label: "Fisk", paths: [
+    "M2.5 12c2.6-3.6 6-5.2 9.5-5.2 3.1 0 5.4 1.6 7 3.2l2.5-2.2v8.4L19 14c-1.6 1.6-3.9 3.2-7 3.2-3.5 0-6.9-1.6-9.5-5.2z",
+    "M7.2 11.2h.01",
   ] },
   vegetarisk: { label: "Vegetarisk", paths: [
     "M20 4C10.5 4 4.5 8.8 4.5 15.6c0 1.6.3 3 .9 4.4",
@@ -178,6 +183,7 @@ function wheelSvg(slices) {
       shape.setAttribute("d", `M0 0L${x0} ${y0}A100 100 0 ${s.end - s.start > 180 ? 1 : 0} 1 ${x1} ${y1}Z`);
     }
     shape.setAttribute("fill", s.color);
+    shape.dataset.id = s.id;
     shape.setAttribute("stroke", "var(--bg)");
     shape.setAttribute("stroke-width", "1.2");
     svg.append(shape);
@@ -189,6 +195,7 @@ function wheelSvg(slices) {
       label.setAttribute("text-anchor", "middle");
       label.setAttribute("dominant-baseline", "central");
       label.textContent = s.name.length > 16 ? `${s.name.slice(0, 15)}…` : s.name;
+      label.dataset.id = s.id;
       svg.append(label);
     }
   }
@@ -223,10 +230,10 @@ async function renderResult(date, restaurants, { live, renderId }) {
   const cards = el("ul", { class: "cards" }, ranked.map((r) => {
     const won = r.id === winner.id;
     const votes = counts[r.id] || 0;
-    return el("li", {}, el("div", { class: `card${won ? " picked" : ""}`, style: `--c:${r.color}` },
+    return el("li", { class: won ? "won" : null }, el("div", { class: `card${won ? " won" : ""}`, style: `--c:${r.color}` },
       cardContent(r, {
         extra: [
-          won && el("span", { class: "badge" }, "Valt"),
+          won && el("span", { class: "badge" }, "Dagens val"),
           total > 0 && el("span", { class: "votes" }, `${votes} ${votes === 1 ? "röst" : "röster"}`),
           priceTag(r),
         ],
@@ -237,9 +244,14 @@ async function renderResult(date, restaurants, { live, renderId }) {
 
   // Under en direktsänd snurr visas namnet och listan först när hjulet stannat, så att ordningen inte avslöjar vinnaren.
   const reveal = el("div", { class: `reveal${live ? " hidden" : ""}` },
-    el("p", { class: "eyebrow" }, "Hjulet valde"),
-    el("h2", { class: "winner" }, winner.name),
-    !total && el("p", { class: "status" }, "Inga röster – alla hade lika chans"),
+    el("div", { class: "winner-head", style: `--c:${winner.color}` },
+      el("span", { class: "logo big" }, winner.logo ? el("img", { src: winner.logo, alt: "" }) : winner.name[0]),
+      el("p", { class: "eyebrow" }, "Dagens lunch"),
+      el("h2", { class: "winner" }, winner.name),
+      el("p", { class: "winner-note" }, total
+        ? `${winner.votes} av ${total} röster · hade ${Math.round(winner.share * 100)} % chans`
+        : "Inga röster – alla hade lika chans"),
+    ),
     cards,
     iconLegend(restaurants),
   );
@@ -249,15 +261,20 @@ async function renderResult(date, restaurants, { live, renderId }) {
     reveal,
   ));
 
+  const settle = () => {
+    svg.querySelectorAll("[data-id]").forEach((n) => n.classList.toggle("win", n.dataset.id === winner.id));
+    svg.classList.add("settled");
+  };
   if (!live) {
     svg.style.transform = `rotate(${rotation}deg)`;
+    settle();
     return;
   }
   svg.style.transform = "rotate(0deg)";
   svg.getBoundingClientRect();  // Tvinga fram startläget innan animationen
   svg.classList.add("spinning");
   svg.style.transform = `rotate(${rotation}deg)`;
-  svg.addEventListener("transitionend", () => reveal.classList.remove("hidden"), { once: true });
+  svg.addEventListener("transitionend", () => { settle(); reveal.classList.remove("hidden"); }, { once: true });
 }
 
 async function show(date, { live = false } = {}) {

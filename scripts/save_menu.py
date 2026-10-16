@@ -43,7 +43,7 @@ class Invalid(Exception):
 
 
 DISH_KEYS = {"label", "name", "description", "price", "type"}
-DISH_TYPES = {"fisk", "fagel", "vegetarisk", "vegansk"}  # Visas som ikoner. Kött och oklart: inget fält.
+DISH_TYPES = {"kott", "fagel", "fisk", "vegetarisk", "vegansk"}  # Visas som ikoner. Oklart: inget fält.
 ROW_KEYS = {"id", "found", "dishes", "price", "note"}
 
 

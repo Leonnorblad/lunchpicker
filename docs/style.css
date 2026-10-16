@@ -257,9 +257,31 @@ main { max-width: 620px; margin: 0 auto; padding: 0 16px 64px; }
 .reveal { width: 100%; transition: opacity .5s, transform .5s; }
 .reveal.hidden { opacity: 0; transform: translateY(8px); }
 .reveal > .eyebrow { margin-bottom: 4px; }
-.winner { margin: 0 0 8px; text-align: center; font: 500 52px/1 var(--serif); letter-spacing: -0.01em; }
+.winner { margin: 0; text-align: center; font: 500 52px/1 var(--serif); letter-spacing: -0.01em; }
+
+/* Vinnaren: logga, namn och röster under hjulet */
+.winner-head { display: grid; justify-items: center; gap: 6px; text-align: center; }
+.winner-head .eyebrow { margin: 10px 0 0; color: color-mix(in srgb, var(--c) 80%, var(--text)); }
+.winner-note { margin: 4px 0 0; color: var(--muted); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.logo.big { width: 76px; height: 76px; box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px var(--c); font-size: 40px; }
+.logo.big img { padding: 7px; }
+
+/* Hjulet efter snurren: vinnarens bit i full färg, de andra tonas ned */
+.wheel svg path, .wheel svg circle, .wheel svg text { transition: opacity .6s; }
+.wheel svg.settled [data-id]:not(.win) { opacity: .28; }
+
+/* Vinnarens menykort */
+.card.won { background: color-mix(in srgb, var(--c) 7%, var(--surface)); box-shadow: inset 0 0 0 2px var(--c); }
+.card.won::before { opacity: 0; }
+.card.won .badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--c) 82%, #000);
+  color: #fff;
+  letter-spacing: .1em;
+}
 .reveal .status { margin-bottom: 0; }
-.reveal .cards { margin-top: 28px; }
+.reveal .cards { margin-top: 32px; }
 
 /* Testläge (?tid=11.29): en remsa överst */
 .test-banner {

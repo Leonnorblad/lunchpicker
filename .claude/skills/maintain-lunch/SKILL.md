@@ -140,7 +140,7 @@ Claude GitHub App måste vara installerad på repot, annars nekas pushen. Ändra
 
 - Restaurangerna står i `restaurants.json`-ordning **vid sparandet**. Den ordningen styr hjulets tårtbitar för den dagen.
 - `price` på restaurangen = ordinarie lunchpris. `price` på en rätt finns bara när den rätten kostar något annat.
-- `type` på en rätt (valfri): `fisk`, `fagel`, `vegetarisk` eller `vegansk`. Visas som en ikon efter namnet. Kött och oklart har inget fält.
+- `type` på en rätt (valfri): `kott`, `fagel`, `fisk`, `vegetarisk` eller `vegansk`. Visas som en ikon efter namnet. Oklart (flera val, efterrätt) har inget fält.
   Modellen sätter det enligt reglerna i `fetch-lunch-menus`. `label` sparas men visas inte.
 - `note` visas för besökarna. Bara sådant restaurangen själv meddelar ("Stängt idag"), aldrig tekniska problem.
 - Skriv **aldrig** menyfiler för hand. Gör ett utkast (formatet står överst i `save_menu.py`) och kör `save_menu.py`.
@@ -211,6 +211,10 @@ Inter (allt annat), från Google Fonts i båda HTML-filerna. Restaurangkorten sk
 färgad ring, namn, en metarad (pris · källa · röster), rätter centrerade med namnet stort (följt av eventuell typikon och
 eget pris) och tillbehören i kursiv under. Under korten visas en teckenförklaring för dagens ikoner.
 Färg betyder alltid en restaurang; därför är typikonerna i textens dämpade färg och värmekartan i en neutral skala.
+
+Resultatet efter 11.30: vinnarens tårtbit i full färg och de andra nedtonade (`.settled`), under hjulet en rubrik med
+vinnarens logga, "Dagens lunch", namnet och röster/chans, och vinnarens kort först med ram i restaurangens färg och en
+fylld "Dagens val"-etikett (`.card.won`).
 
 Layout: under 900 px är menyerna en enda lista (mobil). Från 900 px (`@media (min-width: 900px)` sist i `style.css`) ligger
 de i ett rutnät med `minmax(340px, 1fr)`: två kolumner på mindre skärmar, tre på stora, max 1180 px. Dagväljaren och
