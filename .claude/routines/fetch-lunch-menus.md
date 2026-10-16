@@ -5,8 +5,8 @@ Inställningar för rutinen på claude.ai/code/routines (Desktop: Code → Routi
 | Fält | Värde |
 |---|---|
 | Namn | Hämta lunchmenyer |
-| Repo | lunchmeny |
-| Trigger | Schedule → Weekdays, 07:10 (inte exakt på timmen, då kan starten bli flera minuter sen) |
+| Repo | Leonnorblad/lunchpicker (Claude GitHub App måste vara installerad för att pushen ska gå igenom) |
+| Trigger | Schedule, cron `10 6 * * 1-5` (UTC): 07.10 vintertid, 08.10 sommartid. Alltid före omröstningen 09.00. Inte exakt på timmen, då kan starten bli flera minuter sen. |
 | Environment | Eget, med Network access = Custom (se nedan). Inga variabler, inget setup-skript. |
 | Connectors | Ta bort alla. Rutinen behöver bara GitHub, som redan ingår via repot. |
 
