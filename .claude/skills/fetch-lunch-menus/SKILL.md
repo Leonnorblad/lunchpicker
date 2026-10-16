@@ -27,7 +27,7 @@ Använd `--date` om det angavs, annars dagens datum i Stockholm. Är veckodagen 
 
 Läs `docs/data/restaurants.json`. Varje rad har `id`, `name`, `menu_url` och ibland `"link_only": true`.
 
-**`link_only` hoppar du över helt.** Hämta inte deras sida och sök inte upp deras meny någon annanstans. Källan tillåter inte automatisk hämtning, och sidan länkar dit istället. `save_menu.py` lägger in dem själv.
+**`link_only` hoppar du över helt.** Hämta inte deras sida och sök inte upp deras meny någon annanstans. Källans villkor tillåter inte att menyn visas här, så sidan länkar dit istället. `save_menu.py` lägger in dem själv.
 
 Ändra aldrig `restaurants.json`. `id` kopplar ihop menyn med dagens röster.
 
@@ -69,26 +69,28 @@ Titta på raden `URL:` som `page_text.py` skriver ut. Har sidan skickat dig vida
 - `name`: rättens namn. VERSALER skrivs om till normal versalisering, annars som i källan.
 - `description`: tillbehören eller beskrivningen som i källan. Ta bort inledande "Serveras med" eller "Med" och avslutande punkt, och gör om första bokstaven till versal. Annars `null`.
 - `label`: kategorin som källan själv skriver ut, ordagrant ("Kött", "Fisk", "Veckans vegetariska alternativ"). Hitta inte på någon egen. Annars `null`.
-- `price`: ordinarie lunchpris i hela kronor om det framgår, annars `null`. Kostar en enskild rätt något annat, lägg priset sist i dess `description`: `"Gräddsås och lingon (154 kr)"`. Rätter har inget eget prisfält, och `save_menu.py` underkänner okända fält.
+- `price` på restaurangen: ordinarie lunchpris i hela kronor. Leta efter det: det står ofta i rubriken ("Pris 144:-", "Dagens lunch 135 kr"), vid öppettiderna eller sist på sidan. Utelämna det bara om det verkligen inte står någonstans.
+- `price` på en rätt: bara när just den rätten kostar något annat än ordinarie pris (t.ex. köttbullar 154 kr när lunchen annars är 144 kr), eller när sidan bara har pris per rätt. Ange då ordinarie pris på restaurangen som det vanligaste priset.
 - `note`: visas för besökarna på sidan. Mycket kort, på svenska, och bara om restaurangen själv meddelar något avvikande ("Stängt idag", "Lunchen stängd tills vidare"). Tekniska saker, som en fel `menu_url`, en omdirigering eller en blockerad adress, skriver du bara i rapporten. Annars `null`.
 
 ## 4. Spara
 
-Skriv ett utkast till en fil utanför repot (`${TMPDIR:-/tmp}/lunch-utkast.json`) med alla restauranger som **inte** är `link_only`:
+Skriv ett utkast till en fil utanför repot (`${TMPDIR:-/tmp}/lunch-utkast.json`) med alla restauranger som **inte** är `link_only`. Bara `id` och `dishes` krävs. Fält du inte har kan utelämnas, och `found` räknas fram ur `dishes`:
 
 ```json
 {
   "date": "2026-10-16",
   "restaurants": [
     {
-      "id": "reimers",
-      "found": true,
+      "id": "sabis",
+      "price": 144,
       "dishes": [
-        {"label": null, "name": "Vildsvinsköttbullar", "description": "Potatismos och lingon"}
-      ],
-      "price": 145,
-      "note": null
-    }
+        {"name": "Citronstekt fisk", "description": "Couscoussallad och saffransmajonnäs"},
+        {"name": "Köttbullar på nöt och kalv", "description": "Gräddsås och rårörda lingon", "price": 154},
+        {"label": "Veckans vegetariska", "name": "Krämig pumpasoppa"}
+      ]
+    },
+    {"id": "bruket", "dishes": [], "note": "Lunchen stängd tills vidare"}
   ]
 }
 ```

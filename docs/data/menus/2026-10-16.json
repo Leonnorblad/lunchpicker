@@ -1,6 +1,6 @@
 {
   "date": "2026-10-16",
-  "fetched_at": "2026-10-16T13:51:17+02:00",
+  "fetched_at": "2026-10-16T14:11:22+02:00",
   "restaurants": [
     {
       "id": "reimers",
@@ -35,12 +35,27 @@
     {
       "id": "matronan",
       "name": "Matronan",
-      "source_url": "https://matronanfrosunda.kvartersmenyn.se/",
-      "found": false,
-      "dishes": [],
+      "source_url": "https://www.matronan.se/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Stekt fläskfilé med kantarellsås, potatismos & timjansrostad morot",
+          "description": null
+        },
+        {
+          "label": null,
+          "name": "Fish Taco med ris i tortillabröd, mango salsa & gräddfil",
+          "description": null
+        },
+        {
+          "label": null,
+          "name": "Vegetarisk grönsaksgryta med ris, fetaost & rostade frön",
+          "description": null
+        }
+      ],
       "price": null,
-      "note": null,
-      "link_only": true
+      "note": null
     },
     {
       "id": "lilla-angel",
@@ -75,12 +90,27 @@
     {
       "id": "bra-mat-no8",
       "name": "Bra Mat No8",
-      "source_url": "https://bramatno8.kvartersmenyn.se/",
-      "found": false,
-      "dishes": [],
-      "price": null,
-      "note": null,
-      "link_only": true
+      "source_url": "https://www.bramat8.se/lunch",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Nattbakad kalvtritip med chilibearnaise, rödvinssås och rostad potatis",
+          "description": null
+        },
+        {
+          "label": null,
+          "name": "Ugnsbakad fetaost med tomat, oliver och citron serveras med smördegssnurra",
+          "description": null
+        },
+        {
+          "label": "Fredagsgottis",
+          "name": "Äppelpaj med tillbehör",
+          "description": null
+        }
+      ],
+      "price": 140,
+      "note": null
     },
     {
       "id": "sabis",
@@ -120,11 +150,12 @@
     {
       "id": "bruket",
       "name": "Bruket",
-      "source_url": "https://restaurangbruket.se/lunch",
+      "source_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se",
       "found": false,
       "dishes": [],
       "price": null,
-      "note": null
+      "note": null,
+      "link_only": true
     }
   ]
 }

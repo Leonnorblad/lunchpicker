@@ -2,33 +2,37 @@
   {
     "id": "reimers",
     "name": "Reimers",
-    "menu_url": "https://www.reimers.se/lunch/"
+    "menu_url": "https://www.reimers.se/lunch/",
+    "logo": "logos/reimers.png"
   },
   {
     "id": "matronan",
     "name": "Matronan",
-    "menu_url": "https://matronanfrosunda.kvartersmenyn.se/",
-    "link_only": true
+    "menu_url": "https://www.matronan.se/",
+    "logo": "logos/matronan.png"
   },
   {
     "id": "lilla-angel",
     "name": "Lilla Ängel",
-    "menu_url": "https://www.lillaangel.com/frosunda/lunch/"
+    "menu_url": "https://www.lillaangel.com/frosunda/lunch/",
+    "logo": "logos/lilla-angel.png"
   },
   {
     "id": "bra-mat-no8",
     "name": "Bra Mat No8",
-    "menu_url": "https://bramatno8.kvartersmenyn.se/",
-    "link_only": true
+    "menu_url": "https://www.bramat8.se/lunch",
+    "logo": "logos/bra-mat-no8.png"
   },
   {
     "id": "sabis",
     "name": "Sabis Ulriksdal",
-    "menu_url": "https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/"
+    "menu_url": "https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/",
+    "logo": "logos/sabis.png"
   },
   {
     "id": "bruket",
     "name": "Bruket",
-    "menu_url": "https://restaurangbruket.se/lunch"
+    "menu_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se",
+    "link_only": true
   }
 ]

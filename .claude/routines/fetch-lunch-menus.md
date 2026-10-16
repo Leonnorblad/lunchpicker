@@ -19,8 +19,10 @@ www.lillaangel.com
 lillaangel.com
 www.sabis.se
 sabis.se
-restaurangbruket.se
-www.restaurangbruket.se
+www.matronan.se
+matronan.se
+www.bramat8.se
+bramat8.se
 ```
 
 Lägger du till en restaurang i `docs/data/restaurants.json` måste dess domän också läggas till här.

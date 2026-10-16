@@ -9,12 +9,17 @@ docs/data/index.json. Bara standardbiblioteket, så det kräver ingen installati
     python3 scripts/save_menu.py utkast.json [--date YYYY-MM-DD]
     python3 scripts/save_menu.py --check docs/data/menus/2026-10-15.json
 
-Utkastets format:
+Utkastets format (bara id och dishes krävs, fält som saknas blir null):
 
     {"date": "2026-10-16", "restaurants": [
-      {"id": "reimers", "found": true, "price": 145, "note": null,
-       "dishes": [{"label": "Veg", "name": "Pumpasoppa", "description": null}]}
+      {"id": "reimers", "price": 145,
+       "dishes": [{"name": "Pumpasoppa", "label": "Veg"},
+                  {"name": "Köttbullar", "description": "Gräddsås och lingon", "price": 154}]},
+      {"id": "bruket", "dishes": [], "note": "Stängt idag"}
     ]}
+
+found räknas fram ur dishes om det saknas. price på restaurangen är ordinarie
+lunchpris, price på en rätt bara när den rätten kostar något annat.
 
 Restauranger med "link_only" i restaurants.json fylls i automatiskt och ska inte vara med.
 Exit 0 = sparat, 1 = utkastet underkänt (inget skrivs).
@@ -36,9 +41,30 @@ class Invalid(Exception):
     pass
 
 
+DISH_KEYS = {"label", "name", "description", "price"}
+ROW_KEYS = {"id", "found", "dishes", "price", "note"}
+
+
+def check_price(price, where: str) -> None:
+    if price is not None and (type(price) is not int or not 30 <= price <= 500):
+        raise Invalid(f"{where}: price ska vara ett heltal i kronor (30–500) eller null, fick {price!r}")
+
+
+def normalize_dish(dish, where: str) -> dict:
+    """Utkastets rätt i filens format: label, name, description alltid, price bara om den finns."""
+    if not isinstance(dish, dict):
+        raise Invalid(f"{where}: en rätt ska vara ett objekt")
+    if extra := set(dish) - DISH_KEYS:
+        raise Invalid(f"{where}: okända fält {sorted(extra)}")
+    out = {"label": dish.get("label"), "name": dish.get("name"), "description": dish.get("description")}
+    if dish.get("price") is not None:
+        out["price"] = dish["price"]
+    return out
+
+
 def check_dish(dish, where: str) -> None:
-    if not isinstance(dish, dict) or set(dish) != {"label", "name", "description"}:
-        raise Invalid(f"{where}: en rätt ska ha exakt label, name och description")
+    if not isinstance(dish, dict) or not {"label", "name", "description"} <= set(dish) <= DISH_KEYS:
+        raise Invalid(f"{where}: en rätt ska ha label, name och description (och kan ha price)")
     if not isinstance(dish["name"], str) or not dish["name"].strip():
         raise Invalid(f"{where}: name saknas")
     if dish["name"].isupper() and len(dish["name"]) > 3:
@@ -46,6 +72,7 @@ def check_dish(dish, where: str) -> None:
     for key in ("label", "description"):
         if dish[key] is not None and (not isinstance(dish[key], str) or not dish[key].strip()):
             raise Invalid(f"{where}: {key} ska vara text eller null")
+    check_price(dish.get("price"), where)
 
 
 def check_result(r: dict, where: str) -> None:
@@ -60,31 +87,31 @@ def check_result(r: dict, where: str) -> None:
         raise Invalid(f"{where}: found=false men har rätter")
     for i, dish in enumerate(r["dishes"]):
         check_dish(dish, f"{where} rätt {i + 1}")
-    price = r.get("price")
-    if price is not None and (type(price) is not int or not 30 <= price <= 500):
-        raise Invalid(f"{where}: price ska vara ett heltal i kronor (30–500) eller null, fick {price!r}")
+    check_price(r.get("price"), where)
     note = r.get("note")
     if note is not None and (not isinstance(note, str) or not note.strip()):
         raise Invalid(f"{where}: note ska vara text eller null")
 
 
-def check_menu(menu: dict, restaurants: list[dict]) -> None:
-    """Kontrollerar en färdig menyfil, samma format som sidan läser."""
+def check_menu(menu: dict) -> None:
+    """Kontrollerar en färdig menyfil, samma format som sidan läser.
+
+    Bara formatet: gamla filer ska fortsätta gå igenom när en restaurang byter
+    adress eller en ny läggs till i restaurants.json.
+    """
     if set(menu) != {"date", "fetched_at", "restaurants"}:
         raise Invalid("menyfilen ska ha exakt date, fetched_at och restaurants")
     dt.date.fromisoformat(menu["date"])
     dt.datetime.fromisoformat(menu["fetched_at"])
-    ids = [r["id"] for r in restaurants]
-    if [r.get("id") for r in menu["restaurants"]] != ids:
-        raise Invalid(f"restaurangerna ska vara {ids} i den ordningen")
-    by_id = {r["id"]: r for r in restaurants}
+    ids = [r.get("id") for r in menu["restaurants"]]
+    if len(set(ids)) != len(ids) or not all(isinstance(i, str) and i for i in ids):
+        raise Invalid(f"restaurangernas id saknas eller finns flera gånger: {ids}")
     for r in menu["restaurants"]:
-        conf = by_id[r["id"]]
-        if r.get("name") != conf["name"] or r.get("source_url") != (conf.get("menu_url") or None):
-            raise Invalid(f"{r['id']}: name/source_url stämmer inte med restaurants.json")
+        if not isinstance(r.get("name"), str) or not r["name"].strip():
+            raise Invalid(f"{r['id']}: name saknas")
         check_result(r, r["id"])
-        if conf.get("link_only") and (r["found"] or r.get("link_only") is not True):
-            raise Invalid(f"{r['id']}: ska vara link_only utan rätter")
+        if r.get("link_only") and r["found"]:
+            raise Invalid(f"{r['id']}: link_only ska inte ha rätter")
     if not any(r["found"] for r in menu["restaurants"]):
         raise Invalid("ingen restaurang har found=true")
 
@@ -118,9 +145,13 @@ def build(draft: dict, day: dt.date, restaurants: list[dict], previous: dict | N
         if conf["id"] not in by_id:
             raise Invalid(f"{conf['id']} saknas i utkastet")
         row = by_id[conf["id"]]
-        if extra := set(row) - {"id", "found", "dishes", "price", "note"}:
+        if extra := set(row) - ROW_KEYS:
             raise Invalid(f"{conf['id']}: okända fält {sorted(extra)}")
-        row = {"found": row.get("found"), "dishes": row.get("dishes"), "price": row.get("price"), "note": row.get("note")}
+        dishes = row.get("dishes")
+        if not isinstance(dishes, list):
+            raise Invalid(f"{conf['id']}: dishes ska vara en lista (tom om ingen meny hittades)")
+        dishes = [normalize_dish(d, f"{conf['id']} rätt {i + 1}") for i, d in enumerate(dishes)]
+        row = {"found": row.get("found", bool(dishes)), "dishes": dishes, "price": row.get("price"), "note": row.get("note")}
         check_result(row, conf["id"])
         # Körs skillen igen samma dag ska en meny som redan hittats inte ersättas av en miss
         if not row["found"] and prev.get(conf["id"], {}).get("found"):
@@ -134,7 +165,7 @@ def build(draft: dict, day: dt.date, restaurants: list[dict], previous: dict | N
         "fetched_at": dt.datetime.now(TZ).isoformat(timespec="seconds"),
         "restaurants": results,
     }
-    check_menu(menu, restaurants)
+    check_menu(menu)
     return menu, kept
 
 
@@ -155,7 +186,7 @@ def main() -> int:
 
     try:
         if args.check:
-            check_menu(json.loads(Path(args.check).read_text()), restaurants)
+            check_menu(json.loads(Path(args.check).read_text()))
             print(f"OK: {args.check}")
             return 0
         if not args.draft:

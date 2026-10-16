@@ -1,4 +1,4 @@
-# Lunch i Ulriksdal
+# Lunch
 
 Dagens lunchmenyer, omröstning 09.00–11.30 och lyckohjul kl 11.30.
 
@@ -27,7 +27,9 @@ Redigera `docs/data/restaurants.json`. `menu_url` ska peka på en sida som visar
 
 Lägg också till den nya domänen under *Allowed domains* i rutinens environment, annars kan rutinen inte nå sidan.
 
-Sätt `"link_only": true` för ställen vars källa inte får eller kan hämtas automatiskt (t.ex. Kvartersmenyn, som blockerar servrar och ber att man hör av sig innan man återanvänder innehållet). De visas då med en länk "Se menyn ↗" och finns kvar i omröstningen.
+Använd restaurangens egen sida när det går. Sätt `"link_only": true` för ställen vars källa inte får hämtas och visas på sidan (t.ex. Bruket, vars meny ligger hos Compass Group, som bara tillåter länkar). De visas då med en länk "Se menyn ↗" och finns kvar i omröstningen.
+
+`"logo": "logos/<id>.png"` visar restaurangens logga i en rund bricka. Utan logga visas initialen.
 
 ## Lokalt
 
@@ -52,6 +54,7 @@ I testläget visas en gul etikett längst ned. Rösterna hamnar i egna räknare 
 
 ## Bra att veta
 
-- Röstspärren (en röst per dag, bara 09.00–11.30) finns i webbläsaren, inte på servern. Det räcker för kollegor, men det går att fuska.
-- Abacus tillåter 30 anrop per 10 sekunder per IP-adress, och varje besök efter 11.30 läser 6 räknare. Sidan sprider ut anropen och försöker igen vid behov. Blir ni många på samma kontorsnät kan resultatet ta några sekunder att dyka upp.
+- Man väljer en restaurang och bekräftar. Fram till 11.30 går det att byta: det räknas som +1 på den nya restaurangen och +1 på den gamlas `_minus`-räknare, eftersom Abacus bara kan räkna ned med en hemlig nyckel.
+- Röstspärren (en röst per webbläsare och dag, bara 09.00–11.30) finns i webbläsaren, inte på servern. Det räcker för kollegor, men det går att fuska.
+- Abacus tillåter 30 anrop per 10 sekunder per IP-adress, och varje besök efter 11.30 läser två räknare per restaurang (röster och bytta röster). Sidan sprider ut anropen och försöker igen vid behov. Blir ni många på samma kontorsnät kan resultatet ta några sekunder att dyka upp.
 - Byt `namespace` i `docs/config.js` för att nollställa alla röster.

@@ -5,16 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lunch</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="day">
-    <button id="prev" class="nav" aria-label="Föregående dag">‹</button>
-    <div class="title">
-      <h1 id="weekday"></h1>
-      <p id="date"></p>
+  <header class="top">
+    <p class="eyebrow">Lunch</p>
+    <div class="day">
+      <button id="prev" class="nav" aria-label="Föregående dag">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="title">
+        <h1 id="weekday"></h1>
+        <p id="date"></p>
+      </div>
+      <button id="next" class="nav" aria-label="Nästa dag">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
     </div>
-    <button id="next" class="nav" aria-label="Nästa dag">›</button>
   </header>
   <main id="main"></main>
   <script src="config.js"></script>

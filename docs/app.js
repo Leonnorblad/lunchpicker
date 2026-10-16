@@ -2,11 +2,11 @@
 
 const CFG = window.LUNCH;
 const TZ = "Europe/Stockholm";
-const COLORS = ["#ff6b4a", "#f5a524", "#22a861", "#2d8cff", "#8b5cf6", "#e5487f", "#14b8a6", "#8a8a8a"];
+const COLORS = ["#c2603e", "#c8963a", "#6a9270", "#557796", "#86688e", "#b5687a", "#4a8480", "#8a867e"];
 const SPIN_TURNS = 6;
 
 const $ = (id) => document.getElementById(id);
-const state = { restaurants: [], dates: [], date: null, phase: null, menus: {}, counts: {}, renderId: 0 };
+const state = { restaurants: [], dates: [], date: null, phase: null, menus: {}, counts: {}, renderId: 0, pending: null, sending: false };
 
 // ---------- Testläge ----------
 // ?tid=11.29 låtsas att klockan är 11.29 idag och låter den gå vidare därifrån (?datum=2026-10-16 byter dag).
@@ -78,7 +78,8 @@ function restaurantsFor(menu) {
   const list = menu?.restaurants ?? state.restaurants;
   return list.map((r) => {
     const index = state.restaurants.findIndex((x) => x.id === r.id);
-    return { ...r, source_url: r.source_url ?? r.menu_url, color: COLORS[index >= 0 ? index : COLORS.length - 1] };
+    const conf = state.restaurants[index] ?? {};
+    return { ...r, logo: conf.logo, source_url: r.source_url ?? r.menu_url, color: COLORS[index >= 0 ? index : COLORS.length - 1] };
   });
 }
 
@@ -98,13 +99,19 @@ async function getCount(date, id) {
   throw new Error("Kunde inte hämta röster");
 }
 
+// En röst som byts räknas som +1 på nya restaurangen och +1 på den gamlas "_minus"-räknare.
+// Abacus kan bara räkna ned med en hemlig nyckel, så så här klarar sidan sig utan.
+const minusKey = (id) => `${id}_minus`;
+
 async function loadCounts(date, restaurants) {
   if (state.counts[date]) return state.counts[date];
   const cached = store.get(`counts:${date}`);
   if (cached) return (state.counts[date] = cached);
 
-  const values = await Promise.all(restaurants.map((r) => getCount(date, r.id)));
-  const counts = Object.fromEntries(restaurants.map((r, i) => [r.id, values[i]]));
+  const ids = restaurants.flatMap((r) => [r.id, minusKey(r.id)]);
+  const values = await Promise.all(ids.map((id) => getCount(date, id)));
+  const value = Object.fromEntries(ids.map((id, i) => [id, values[i]]));
+  const counts = Object.fromEntries(restaurants.map((r) => [r.id, Math.max(0, value[r.id] - value[minusKey(r.id)])]));
   state.counts[date] = counts;
   store.set(`counts:${date}`, counts);  // Rösterna är stängda, resultatet ändras inte
   return counts;
@@ -168,6 +175,12 @@ function el(tag, attrs = {}, ...children) {
   return node;
 }
 
+function isoWeek(d) {
+  const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));  // Torsdagen samma vecka avgör året
+  return Math.ceil(((t - Date.UTC(t.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7);
+}
+
 function renderHeader(date) {
   const d = asDate(date);
   const weekday = new Intl.DateTimeFormat("sv-SE", { weekday: "long", timeZone: "UTC" }).format(d);
@@ -176,7 +189,7 @@ function renderHeader(date) {
     day: "numeric", month: "long", year: sameYear ? undefined : "numeric", timeZone: "UTC",
   }).format(d);
   $("weekday").textContent = weekday[0].toUpperCase() + weekday.slice(1);
-  $("date").textContent = day;
+  $("date").textContent = `${day} · vecka ${isoWeek(d)}`;
   const i = state.dates.indexOf(date);
   $("prev").disabled = i <= 0;
   $("next").disabled = i < 0 || i >= state.dates.length - 1;
@@ -193,11 +206,14 @@ function dishList(r) {
   }
   return el("ul", { class: "dishes" },
     r.dishes.map((d) => el("li", { class: "dish" },
-      d.label && el("span", { class: "label" }, d.label),
-      d.name,
-      d.description && el("small", {}, d.description),
+      d.label && el("span", { class: "dish-label" }, d.label),
+      el("div", { class: "dish-line" },
+        el("span", { class: "dish-name" }, d.name),
+        d.price && el("span", { class: "dish-price" }, `${d.price} kr`),
+      ),
+      d.description && el("p", { class: "dish-desc" }, d.description),
     )),
-    r.note && el("li", { class: "dish" }, el("small", {}, r.note)),
+    r.note && el("li", { class: "note" }, r.note),
   );
 }
 
@@ -205,10 +221,12 @@ function dishList(r) {
 function cardContent(r, { extra, source }) {
   return [
     el("div", { class: "card-head" },
-      el("span", { class: "dot" }),
+      el("span", { class: "logo" }, r.logo ? el("img", { src: r.logo, alt: "", loading: "lazy" }) : r.name[0]),
       el("h2", {}, r.name),
-      extra,
-      source && r.dishes?.length > 0 && r.source_url && el("a", { class: "source", href: r.source_url, target: "_blank", rel: "noopener", "aria-label": "Källa" }, "↗"),
+      el("div", { class: "meta" },
+        extra,
+        source && r.dishes?.length > 0 && r.source_url && el("a", { class: "source", href: r.source_url, target: "_blank", rel: "noopener", "aria-label": "Källa" }, "Källa ↗"),
+      ),
     ),
     dishList(r),
   ];
@@ -222,33 +240,52 @@ function renderMenus(date, restaurants, phase) {
   const myVote = store.get(`vote:${date}`);
   const isToday = date === stockholmNow().date;
 
+  const mine = myVote && restaurants.find((r) => r.id === myVote);
   let status = null;
-  if (voting) status = myVote ? `Hjulet snurrar ${clock(CFG.spinAt)}` : `Rösta före ${clock(CFG.spinAt)}`;
+  if (voting) status = mine
+    ? `Du har röstat på ${mine.name}. Du kan byta fram till ${clock(CFG.spinAt)}.`
+    : `Välj en restaurang och bekräfta. Röstningen stänger ${clock(CFG.spinAt)}.`;
   else if (isToday) status = `Röstningen öppnar ${clock(CFG.voteOpens)}`;
+
+  // Klick väljer, knappen i listen längst ned bekräftar. Klick på det valda avmarkerar.
+  const select = (id) => {
+    if (state.sending) return;
+    state.pending = state.pending === id || id === myVote ? null : id;
+    show(date);
+  };
 
   const cards = restaurants.map((r) => {
     const content = cardContent(r, {
-      extra: myVote === r.id ? el("span", { class: "check" }, "✓") : priceTag(r),
+      extra: myVote === r.id ? el("span", { class: "check" }, "Din röst") : priceTag(r),
       source: !voting,
     });
-    const attrs = { class: `card${myVote === r.id ? " picked" : ""}`, style: `--c:${r.color}` };
+    const classes = ["card", myVote === r.id && "picked", state.pending === r.id && "selected"].filter(Boolean).join(" ");
+    const attrs = { class: classes, style: `--c:${r.color}` };
     return el("li", {}, voting
       ? el("div", {
           ...attrs,
-          class: `${attrs.class} votable`,
+          class: `${classes} votable`,
           role: "button",
-          tabindex: myVote ? "-1" : "0",
-          "aria-disabled": myVote ? "true" : "false",
-          onclick: () => vote(date, r.id),
-          onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); vote(date, r.id); } },
+          tabindex: "0",
+          "aria-pressed": state.pending === r.id ? "true" : "false",
+          onclick: () => select(r.id),
+          onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(r.id); } },
         }, content)
       : el("div", attrs, content));
   });
 
-  main.replaceChildren(
-    status && el("p", { class: "status", id: "status" }, status),
-    el("ul", { class: `cards${myVote ? " voted" : ""}` }, cards),
+  const pending = voting && state.pending && restaurants.find((r) => r.id === state.pending);
+  const confirm = pending && el("div", { class: "confirm", style: `--c:${pending.color}` },
+    el("span", { class: "confirm-text" }, mine ? `Byt till ${pending.name}?` : `Rösta på ${pending.name}?`),
+    el("button", { class: "button ghost", disabled: state.sending, onclick: () => select(pending.id) }, "Avbryt"),
+    el("button", { class: "button primary", disabled: state.sending, onclick: () => vote(date, pending.id) }, state.sending ? "Skickar…" : "Bekräfta"),
   );
+
+  main.replaceChildren(...[
+    status && el("p", { class: "status", id: "status" }, status),
+    el("ul", { class: "cards" }, cards),
+    confirm,
+  ].filter(Boolean));
 }
 
 function wheelSvg(slices) {
@@ -270,7 +307,7 @@ function wheelSvg(slices) {
     }
     shape.setAttribute("fill", s.color);
     shape.setAttribute("stroke", "var(--bg)");
-    shape.setAttribute("stroke-width", "1.5");
+    shape.setAttribute("stroke-width", "1.2");
     svg.append(shape);
 
     if (s.end - s.start >= 20) {
@@ -328,6 +365,7 @@ async function renderResult(date, restaurants, { live, renderId }) {
 
   // Under en direktsänd snurr visas namnet och listan först när hjulet stannat, så att ordningen inte avslöjar vinnaren.
   const reveal = el("div", { class: `reveal${live ? " hidden" : ""}` },
+    el("p", { class: "eyebrow" }, "Hjulet valde"),
     el("h2", { class: "winner" }, winner.name),
     !total && el("p", { class: "status" }, "Inga röster – alla hade lika chans"),
     cards,
@@ -352,6 +390,7 @@ async function renderResult(date, restaurants, { live, renderId }) {
 async function show(date, { live = false } = {}) {
   const renderId = ++state.renderId;
   const phase = phaseFor(date);
+  if (state.date !== date || phase !== "voting") state.pending = null;
   state.date = date;
   state.phase = phase;
   renderHeader(date);
@@ -365,19 +404,48 @@ async function show(date, { live = false } = {}) {
 
 // ---------- Röstning ----------
 
+async function hit(date, id) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const response = await fetch(counterUrl("hit", date, id), { cache: "no-store" });
+      if (response.ok) return;
+    } catch {}
+    await sleep(800 * (attempt + 1));
+  }
+  throw new Error("Räknaren svarade inte");
+}
+
+// Ett byte som inte hann räknas av för den gamla restaurangen sparas och skickas nästa gång.
+async function settleOwed(date) {
+  const owed = store.get(`owed:${date}`) ?? [];
+  // Efter 11.30 får inget ändras, då skulle olika besökare få olika hjul.
+  if (!owed.length || phaseFor(date) !== "voting") return;
+  const left = [];
+  for (const id of owed) await hit(date, minusKey(id)).catch(() => left.push(id));
+  if (left.length) store.set(`owed:${date}`, left);
+  else store.remove(`owed:${date}`);
+}
+
 async function vote(date, id) {
-  if (store.get(`vote:${date}`) || phaseFor(date) !== "voting") return;
-  store.set(`vote:${date}`, id);
+  const previous = store.get(`vote:${date}`);
+  if (state.sending || previous === id || phaseFor(date) !== "voting") return;
+  state.sending = true;
   show(date);
   try {
-    const response = await fetch(counterUrl("hit", date, id), { cache: "no-store" });
-    if (!response.ok) throw new Error(response.status);
+    await hit(date, id);
   } catch {
-    store.remove(`vote:${date}`);
+    state.sending = false;
     await show(date);
     const status = $("status");
-    if (status) { status.textContent = "Rösten gick inte fram, försök igen"; status.classList.add("error"); }
+    if (status) { status.textContent = "Rösten gick inte fram, försök igen."; status.classList.add("error"); }
+    return;
   }
+  store.set(`vote:${date}`, id);
+  if (previous) store.set(`owed:${date}`, [...(store.get(`owed:${date}`) ?? []), previous]);
+  state.pending = null;
+  state.sending = false;
+  show(date);
+  await settleOwed(date);
 }
 
 // ---------- Navigering ----------
@@ -423,7 +491,7 @@ async function init() {
 
   if (TEST) {
     const banner = el("div", { class: "test-banner" });
-    document.body.append(banner);
+    document.body.prepend(banner);
     const pad = (n) => String(n).padStart(2, "0");
     const update = () => {
       const s = stockholmNow().seconds;
@@ -434,6 +502,7 @@ async function init() {
   }
 
   await show(start);
+  settleOwed(today);
 }
 
 init();

@@ -1,22 +1,25 @@
 :root {
-  --bg: #f6f5f2;
-  --surface: #ffffff;
-  --text: #17171a;
-  --muted: #6e6e76;
-  --line: #e7e5e0;
-  --accent: #17171a;
-  --radius: 16px;
+  --bg: #f6f5f1;
+  --surface: #fdfcfa;
+  --text: #1d1c1a;
+  --muted: #74706a;
+  --faint: #a29e96;
+  --line: #e5e2db;
+  --hover: #f1efea;
+  --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #111113;
-    --surface: #1b1b1f;
-    --text: #f2f2f3;
-    --muted: #9a9aa3;
-    --line: #2a2a30;
-    --accent: #f2f2f3;
+    --bg: #131312;
+    --surface: #1a1918;
+    --text: #edebe6;
+    --muted: #9c988f;
+    --faint: #6d6a64;
+    --line: #2a2826;
+    --hover: #211f1e;
     color-scheme: dark;
   }
 }
@@ -27,151 +30,211 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 16px/1.45 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font: 15px/1.5 var(--sans);
+  font-feature-settings: "cv11", "ss01";
   -webkit-font-smoothing: antialiased;
 }
 
 button { font: inherit; color: inherit; }
+a { color: inherit; }
 
-/* Dagväljare */
-.day {
+/* Sidhuvud */
+.top {
   position: sticky;
   top: 0;
   z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 640px;
+  max-width: 620px;
   margin: 0 auto;
-  padding: 20px 16px 16px;
+  padding: 22px 16px 18px;
   background: var(--bg);
 }
-.title { text-align: center; }
-.title h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
-.title p { margin: 2px 0 0; color: var(--muted); font-size: 15px; }
-.nav {
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: var(--surface);
-  font-size: 24px;
-  line-height: 1;
-  cursor: pointer;
-  transition: transform .15s, opacity .15s;
-}
-.nav:hover:not(:disabled) { transform: scale(1.06); }
-.nav:disabled { opacity: .25; cursor: default; }
-
-main { max-width: 640px; margin: 0 auto; padding: 0 16px 48px; }
-
-.status { margin: 0 0 16px; text-align: center; color: var(--muted); font-size: 14px; }
-.status.error { color: #d93025; }
-
-/* Menykort */
-.cards { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
-.card {
-  display: block;
-  width: 100%;
-  padding: 16px 18px;
-  border: 1.5px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  text-align: left;
-}
-.card.votable { cursor: pointer; transition: border-color .15s, transform .15s, opacity .2s; }
-.card.votable:hover:not([aria-disabled="true"]), .card.votable:focus-visible { border-color: var(--c); transform: translateY(-1px); outline: none; }
-.card.votable[aria-disabled="true"] { cursor: default; }
-.card.picked { border-color: var(--c); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 18%, transparent); }
-.cards.voted .card:not(.picked) { opacity: .5; }
-
-.card-head { display: flex; align-items: center; gap: 10px; }
-.card-head h2 { flex: 1; margin: 0; font-size: 17px; font-weight: 650; }
-.dot { width: 10px; height: 10px; flex: none; border-radius: 50%; background: var(--c); }
-.price { color: var(--muted); font-size: 14px; white-space: nowrap; }
-.check { font-size: 15px; font-weight: 700; color: var(--c); }
-
-.dishes { margin: 10px 0 0 20px; padding: 0; list-style: none; display: grid; gap: 6px; }
-.dish { font-size: 15px; }
-.dish small { display: block; color: var(--muted); font-size: 13px; }
-.label {
-  display: inline-block;
-  margin-right: 6px;
-  padding: 0 6px;
-  border-radius: 6px;
-  background: var(--bg);
+.eyebrow {
+  margin: 0 0 10px;
+  text-align: center;
   color: var(--muted);
   font-size: 11px;
   font-weight: 600;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  letter-spacing: .04em;
-  vertical-align: 1px;
 }
-.empty { margin: 8px 0 0 20px; color: var(--muted); font-size: 14px; }
-.source { color: var(--muted); text-decoration: none; font-size: 14px; }
-.menu-link { color: var(--text); font-weight: 600; text-decoration: none; }
-.menu-link:hover { text-decoration: underline; }
+.day { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.title { text-align: center; }
+.title h1 { margin: 0; font: 500 44px/1 var(--serif); letter-spacing: -0.01em; }
+.title p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+.nav {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: background .15s, opacity .15s;
+}
+.nav svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nav:hover:not(:disabled) { background: var(--hover); }
+.nav:disabled { opacity: .3; cursor: default; }
+
+main { max-width: 620px; margin: 0 auto; padding: 0 16px 64px; }
+
+.status { margin: 0 0 18px; text-align: center; color: var(--muted); font-size: 13px; }
+.status.error { color: #b3361f; }
+
+/* Menyerna: en lista med tunna linjer mellan restaurangerna */
+.cards {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.cards > li + li { border-top: 1px solid var(--line); }
+.card {
+  position: relative;
+  padding: 30px 24px 32px;
+  text-align: center;
+  transition: background .15s, opacity .2s;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--c);
+  opacity: 0;
+  transition: opacity .15s;
+}
+.card.votable { cursor: pointer; }
+.card.votable:hover:not([aria-disabled="true"]), .card.votable:focus-visible { background: var(--hover); outline: none; }
+.card.votable[aria-disabled="true"] { cursor: default; }
+.card.picked { background: color-mix(in srgb, var(--c) 7%, var(--surface)); }
+.card.picked::before { opacity: 1; }
+
+.card-head { display: grid; justify-items: center; gap: 10px; }
+.card-head h2 { margin: 0; font: 600 27px/1.1 var(--serif); letter-spacing: .005em; }
+.meta { display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.meta::before, .meta::after { content: ""; width: 28px; height: 1px; background: var(--line); }
+.meta:empty { display: none; }
+.meta > * + *::before { content: "·"; margin-right: 12px; color: var(--faint); }
+.check { color: var(--c); }
+.badge { color: color-mix(in srgb, var(--c) 80%, var(--text)); }
+.source { color: var(--faint); text-decoration: none; letter-spacing: 0; }
+.source:hover { color: var(--text); }
+
+/* Logga i en vit rund bricka med restaurangens färg som ring. Utan logga: initialen. */
+.logo {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 1.5px var(--surface), 0 0 0 3px var(--c);
+  color: var(--c);
+  font: 600 24px/1 var(--serif);
+}
+.logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+
+.dishes { display: grid; gap: 18px; max-width: 440px; margin: 22px auto 0; padding: 0; list-style: none; }
+.dish-label {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--faint);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.dish-line { font: 600 20px/1.25 var(--serif); }
+.dish-price { margin-left: 8px; color: var(--muted); font: 500 13px var(--sans); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dish-desc { margin: 3px 0 0; color: var(--muted); font: italic 500 16.5px/1.35 var(--serif); }
+.note { color: var(--muted); font: italic 500 16px var(--serif); }
+.empty { margin: 16px 0 0; color: var(--muted); font-size: 13.5px; }
+.menu-link { font-weight: 500; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.menu-link:hover { text-decoration-color: currentColor; }
 
 /* Hjulet */
-.result { display: grid; justify-items: center; gap: 20px; }
-.wheel { position: relative; width: min(340px, 86vw); aspect-ratio: 1; margin-top: 8px; }
-.wheel svg { width: 100%; height: 100%; display: block; }
+.result { display: grid; justify-items: center; gap: 28px; }
+.wheel { position: relative; width: min(300px, 78vw); aspect-ratio: 1; margin-top: 10px; }
+.wheel svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 6px 18px rgb(0 0 0 / .08)); }
 .wheel svg.spinning { transition: transform 7s cubic-bezier(.12, .7, .08, 1); }
-.wheel svg text { fill: #fff; font-size: 9px; font-weight: 650; pointer-events: none; }
+.wheel svg text { fill: #fff; font: 600 7.5px var(--sans); letter-spacing: .02em; pointer-events: none; }
 .pointer {
   position: absolute;
-  top: -10px;
+  top: -8px;
   left: 50%;
   width: 0;
   height: 0;
   transform: translateX(-50%);
-  border: 12px solid transparent;
-  border-top: 20px solid var(--accent);
+  border: 8px solid transparent;
+  border-top: 14px solid var(--text);
   border-bottom: 0;
-  filter: drop-shadow(0 2px 2px rgb(0 0 0 / .25));
 }
 .hub {
   position: absolute;
   inset: 50% auto auto 50%;
-  width: 16%;
+  width: 13%;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: var(--surface);
-  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 4px var(--bg);
 }
 
-.reveal { width: 100%; transition: opacity .4s, transform .4s; }
-.reveal.hidden { opacity: 0; transform: translateY(6px); }
-.winner { margin: 0 0 6px; text-align: center; font-size: 30px; letter-spacing: -0.02em; }
-.reveal .status { margin-bottom: 20px; }
-.reveal .cards { margin-top: 20px; }
-.reveal .status + .cards { margin-top: 0; }
+.reveal { width: 100%; transition: opacity .5s, transform .5s; }
+.reveal.hidden { opacity: 0; transform: translateY(8px); }
+.reveal > .eyebrow { margin-bottom: 4px; }
+.winner { margin: 0 0 8px; text-align: center; font: 500 52px/1 var(--serif); letter-spacing: -0.01em; }
+.reveal .status { margin-bottom: 0; }
+.reveal .cards { margin-top: 28px; }
 
-.badge {
-  padding: 1px 8px;
-  border-radius: 999px;
-  background: var(--c);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-}
-.votes { color: var(--muted); font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-
-/* Testläge (?tid=11.29) */
+/* Testläge (?tid=11.29): en remsa överst */
 .test-banner {
-  position: fixed;
-  bottom: 12px;
-  left: 50%;
-  z-index: 3;
-  transform: translateX(-50%);
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: #f5a524;
-  color: #17171a;
-  font-size: 13px;
-  font-weight: 650;
-  white-space: nowrap;
-  box-shadow: 0 2px 8px rgb(0 0 0 / .25);
+  padding: 7px 16px;
+  background: var(--text);
+  color: var(--bg);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
+.test-banner::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: #e0a43a; vertical-align: 1px; }
+
+/* Vald men inte bekräftad, och bekräftelsen längst ned */
+.card.selected { background: var(--hover); }
+.card.selected::before { opacity: .55; }
+.confirm {
+  position: sticky;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 10px 10px 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgb(0 0 0 / .12);
+}
+.confirm-text { flex: 1; font-weight: 500; }
+.button {
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s, opacity .15s;
+}
+.button:disabled { opacity: .6; cursor: default; }
+.button.ghost { border-color: var(--line); background: transparent; }
+.button.ghost:hover:not(:disabled) { background: var(--hover); }
+.button.primary { background: var(--text); color: var(--bg); }
+.button.primary:hover:not(:disabled) { opacity: .88; }
