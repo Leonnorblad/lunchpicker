@@ -14,6 +14,16 @@ Dagens lunchmenyer, omröstning 09.00–11.30 och lyckohjul kl 11.30.
 3. **Settings → Pages:** Source = *Deploy from a branch*, branch `main`, mapp `/docs`.
 4. **Actions → Hämta lunchmenyer → Run workflow** för att hämta dagens menyer direkt.
 
+## Som Claude Code-rutin
+
+Istället för GitHub Action kan menyerna hämtas av en [Claude Code-rutin](https://code.claude.com/docs/en/routines): en Claude-session som startar i molnet varje vardagsmorgon, klonar repot, kör skillen `fetch-lunch-menus` och pushar till `main`. Claude kan prova flera vägar (undersidor, PDF, källkod, sökning) när en sida inte går att läsa direkt. Körningen dras från Claude-abonnemanget, så ingen OpenAI-nyckel behövs, men det blir inga Langfuse-traces. Varje körning syns istället som en session på claude.ai.
+
+- **Skill:** [`.claude/skills/fetch-lunch-menus/SKILL.md`](.claude/skills/fetch-lunch-menus/SKILL.md). Går också att köra lokalt i Claude Code: `/fetch-lunch-menus` (bara spara) eller `/fetch-lunch-menus publicera`.
+- **Sparande:** `scripts/save_menu.py` kontrollerar Claudes utkast, behåller tidigare hittade menyer och skriver filerna. `python3 scripts/save_menu.py --check <fil>` kontrollerar en befintlig menyfil.
+- **Rutinens inställningar och prompt:** [`.claude/routines/fetch-lunch-menus.md`](.claude/routines/fetch-lunch-menus.md).
+
+Låt bara en av dem köra på schema. När rutinen fungerar: ta bort `schedule:` ur `.github/workflows/fetch-menus.yml` och behåll Action för manuell körning.
+
 ## Ändra restauranger
 
 Redigera `docs/data/restaurants.json`. `menu_url` ska peka på en sida som visar veckans eller dagens meny (HTML, PDF eller bild). Lämnas den tom söker Luna på webben istället. Det är dyrare och mindre pålitligt.
