@@ -1,6 +1,6 @@
 {
   "date": "2026-10-16",
-  "fetched_at": "2026-10-16T13:35:58+02:00",
+  "fetched_at": "2026-10-16T13:51:17+02:00",
   "restaurants": [
     {
       "id": "reimers",
@@ -11,7 +11,7 @@
         {
           "label": null,
           "name": "Pankopanerad fläskschnitzel",
-          "description": "Klyftpotatis, soltorkat tomatsmör och skysås"
+          "description": "Klyftpotatis, soltorkad tomatsmör och skysås"
         },
         {
           "label": null,
@@ -51,22 +51,22 @@
         {
           "label": null,
           "name": "Entrecôte",
-          "description": "Serveras med potatismos och svampsås."
+          "description": "Potatismos och svampsås"
         },
         {
           "label": null,
           "name": "Lax",
-          "description": "Serveras med krämig citronsås, kokt potatis och gröna ärtor."
+          "description": "Krämig citronsås, kokt potatis och gröna ärtor"
         },
         {
           "label": "Veckans vegetariska alternativ",
           "name": "Raggmunk",
-          "description": "Serveras med lingon och sallad."
+          "description": "Lingon och sallad"
         },
         {
           "label": "Veckans vegetariska alternativ",
           "name": "Vegetarisk pasta",
-          "description": null
+          "description": "Alltid på Lilla Ängel"
         }
       ],
       "price": 135,
@@ -90,7 +90,7 @@
       "dishes": [
         {
           "label": null,
-          "name": "Tempurafriterade grönsaker",
+          "name": "Tempura friterade grönsaker",
           "description": "Sojasås, chilimajo, koriander och ris"
         },
         {
@@ -124,7 +124,7 @@
       "found": false,
       "dishes": [],
       "price": null,
-      "note": "Lunchserveringen är stängd tills vidare och ingen veckomeny finns publicerad."
+      "note": "menu_url omdirigeras till Gefle Gourmetservice i Gävle; ingen meny hittades"
     }
   ]
 }
