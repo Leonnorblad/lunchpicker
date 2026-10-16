@@ -1,6 +1,6 @@
 {
   "date": "2026-10-16",
-  "fetched_at": "2026-10-16T14:44:07+02:00",
+  "fetched_at": "2026-10-16T14:53:59+02:00",
   "restaurants": [
     {
       "id": "reimers",
@@ -11,7 +11,8 @@
         {
           "label": null,
           "name": "Pankopanerad fläskschnitzel",
-          "description": "Klyftpotatis, soltorkad tomatsmör och skysås"
+          "description": "Klyftpotatis, soltorkad tomatsmör och skysås",
+          "type": "kott"
         },
         {
           "label": null,
@@ -21,8 +22,8 @@
         },
         {
           "label": "Veckans sallad",
-          "name": "Sallad med fetaost",
-          "description": "Rostade betor, grönsaker och balsamicokräm",
+          "name": "Sallad med fetaost, rostade betor, grönsaker och balsamicokräm",
+          "description": null,
           "type": "vegetarisk"
         },
         {
@@ -44,7 +45,8 @@
         {
           "label": null,
           "name": "Stekt fläskfilé",
-          "description": "Kantarellsås, potatismos & timjansrostad morot"
+          "description": "Kantarellsås, potatismos & timjansrostad morot",
+          "type": "kott"
         },
         {
           "label": null,
@@ -71,7 +73,8 @@
         {
           "label": null,
           "name": "Entrecôte",
-          "description": "Potatismos och svampsås"
+          "description": "Potatismos och svampsås",
+          "type": "kott"
         },
         {
           "label": null,
@@ -98,7 +101,8 @@
         {
           "label": null,
           "name": "Nattbakad kalvtritip",
-          "description": "Chilibearnaise, rödvinssås och rostad potatis"
+          "description": "Chilibearnaise, rödvinssås och rostad potatis",
+          "type": "kott"
         },
         {
           "label": null,
@@ -130,7 +134,8 @@
         {
           "label": null,
           "name": "Tunnbrödsrulle",
-          "description": "Chorizo, räksallad och rostad lök"
+          "description": "Chorizo, räksallad och rostad lök",
+          "type": "kott"
         },
         {
           "label": null,
@@ -147,7 +152,8 @@
           "label": null,
           "name": "Köttbullar på nöt och kalv",
           "description": "Gräddsås, rårörda lingon, pressgurka och potatispuré",
-          "price": 154
+          "price": 154,
+          "type": "kott"
         }
       ],
       "price": 144,
