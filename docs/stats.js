@@ -13,6 +13,9 @@ const DEMO = params.has("exempel");
 const WEEKDAYS = ["Mån", "Tis", "Ons", "Tor", "Fre"];
 const svgNS = "http://www.w3.org/2000/svg";
 
+// Diagrammen ritas i panelens verkliga bredd, så att texten behåller sin storlek på mobilen.
+const chartWidth = () => Math.round(Math.min(780, Math.max(280, $("stats").clientWidth - 50)));
+
 // ---------- Hjälpare ----------
 
 function svg(tag, attrs = {}, ...children) {
@@ -283,14 +286,14 @@ function votesPerDay(s) {
   if (!s.totalVotes) {
     return section("Röster per dag", null, el("p", { class: "empty-state" }, "Ingen har röstat än. Grafen fylls på när rösterna kommer in."));
   }
-  const W = 640, H = 240, m = { t: 12, r: 8, b: 26, l: 30 };
+  const W = chartWidth(), H = 240, m = { t: 12, r: 8, b: 26, l: 30 };
   const iw = W - m.l - m.r, ih = H - m.t - m.b;
   const ticks = niceTicks(Math.max(...s.days.map((d) => d.total)));
   const yMax = ticks.at(-1);
   const y = (v) => m.t + ih - (v / yMax) * ih;
   const band = iw / s.days.length;
   const bw = Math.max(3, Math.min(28, band * 0.7));
-  const labelEvery = Math.ceil(s.days.length / 8);
+  const labelEvery = Math.ceil(s.days.length / Math.max(3, Math.floor(W / 80)));
 
   const chart = svg("svg", { viewBox: `0 0 ${W} ${H}`, class: "chart", role: "img", "aria-label": "Röster per dag, staplade per restaurang" },
     ticks.map((t) => svg("g", {},
@@ -332,7 +335,7 @@ function legend(s) {
 
 // Linjediagram med hårkors. series: [{ entity, points: [{ date, value }] }]
 function lineChart({ series, dates, label, yFormat = String, yMin = 0, step = false }) {
-  const W = 640, H = 260, m = { t: 14, r: 96, b: 26, l: 40 };
+  const W = chartWidth(), H = 260, m = { t: 14, r: W < 420 ? 84 : 96, b: 26, l: 36 };
   const iw = W - m.l - m.r, ih = H - m.t - m.b;
   const values = series.flatMap((s) => s.points.map((p) => p.value));
   const lo = yMin === "auto" ? Math.floor((Math.min(...values) - 5) / 10) * 10 : yMin;
@@ -340,7 +343,7 @@ function lineChart({ series, dates, label, yFormat = String, yMin = 0, step = fa
   const yMax = ticks.at(-1);
   const x = (date) => m.l + (dates.length < 2 ? iw / 2 : (dates.indexOf(date) / (dates.length - 1)) * iw);
   const y = (v) => m.t + ih - ((v - lo) / (yMax - lo || 1)) * ih;
-  const labelEvery = Math.ceil(dates.length / 7);
+  const labelEvery = Math.ceil(dates.length / Math.max(3, Math.floor(W / 90)));
 
   const pathFor = (pts) => pts.map((p, i) => {
     const px = x(p.date), py = y(p.value);
@@ -542,6 +545,12 @@ async function init() {
       if (n > 3) main.replaceChildren(el("p", { class: "status" }, `Hämtar röster … ${i + 1} av ${n} dagar`));
     });
     render(summarize(days));
+    // Rita om diagrammen när bredden ändras (t.ex. när telefonen vrids)
+    let lastWidth = chartWidth(), timer;
+    window.addEventListener("resize", () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { if (chartWidth() !== lastWidth) { lastWidth = chartWidth(); render(summarize(days)); } }, 150);
+    });
   } catch (error) {
     main.replaceChildren(el("p", { class: "status error" }, "Kunde inte hämta statistiken. Ladda om sidan."));
     console.error(error);

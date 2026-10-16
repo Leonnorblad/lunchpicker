@@ -1,63 +1,72 @@
+<div align="center">
+
 # Lunch
 
-Dagens lunchmenyer, omröstning 09.00–11.30 och lyckohjul kl 11.30.
+**Var ska vi äta idag?**<br>
+Dagens menyer från restaurangerna runt kontoret, en omröstning på förmiddagen<br>
+och ett lyckohjul som bestämmer klockan halv tolv.
 
-- **Menyer:** en [Claude Code-rutin](#claude-code-rutinen) körs varje vardagsmorgon. Den hämtar varje restaurangs menysida, plockar ut dagens rätter, sparar dem i `docs/data/menus/<datum>.json` och pushar till `main`.
-- **Sida:** `docs/` publiceras med GitHub Pages.
-- **Statistik:** är avstängd tills vidare (`showStats: false` i `docs/config.js`), men rösterna arkiveras ändå. Påslagen öppnar knappen uppe till höger `statistik.html` med topplista, hjulets val dag för dag, röster över tid och mer. `statistik.html?exempel` visar sidan med påhittad data. Dagar då ingen röstade (t.ex. när ingen är på kontoret) räknas inte som vinster, eftersom hjulet då valde helt slumpmässigt. Ett filter överst tar med dem.
-- **Ljust/mörkt:** följer systemet. Knappen uppe till vänster byter, och valet sparas i webbläsaren.
-- **Röster:** räknare hos [Abacus](https://abacus.jasoncameron.dev). Ingen databas och ingen nyckel. Hjulet räknas fram på samma sätt i varje webbläsare (utifrån datum och röster), så alla ser samma resultat.
+### [→ Öppna lunchsidan](https://leonnorblad.github.io/lunchpicker/)
 
-## Kom igång
+<br>
 
-1. Skapa ett repo på GitHub och pusha projektet.
-2. **Settings → Pages:** Source = *Deploy from a branch*, branch `main`, mapp `/docs`.
-3. Skapa rutinen enligt [`.claude/routines/fetch-lunch-menus.md`](.claude/routines/fetch-lunch-menus.md). Claude GitHub App måste vara installerad på repot, annars nekas pushen.
+<img src="screenshots/rosta.png" width="260" alt="Dagens menyer, med Reimers vald och en rad längst ned för att bekräfta rösten">&nbsp;&nbsp;
+<img src="screenshots/hjulet.png" width="260" alt="Lyckohjulet med restaurangerna och dagens vinnare">&nbsp;&nbsp;
+<img src="screenshots/morkt.png" width="260" alt="Sabis meny i mörkt läge">
 
-## Claude Code-rutinen
+<sub>Rösta på menyerna · hjulet bestämmer · samma sida i mörkt läge</sub>
 
-Menyerna hämtas av en [Claude Code-rutin](https://code.claude.com/docs/en/routines): en Claude-session som startar i molnet varje vardagsmorgon, klonar repot, kör skillen `fetch-lunch-menus` och pushar till `main`. Claude kan prova flera vägar (undersidor, PDF, källkod, sökning) när en sida inte går att läsa direkt. Körningen dras från Claude-abonnemanget, så inga API-nycklar behövs. Varje körning syns som en session på claude.ai, där det går att läsa vad Claude gjorde för varje restaurang.
+</div>
 
-- **Skill:** [`.claude/skills/fetch-lunch-menus/SKILL.md`](.claude/skills/fetch-lunch-menus/SKILL.md). Går också att köra lokalt i Claude Code: `/fetch-lunch-menus` (bara spara) eller `/fetch-lunch-menus publicera`.
-- **Sparande:** `scripts/save_menu.py` kontrollerar Claudes utkast, behåller tidigare hittade menyer och skriver filerna. `python3 scripts/save_menu.py --check <fil>` kontrollerar en befintlig menyfil.
-- **Röstarkiv:** `scripts/archive_votes.py` sparar avslutade dagars röster i `docs/data/votes.json`. Skillen kör det varje morgon. Sidan och statistiken läser arkivet före Abacus, så gamla dagar är fasta även om `namespace` byts.
-- **Rutinens inställningar och prompt:** [`.claude/routines/fetch-lunch-menus.md`](.claude/routines/fetch-lunch-menus.md).
-- **Köra om:** *Run now* på rutinens sida på claude.ai/code/routines. Det går att köra om samma dag: en meny som redan hittats skrivs aldrig över av en miss.
+<br>
 
-## Ändra restauranger
+## Så går en dag till
 
-Redigera `docs/data/restaurants.json`. `menu_url` ska peka på en sida som visar veckans eller dagens meny (HTML, PDF eller bild). Lämnas den tom söker Claude på webben istället. Det är mindre pålitligt.
+| När | Vad händer |
+|---|---|
+| **Morgonen** | Dagens menyer hämtas automatiskt från restaurangernas egna sidor: rätter, tillbehör och pris, ordagrant som de står där. |
+| **09.00–11.30** | Rösta. Klicka på stället du vill äta på och bekräfta. Ändrar du dig går det att byta fram till 11.30. |
+| **11.30** | Hjulet snurrar. Varje restaurang får en bit som är lika stor som dess andel av rösterna, så den populäraste har störst chans, men inget är avgjort i förväg. Alla ser samma hjul och samma vinnare. Har ingen röstat har alla lika stor chans. |
+| **Efteråt** | Alla menyer finns kvar under hjulet, med den valda restaurangen först. |
 
-Lägg också till den nya domänen under *Allowed domains* i rutinens environment, annars kan rutinen inte nå sidan.
+Bläddra mellan dagarna med pilarna. Knappen uppe till vänster byter mellan ljust och mörkt läge.
 
-Använd restaurangens egen sida när det går. Sätt `"link_only": true` för ställen vars källa inte får hämtas och visas på sidan (t.ex. Bruket, vars meny ligger hos Compass Group, som bara tillåter länkar). De visas då med en länk "Se menyn ↗" och finns kvar i omröstningen.
+## Restaurangerna
 
-`"logo": "logos/<id>.png"` visar restaurangens logga i en rund bricka. Utan logga visas initialen.
+| | Restaurang | Menyn kommer från |
+|---|---|---|
+| <img src="docs/logos/reimers.png" width="28"> | **Reimers** | [reimers.se](https://www.reimers.se/lunch/) |
+| <img src="docs/logos/matronan.png" width="28"> | **Matronan** | [matronan.se](https://www.matronan.se/) |
+| <img src="docs/logos/lilla-angel.png" width="28"> | **Lilla Ängel** | [lillaangel.com](https://www.lillaangel.com/frosunda/lunch/) |
+| <img src="docs/logos/bra-mat-no8.png" width="28"> | **Bra Mat No8** | [bramat8.se](https://www.bramat8.se/lunch) |
+| <img src="docs/logos/sabis.png" width="28"> | **Sabis Ulriksdal** | [sabis.se](https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/) |
+| | **Bruket** | Bara en länk till [menyn hos Compass Group](https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se), som inte tillåter att den visas här |
 
-## Lokalt
+Hittas ingen meny en dag står det så, med en länk till restaurangens sida. Inga rätter hittas på.
 
-Skripten använder bara Pythons standardbibliotek, så inget behöver installeras.
+## Statistik (kommer snart)
 
-```sh
-python3 -m http.server -d docs 8000   # sidan på http://localhost:8000
-```
+Rösterna och hjulets val sparas varje dag, och när det har samlats lite mer kommer en statistiksida:
+topplista, hjulets val dag för dag, röster över tid, vilka veckodagar som vinner och lunchpriserna.
+Dagar då ingen röstade räknas inte, så statistiken visar vad vi faktiskt valde.
 
-Menyerna hämtas lokalt med `/fetch-lunch-menus` i Claude Code (sparar bara) eller `/fetch-lunch-menus publicera` (pushar också till `main`). `--date 2026-10-16` hämtar ett annat datum.
+<div align="center">
 
-### Testa röstning och hjul
+<img src="screenshots/statistik.png" width="260" alt="Statistiksidan med nyckeltal och topplista, exempeldata">&nbsp;&nbsp;
+<img src="screenshots/statistik-grafer.png" width="260" alt="Diagram över röster per dag och antal vinster över tid, exempeldata">
 
-Lägg till `?tid=` för att låtsas att klockan är något annat idag. Klockan går vidare därifrån, så sidan byter läge av sig själv.
+<sub>Förhandsvisning med påhittad exempeldata</sub>
 
-- `?tid=08.59.50`: före röstningen, som öppnar efter tio sekunder.
-- `?tid=10.00`: under röstningen.
-- `?tid=11.29.40`: rösta och se hjulet snurra kl 11.30.
-- `&datum=2026-10-15`: en annan dag.
-
-I testläget visas en gul etikett längst ned. Rösterna hamnar i egna räknare som är nya vid varje sidladdning, så de riktiga rösterna påverkas inte. Inget sparas i webbläsaren.
+</div>
 
 ## Bra att veta
 
-- Man väljer en restaurang och bekräftar. Fram till 11.30 går det att byta: det räknas som +1 på den nya restaurangen och +1 på den gamlas `_minus`-räknare, eftersom Abacus bara kan räkna ned med en hemlig nyckel.
-- Röstspärren (en röst per webbläsare och dag, bara 09.00–11.30) finns i webbläsaren, inte på servern. Det räcker för kollegor, men det går att fuska.
-- Abacus tillåter 30 anrop per 10 sekunder per IP-adress, och varje besök efter 11.30 läser två räknare per restaurang (röster och bytta röster). Sidan sprider ut anropen och försöker igen vid behov. Blir ni många på samma kontorsnät kan resultatet ta några sekunder att dyka upp.
-- Byt `namespace` i `docs/config.js` för att nollställa alla röster.
+- Varje webbläsare har en röst per dag. Rösterna är anonyma.
+- Menyerna hämtas av en [Claude Code-rutin](https://code.claude.com/docs/en/routines) som körs i molnet varje vardagsmorgon.
+- Sidan är statisk och ligger på GitHub Pages. Ingen inloggning och inga kakor, bara det din webbläsare själv sparar
+  (din röst och om du valt mörkt läge).
+
+---
+
+<sub>Ska du ändra något i koden? Börja med [`CLAUDE.md`](CLAUDE.md) och underhållsguiden i
+[`.claude/skills/maintain-lunch/SKILL.md`](.claude/skills/maintain-lunch/SKILL.md).</sub>
