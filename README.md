@@ -10,11 +10,17 @@ och ett lyckohjul som bestämmer klockan halv tolv.
 
 <br>
 
+<img src="screenshots/dator.png" width="840" alt="Lunchsidan på en dator: dagens menyer från sex restauranger i tre kolumner">
+
+<sub>På datorn ligger menyerna sida vid sida</sub>
+
+<br><br>
+
 <img src="screenshots/rosta.png" width="260" alt="Dagens menyer, med Reimers vald och en rad längst ned för att bekräfta rösten">&nbsp;&nbsp;
 <img src="screenshots/hjulet.png" width="260" alt="Lyckohjulet med restaurangerna och dagens vinnare">&nbsp;&nbsp;
 <img src="screenshots/morkt.png" width="260" alt="Sabis meny i mörkt läge">
 
-<sub>Rösta på menyerna · hjulet bestämmer · samma sida i mörkt läge</sub>
+<sub>På mobilen: rösta · hjulet bestämmer · mörkt läge</sub>
 
 </div>
 
@@ -29,7 +35,8 @@ och ett lyckohjul som bestämmer klockan halv tolv.
 | **11.30** | Hjulet snurrar. Varje restaurang får en bit som är lika stor som dess andel av rösterna, så den populäraste har störst chans, men inget är avgjort i förväg. Alla ser samma hjul och samma vinnare. Har ingen röstat har alla lika stor chans. |
 | **Efteråt** | Alla menyer finns kvar under hjulet, med den valda restaurangen först. |
 
-Bläddra mellan dagarna med pilarna. Knappen uppe till vänster byter mellan ljust och mörkt läge.
+Små ikoner efter rätterna visar vad som är fisk, fågel, vegetariskt eller veganskt. Bläddra mellan dagarna med pilarna,
+och byt mellan ljust och mörkt läge med knappen uppe till vänster.
 
 ## Restaurangerna
 

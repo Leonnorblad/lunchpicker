@@ -211,6 +211,11 @@ färgad ring, namn, en metarad (pris · källa · röster), rätter centrerade m
 eget pris) och tillbehören i kursiv under. Under korten visas en teckenförklaring för dagens ikoner.
 Färg betyder alltid en restaurang; därför är typikonerna i textens dämpade färg och värmekartan i en neutral skala.
 
+Layout: under 900 px är menyerna en enda lista (mobil). Från 900 px (`@media (min-width: 900px)` sist i `style.css`) ligger
+de i ett rutnät med `minmax(340px, 1fr)`: två kolumner på mindre skärmar, tre på stora, max 1180 px. Dagväljaren och
+bekräftelseraden är alltid högst 588 px och centrerade; ljust/mörkt- och statistikknappen sitter i sidhuvudets hörn.
+Testa alltid både 375 px, ca 1000 px och 1280 px.
+
 ### Lägga till en typikon
 1. `save_menu.py`: lägg till värdet i `DISH_TYPES`.
 2. `app.js`: lägg till i `DISH_TYPES` med `label` och `paths` (24×24, bara linjer, rundade ändar, samma stil som de andra).
