@@ -83,6 +83,7 @@ Brukets sida (Mashie): dagens datum står först ("16 okt" / "Fredag") och följ
   | Tunnbrödsrulle med chorizo, räksallad och rostad lök | Tunnbrödsrulle med chorizo | Räksallad och rostad lök |
   | Sallad med fetaost, rostade betor, grönsaker och balsamicokräm | Sallad med fetaost | Rostade betor, grönsaker och balsamicokräm |
   | Ugnsbakad fetaost med tomat, oliver och citron serveras med smördegssnurra | Ugnsbakad fetaost med tomat, oliver och citron | Smördegssnurra |
+  | Nattbakad Karre”ramen”-gari, pak choi, risnudlar, sojabönor, rättika & ägg | Nattbakad Karre ”ramen” | Gari, pak choi, risnudlar, sojabönor, rättika & ägg |
   | Äppelpaj med tillbehör | Äppelpaj med tillbehör | (utelämna) |
 
   Orden i sig ändras aldrig, bara var raden delas. Är du osäker, låt raden vara hel i `name`.

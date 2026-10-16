@@ -1,6 +1,6 @@
 {
   "date": "2026-10-16",
-  "fetched_at": "2026-10-16T15:21:44+02:00",
+  "fetched_at": "2026-10-16T15:22:24+02:00",
   "restaurants": [
     {
       "id": "reimers",
@@ -176,8 +176,8 @@
         },
         {
           "label": "Världens smaker",
-          "name": "Nattbakad Karre”ramen”-gari",
-          "description": "Pak choi, risnudlar, sojabönor, rättika & ägg",
+          "name": "Nattbakad Karre ”ramen”",
+          "description": "Gari, pak choi, risnudlar, sojabönor, rättika & ägg",
           "type": "kott"
         }
       ],
