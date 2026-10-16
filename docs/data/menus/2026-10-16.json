@@ -1,6 +1,6 @@
 {
   "date": "2026-10-16",
-  "fetched_at": "2026-10-16T14:29:33+02:00",
+  "fetched_at": "2026-10-16T14:30:30+02:00",
   "restaurants": [
     {
       "id": "reimers",
@@ -100,8 +100,8 @@
         },
         {
           "label": "Fredagsgottis",
-          "name": "Äppelpaj",
-          "description": "Tillbehör"
+          "name": "Äppelpaj med tillbehör",
+          "description": null
         }
       ],
       "price": 140,

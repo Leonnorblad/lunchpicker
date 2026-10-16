@@ -28,6 +28,7 @@ Exit 0 = sparat, 1 = utkastet underkänt (inget skrivs).
 import argparse
 import datetime as dt
 import json
+import re
 import sys
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -57,8 +58,14 @@ def normalize_dish(dish, where: str) -> dict:
     if extra := set(dish) - DISH_KEYS:
         raise Invalid(f"{where}: okända fält {sorted(extra)}")
     out = {"label": dish.get("label"), "name": dish.get("name"), "description": dish.get("description")}
-    if dish.get("price") is not None:
-        out["price"] = dish["price"]
+    price = dish.get("price")
+    # Ett pris sist i beskrivningen, "Gräddsås och lingon (154 kr)", flyttas till rättens prisfält
+    if price is None and isinstance(out["description"], str):
+        if m := re.search(r"\s*\(?(\d{2,3})\s*(?:kr|:-)\)?\s*$", out["description"]):
+            price = int(m.group(1))
+            out["description"] = out["description"][:m.start()].strip(" ,") or None
+    if price is not None:
+        out["price"] = price
     return out
 
 
