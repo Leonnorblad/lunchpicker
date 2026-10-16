@@ -71,10 +71,21 @@ Brukets sida (Mashie): dagens datum står först ("16 okt" / "Fredag") och följ
 - `name`: rättens namn. VERSALER skrivs om till normal versalisering, annars som i källan.
 - Mellanslag kring skiljetecken rättas: "ricotta , spenat" blir "ricotta, spenat", "mozzarella& tomat" blir "mozzarella & tomat", och ett bindestreck mellan rätt och tillbehör ("Cannelloni- ricotta") är en delning som " med ". Orden ändras inte.
 - `description`: tillbehören eller beskrivningen som i källan. Ta bort inledande "Serveras med" eller "Med" och avslutande punkt, och gör om första bokstaven till versal. Annars `null`.
-- **Rätt och tillbehör på samma rad delas upp**, så att alla restauranger visas likadant (namnet stort, tillbehören i kursiv under). Dela vid första " med ", " serveras med " eller kommatecken efter själva rätten:
-  `"Stekt fläskfilé med kantarellsås, potatismos & timjansrostad morot"` → `name: "Stekt fläskfilé"`, `description: "Kantarellsås, potatismos & timjansrostad morot"`.
-  Dela inte där "med" hör till rättens namn ("Sallad med fetaost", "Fiskgryta med räkor" när det är hela rätten). Är du osäker, låt raden vara hel i `name`. Orden i sig ändras aldrig.
-  Dela inte heller när det enda som blir kvar är något allmänt som "med tillbehör": `"Äppelpaj med tillbehör"` är hela namnet.
+- **Rätt och tillbehör delas upp på två rader**, så att alla restauranger visas likadant (namnet stort, tillbehören i kursiv under):
+  - `name` (första raden) = det man äter: själva rätten **med sin huvudingrediens eller sitt huvudval** (proteinet, fyllningen, "kyckling eller pannoumi").
+  - `description` (andra raden) = **bara tillbehör**: såser, sallader, potatis, ris, garnering.
+  - Dela där tillbehören börjar, ofta vid ett kommatecken, " med ", " serveras med " eller ett bindestreck. Det första " med " hör ofta till rätten och ska stå kvar i namnet.
+
+  | Källan | `name` | `description` |
+  |---|---|---|
+  | Stekt fläskfilé med kantarellsås, potatismos & timjansrostad morot | Stekt fläskfilé | Kantarellsås, potatismos & timjansrostad morot |
+  | Caesarsallad med svensk kyckling eller pannoumi, bacon, romansallad och grana padano | Caesarsallad med svensk kyckling eller pannoumi | Bacon, romansallad och grana padano |
+  | Tunnbrödsrulle med chorizo, räksallad och rostad lök | Tunnbrödsrulle med chorizo | Räksallad och rostad lök |
+  | Sallad med fetaost, rostade betor, grönsaker och balsamicokräm | Sallad med fetaost | Rostade betor, grönsaker och balsamicokräm |
+  | Ugnsbakad fetaost med tomat, oliver och citron serveras med smördegssnurra | Ugnsbakad fetaost med tomat, oliver och citron | Smördegssnurra |
+  | Äppelpaj med tillbehör | Äppelpaj med tillbehör | (utelämna) |
+
+  Orden i sig ändras aldrig, bara var raden delas. Är du osäker, låt raden vara hel i `name`.
 - `label`: kategorin som källan själv skriver ut, ordagrant ("Veckans sallad", "Fredagsgottis"). Hitta inte på någon egen. Annars utelämna. Den sparas men visas inte på sidan.
 - `type`: vad rätten är, visas som en ikon. Du avgör det utifrån rättens namn, beskrivning och kategori:
   - `kott`: fläsk, nöt, kalv, lamm, vilt, korv, bacon, köttbullar (fläskschnitzel, entrecôte, kalvtritip, chorizo).
