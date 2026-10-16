@@ -1,6 +1,6 @@
 {
   "date": "2026-10-16",
-  "fetched_at": "2026-10-16T14:53:59+02:00",
+  "fetched_at": "2026-10-16T14:59:38+02:00",
   "restaurants": [
     {
       "id": "reimers",
@@ -46,18 +46,21 @@
           "label": null,
           "name": "Stekt fläskfilé",
           "description": "Kantarellsås, potatismos & timjansrostad morot",
+          "price": 129,
           "type": "kott"
         },
         {
           "label": null,
           "name": "Fish Taco",
           "description": "Ris i tortillabröd, mango salsa & gräddfil",
+          "price": 139,
           "type": "fisk"
         },
         {
           "label": null,
           "name": "Vegetarisk grönsaksgryta",
           "description": "Ris, fetaost & rostade frön",
+          "price": 125,
           "type": "vegetarisk"
         }
       ],
@@ -106,8 +109,8 @@
         },
         {
           "label": null,
-          "name": "Ugnsbakad fetaost",
-          "description": "Tomat, oliver och citron serveras med smördegssnurra",
+          "name": "Ugnsbakad fetaost med tomat, oliver och citron",
+          "description": "Smördegssnurra",
           "type": "vegetarisk"
         },
         {
@@ -145,8 +148,8 @@
         },
         {
           "label": null,
-          "name": "Caesarsallad",
-          "description": "Svensk kyckling eller pannoumi, bacon, romansallad och grana padano"
+          "name": "Caesarsallad med svensk kyckling eller pannoumi, bacon, romansallad och grana padano",
+          "description": null
         },
         {
           "label": null,
