@@ -68,6 +68,9 @@ Titta på raden `URL:` som `page_text.py` skriver ut. Har sidan skickat dig vida
 
 - `name`: rättens namn. VERSALER skrivs om till normal versalisering, annars som i källan.
 - `description`: tillbehören eller beskrivningen som i källan. Ta bort inledande "Serveras med" eller "Med" och avslutande punkt, och gör om första bokstaven till versal. Annars `null`.
+- **Rätt och tillbehör på samma rad delas upp**, så att alla restauranger visas likadant (namnet stort, tillbehören i kursiv under). Dela vid första " med ", " serveras med " eller kommatecken efter själva rätten:
+  `"Stekt fläskfilé med kantarellsås, potatismos & timjansrostad morot"` → `name: "Stekt fläskfilé"`, `description: "Kantarellsås, potatismos & timjansrostad morot"`.
+  Dela inte där "med" hör till rättens namn ("Sallad med fetaost", "Fiskgryta med räkor" när det är hela rätten). Är du osäker, låt raden vara hel i `name`. Orden i sig ändras aldrig.
 - `label`: kategorin som källan själv skriver ut, ordagrant ("Kött", "Fisk", "Veckans vegetariska alternativ"). Hitta inte på någon egen. Annars `null`.
 - `price` på restaurangen: ordinarie lunchpris i hela kronor. Leta efter det: det står ofta i rubriken ("Pris 144:-", "Dagens lunch 135 kr"), vid öppettiderna eller sist på sidan. Utelämna det bara om det verkligen inte står någonstans.
 - `price` på en rätt: bara när just den rätten kostar något annat än ordinarie pris (t.ex. köttbullar 154 kr när lunchen annars är 144 kr), eller när sidan bara har pris per rätt. Ange då ordinarie pris på restaurangen som det vanligaste priset.
