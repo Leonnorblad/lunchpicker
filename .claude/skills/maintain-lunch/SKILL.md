@@ -47,6 +47,7 @@ Ingen byggprocess, inga beroenden: statiska filer i `docs/`, vanlig JavaScript o
 | `docs/logos/<id>.png` | Restaurangloggor, ca 128 px, kvadratiska. |
 | `scripts/page_text.py` | Hämtar en URL: HTML blir text, PDF/bild sparas som fil. Skriver ut slutlig `URL:` (efter omdirigering) och menylänkar. |
 | `scripts/save_menu.py` | Kontrollerar ett utkast, fyller i namn/länk från `restaurants.json`, behåller tidigare hittade menyer, skriver menyfilen och `index.json`. `--check <fil>` kontrollerar bara formatet. |
+| `scripts/stamp_assets.py` | Sätter `?v=<hash av innehållet>` på CSS/JS i `docs/*.html`, så att webbläsare inte kör gammal kod. `--check` kontrollerar. |
 | `scripts/archive_votes.py` | Läser Abacus för avslutade dagar som saknas i `votes.json` och sparar dem. `--dry-run` skriver inget. |
 | `.claude/skills/fetch-lunch-menus/SKILL.md` | Instruktionerna rutinen följer för att hämta menyer. |
 | `.claude/routines/fetch-lunch-menus.md` | Rutinens inställningar, domänlista och prompt. |
@@ -238,6 +239,7 @@ Testa med skillen lokalt (utan `publicera`) eller *Run now* på rutinen och läs
 python3 -m http.server -d docs 8000     # eller preview_start "lunch" / "lunch-fresh" (port 8001) från .claude/launch.json
 node --check docs/core.js && node --check docs/app.js && node --check docs/stats.js
 for f in docs/data/menus/*.json; do python3 scripts/save_menu.py --check "$f"; done
+python3 scripts/stamp_assets.py --check
 ```
 
 | URL | Visar |
@@ -258,6 +260,12 @@ En remsa överst visar testläget och den låtsade klockan.
   ingen träff alls underkänns, okända fält underkänns, `link_only` i utkastet underkänns).
 
 ## Publicera
+
+**Ändrar du CSS eller JavaScript (även `config.js`): kör `python3 scripts/stamp_assets.py` före commit**, och
+`python3 scripts/stamp_assets.py --check` ska gå igenom. GitHub Pages låter webbläsare cacha filer i tio minuter;
+utan nya versionsmärken kan besökare få ny data men gammal kod (t.ex. gammal layout och etiketter i stället för ikoner).
+HTML-filerna själva kan fortfarande vara cachade i upp till tio minuter, sedan hämtas allt nytt.
+
 
 `git push origin main`. GitHub Pages bygger `docs/` på ungefär en minut. Kontrollera:
 
