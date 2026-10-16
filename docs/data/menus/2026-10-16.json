@@ -1,6 +1,6 @@
 {
   "date": "2026-10-16",
-  "fetched_at": "2026-10-16T15:16:08+02:00",
+  "fetched_at": "2026-10-16T15:21:44+02:00",
   "restaurants": [
     {
       "id": "reimers",
@@ -22,8 +22,8 @@
         },
         {
           "label": "Veckans sallad",
-          "name": "Sallad med fetaost, rostade betor, grönsaker och balsamicokräm",
-          "description": null,
+          "name": "Sallad med fetaost",
+          "description": "Rostade betor, grönsaker och balsamicokräm",
           "type": "vegetarisk"
         },
         {
@@ -136,8 +136,8 @@
         },
         {
           "label": null,
-          "name": "Tunnbrödsrulle",
-          "description": "Chorizo, räksallad och rostad lök",
+          "name": "Tunnbrödsrulle med chorizo",
+          "description": "Räksallad och rostad lök",
           "type": "kott"
         },
         {
@@ -148,8 +148,8 @@
         },
         {
           "label": null,
-          "name": "Caesarsallad med svensk kyckling eller pannoumi, bacon, romansallad och grana padano",
-          "description": null
+          "name": "Caesarsallad med svensk kyckling eller pannoumi",
+          "description": "Bacon, romansallad och grana padano"
         },
         {
           "label": null,
@@ -170,14 +170,14 @@
       "dishes": [
         {
           "label": "Gröna smaker",
-          "name": "Cannelloni",
-          "description": "Ricotta, spenat, mozzarella & tomat sallad",
+          "name": "Cannelloni med ricotta",
+          "description": "Spenat, mozzarella & tomat sallad",
           "type": "vegetarisk"
         },
         {
           "label": "Världens smaker",
-          "name": "Nattbakad Karre ”ramen”",
-          "description": "Gari, pak choi, risnudlar, sojabönor, rättika & ägg",
+          "name": "Nattbakad Karre”ramen”-gari",
+          "description": "Pak choi, risnudlar, sojabönor, rättika & ägg",
           "type": "kott"
         }
       ],
