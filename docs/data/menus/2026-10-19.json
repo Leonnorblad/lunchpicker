@@ -1,0 +1,170 @@
+{
+  "date": "2026-10-19",
+  "fetched_at": "2026-10-19T08:15:41+02:00",
+  "restaurants": [
+    {
+      "id": "reimers",
+      "name": "Reimers",
+      "source_url": "https://www.reimers.se/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Viltgryta med hjort, vildsvin, champinjoner, kantareller och potatismos",
+          "description": null,
+          "type": "kott"
+        },
+        {
+          "label": null,
+          "name": "Bakad kolja",
+          "description": "Rostad potatis, vitvinssås och smulad fetaost",
+          "type": "fisk"
+        },
+        {
+          "label": "Veckans sallad",
+          "name": "Sallad med kycklingcurryröra",
+          "description": "Risoni och grönsaker",
+          "type": "fagel"
+        },
+        {
+          "label": "Veckans vegetariska",
+          "name": "Krämig pasta med Grana Padano",
+          "description": "Broccoli, blomkål och pico de gallo",
+          "type": "vegetarisk"
+        }
+      ],
+      "price": 145,
+      "note": null
+    },
+    {
+      "id": "matronan",
+      "name": "Matronan",
+      "source_url": "https://www.matronan.se/",
+      "found": false,
+      "dishes": [],
+      "price": null,
+      "note": null
+    },
+    {
+      "id": "lilla-angel",
+      "name": "Lilla Ängel",
+      "source_url": "https://www.lillaangel.com/frosunda/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Gratinerad sejfilé",
+          "description": "Dillsås, ost och kokt potatis",
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Boeuf bourguignon",
+          "description": "Kokt potatis och parmesanost",
+          "type": "kott"
+        },
+        {
+          "label": "Veckans vegetariska alternativ",
+          "name": "Raggmunk",
+          "description": "Lingon och sallad",
+          "type": "vegetarisk"
+        }
+      ],
+      "price": 135,
+      "note": null
+    },
+    {
+      "id": "bra-mat-no8",
+      "name": "Bra Mat No8",
+      "source_url": "https://www.bramat8.se/lunch",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Gulaschgryta",
+          "description": "Grillad paprika, basmatiris och gräddfil"
+        },
+        {
+          "label": null,
+          "name": "Ugnsbakad fisk",
+          "description": "Sanderfjordsås, kokt potatis och gröna ärtor",
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Vitlöksstekt gnocchi",
+          "description": "Nötsmör, semitorkade tomater och babyspenat",
+          "type": "vegetarisk"
+        }
+      ],
+      "price": 140,
+      "note": null
+    },
+    {
+      "id": "sabis",
+      "name": "Sabis Ulriksdal",
+      "source_url": "https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Indisk biryani",
+          "description": "Stekt kryddigt ris med russin och nötter"
+        },
+        {
+          "label": null,
+          "name": "Cajun kryddad kyckling",
+          "description": "Rostade rotfrukter och potatis, chili yoghurt och majs sallad",
+          "type": "fagel"
+        },
+        {
+          "label": null,
+          "name": "Miso bakad fisk",
+          "description": "Lime kräm, citrus inlagd rättika, rostad blomkål och ris",
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Caesarsallad med svensk kyckling eller pannoumi",
+          "description": "Bacon, romansallad och grana padano"
+        },
+        {
+          "label": null,
+          "name": "Köttbullar på nöt och kalv",
+          "description": "Gräddsås, rårörda lingon, pressgurka och potatispuré",
+          "price": 154,
+          "type": "kott"
+        }
+      ],
+      "price": 144,
+      "note": null
+    },
+    {
+      "id": "bruket",
+      "name": "Bruket",
+      "source_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se",
+      "found": true,
+      "dishes": [
+        {
+          "label": "Gröna smaker",
+          "name": "Vårrullar",
+          "description": "Fried rice, kimchemajonaise, sesam & rättika"
+        },
+        {
+          "label": "Klassiska smaker",
+          "name": "Smålänska Isterband",
+          "description": "Persiljestuvad potatis, betor & brukets senap",
+          "type": "kott"
+        },
+        {
+          "label": "Världens smaker",
+          "name": "Bouillabaisse",
+          "description": "Lax, kummel, räkor, rotfrukter, krutonger & saffrans aioli",
+          "type": "fisk"
+        }
+      ],
+      "price": null,
+      "note": null
+    }
+  ]
+}
