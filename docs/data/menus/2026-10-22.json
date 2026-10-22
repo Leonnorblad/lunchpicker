@@ -1,0 +1,164 @@
+{
+  "date": "2026-10-22",
+  "fetched_at": "2026-10-22T08:15:51+02:00",
+  "restaurants": [
+    {
+      "id": "reimers",
+      "name": "Reimers",
+      "source_url": "https://www.reimers.se/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Confiterad kycklingfilé",
+          "description": "Kryddris och örtsås",
+          "type": "fagel"
+        },
+        {
+          "label": null,
+          "name": "Ångad sej",
+          "description": "Potatismos, skirat smör, rödbetor och palsternackachips",
+          "type": "fisk"
+        },
+        {
+          "label": "Veckans sallad",
+          "name": "Sallad med kycklingcurryröra",
+          "description": "Risoni och grönsaker",
+          "type": "fagel"
+        },
+        {
+          "label": "Veckans vegetariska",
+          "name": "Krämig pasta med Grana Padano",
+          "description": "Broccoli, blomkål och pico de gallo",
+          "type": "vegetarisk"
+        }
+      ],
+      "price": 145,
+      "note": null
+    },
+    {
+      "id": "matronan",
+      "name": "Matronan",
+      "source_url": "https://www.matronan.se/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Biff Minute",
+          "description": "Potatisgratäng, bearnaise & grönt",
+          "price": 129,
+          "type": "kott"
+        },
+        {
+          "label": null,
+          "name": "Pocherad kolja",
+          "description": "Basilikasås, krossad potatis & kronärtskocksallad",
+          "price": 139,
+          "type": "fisk"
+        },
+        {
+          "label": "Dagens veg",
+          "name": "Vegetarisk halloumi stroganoff",
+          "description": "Kikärtor & ris",
+          "price": 125,
+          "type": "vegetarisk"
+        }
+      ],
+      "price": null,
+      "note": null
+    },
+    {
+      "id": "lilla-angel",
+      "name": "Lilla Ängel",
+      "source_url": "https://www.lillaangel.com/frosunda/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Raggmunk",
+          "description": "Stekt fläsksida och lingonsylt",
+          "type": "kott"
+        },
+        {
+          "label": null,
+          "name": "Fiskgratäng",
+          "description": "Räkor och dillsås",
+          "type": "fisk"
+        },
+        {
+          "label": "Veckans vegetariska alternativ",
+          "name": "Vegetarisk pasta med halloumi",
+          "description": null,
+          "type": "vegetarisk"
+        }
+      ],
+      "price": 135,
+      "note": null
+    },
+    {
+      "id": "bra-mat-no8",
+      "name": "Bra Mat No8",
+      "source_url": "https://www.bramat8.se/lunch",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Kyckling med jordnötssås",
+          "description": "Basmatiris och limemarinerad broccoli",
+          "type": "fagel"
+        },
+        {
+          "label": null,
+          "name": "Saffrasdoftande fiskgryta med handskalade räkor",
+          "description": "Aioli och krutonger",
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Spenat- och fetaostlasagne",
+          "description": "Toppas med grana padano och ruccola",
+          "type": "vegetarisk"
+        }
+      ],
+      "price": 140,
+      "note": null
+    },
+    {
+      "id": "sabis",
+      "name": "Sabis Ulriksdal",
+      "source_url": "https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/",
+      "found": false,
+      "dishes": [],
+      "price": null,
+      "note": null
+    },
+    {
+      "id": "bruket",
+      "name": "Bruket",
+      "source_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se",
+      "found": true,
+      "dishes": [
+        {
+          "label": "Gröna smaker",
+          "name": "Rödbetsbiff",
+          "description": "Getost crème, grillade grönsaker & honung",
+          "type": "vegetarisk"
+        },
+        {
+          "label": "Klassiska smaker",
+          "name": "Ärtsoppa med fläsk",
+          "description": "Husets pannkakor med sylt och grädde",
+          "type": "kott"
+        },
+        {
+          "label": "Världens smaker",
+          "name": "Köttförslimpa ”bulgogi”",
+          "description": "Gochuang, sesam, pak choi, gari & sushi ris",
+          "type": "kott"
+        }
+      ],
+      "price": null,
+      "note": null
+    }
+  ]
+}
