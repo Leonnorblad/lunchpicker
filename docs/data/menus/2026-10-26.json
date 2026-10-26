@@ -1,6 +1,6 @@
 {
   "date": "2026-10-26",
-  "fetched_at": "2026-10-26T07:15:51+01:00",
+  "fetched_at": "2026-10-26T16:47:37+01:00",
   "restaurants": [
     {
       "id": "reimers",
@@ -167,8 +167,27 @@
       "id": "bruket",
       "name": "Bruket",
       "source_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se",
-      "found": false,
-      "dishes": [],
+      "found": true,
+      "dishes": [
+        {
+          "label": "Gröna smaker",
+          "name": "Lins-Tandoori",
+          "description": "Belugalinser, blomkål, zucchini och yoghurt",
+          "type": "vegetarisk"
+        },
+        {
+          "label": "Klassiska smaker",
+          "name": "Friterad Torsk",
+          "description": "Dansk remouladsås, rostad lök, dillpotatis och citron",
+          "type": "fisk"
+        },
+        {
+          "label": "Världens smaker",
+          "name": "BBQ Fajitas med kycklinglår",
+          "description": "Avokadocrème, tortillia, bönor och svartris",
+          "type": "fagel"
+        }
+      ],
       "price": null,
       "note": null
     }
