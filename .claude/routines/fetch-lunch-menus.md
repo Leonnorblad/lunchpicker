@@ -6,7 +6,7 @@ Inställningar för rutinen på claude.ai/code/routines (Desktop: Code → Routi
 |---|---|
 | Namn | Hämta lunchmenyer |
 | Repo | Leonnorblad/lunchpicker (Claude GitHub App måste vara installerad för att pushen ska gå igenom) |
-| Trigger | Schedule, cron `0 9 * * 1-5` (UTC) = 10.00 vintertid. **Sommartid (sista söndagen i mars): ändra till `0 8 * * 1-5`, och tillbaka till `0 9` sista söndagen i oktober.** Cron räknas i UTC. Kl. 10 har restaurangerna hunnit lägga upp veckans meny även på måndagar. Starten blir ofta några minuter sen och körningen tar ett par minuter, så menyerna syns runt 10.05. Röstningen öppnar när de har kommit, och senast `voteOpens` (10.30) om körningen misslyckas. |
+| Trigger | Schedule, cron `45 7,8 * * 1-5` (UTC). Rutinen hämtar 9.45 svensk tid året runt. Cron räknas alltid i UTC (rutinen har ingen tidszon), så den startar både 07.45 och 08.45 UTC, och prompten nedan släpper bara igenom starten som är mellan 09.30 och 10.30 i Stockholm. Den andra (8.45 vintertid, 10.45 sommartid) slutar direkt. Inget behöver ändras vid sommartid. Menyerna syns runt 09.50. Röstningen öppnar när de har kommit, och senast `voteOpens` (10.30) om körningen misslyckas. |
 | Environment | Eget, med Network access = Custom (se nedan). Inga variabler, inget setup-skript. |
 | Connectors | Ta bort alla. Rutinen behöver bara GitHub, som redan ingår via repot. |
 
@@ -34,7 +34,16 @@ Lägger du till en restaurang i `docs/data/restaurants.json` måste dess domän 
 Kopiera texten nedan till rutinens Instructions.
 
 ```text
-Kör skillen /fetch-lunch-menus med argumentet "publicera".
+Kör först bara detta kommando:
+
+    TZ=Europe/Stockholm date +%H%M
+
+Rutinen startar två gånger varje vardag, 9.45 och antingen 8.45 eller 10.45 svensk tid
+(cron är i UTC och följer inte sommartid). Bara starten runt 9.45 ska göra något.
+Är talet mindre än 0930 eller större än 1030: svara "Inte 9.45 svensk tid, gör
+ingenting." och sluta direkt, utan att läsa filer, köra skillen eller committa.
+
+Annars: kör skillen /fetch-lunch-menus med argumentet "publicera".
 
 Det betyder: hämta dagens lunchmenyer (Stockholmstid) för restaurangerna i
 docs/data/restaurants.json, spara dem med scripts/save_menu.py och pusha

@@ -14,7 +14,7 @@ Sidan: https://leonnorblad.github.io/lunchpicker/ · Repo: `Leonnorblad/lunchpic
 ## Översikt
 
 ```
-vardagar 10.00      Claude Code-rutin (molnet) ─► skill fetch-lunch-menus
+vardagar 09.45      Claude Code-rutin (molnet) ─► skill fetch-lunch-menus
                       ├─ scripts/archive_votes.py   avslutade dagars röster → docs/data/votes.json
                       ├─ scripts/page_text.py       hämtar varje menysida som text
                       ├─ Claude läser och skriver ett utkast
@@ -112,9 +112,9 @@ Restaurangernas källor och villkor just nu:
 ### Rutinen (molnet)
 
 Inställningarna finns i `.claude/routines/fetch-lunch-menus.md` och på claude.ai/code/routines (rutin-id `trig_01U6pBgKvECQMrfUtTkoXDmw`).
-Schema `0 9 * * 1-5` (UTC) = 10.00 vintertid. **Cron är i UTC: vid sommartid (sista söndagen i mars) ändras det till
-`0 8 * * 1-5`, och tillbaka sista söndagen i oktober**, annars hämtas menyerna 11.00 och röstningen öppnar först 10.30
-utan rätter. Starten blir några minuter sen och körningen tar ett par minuter; menyerna syns runt 10.05.
+Schema `45 7,8 * * 1-5` (UTC) = 9.45 svensk tid året runt. Rutinen har ingen tidszon, så den startar både 07.45 och
+08.45 UTC och promptens första steg släpper bara igenom starten mellan 09.30 och 10.30 i Stockholm; den andra slutar direkt.
+Inget behöver ändras vid sommartid. Menyerna syns runt 09.50.
 Rutinen kör med Haiku (`claude-haiku-5-5`). Environment med Network access = Custom;
 domänlistan står i rutinfilen och måste innehålla varje restaurangs domän och `abacus.jasoncameron.dev`.
 Claude GitHub App måste vara installerad på repot, annars nekas pushen. Ändras prompten: uppdatera rutinfilen och rutinen

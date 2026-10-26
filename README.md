@@ -30,8 +30,8 @@ och ett lyckohjul som bestämmer klockan halv tolv.
 
 | När | Vad händer |
 |---|---|
-| **10.00** | Dagens menyer hämtas automatiskt från restaurangernas egna sidor: rätter, tillbehör och pris, ordagrant som de står där. |
-| **Strax efter 10–11.30** | Rösta. Röstningen öppnar när menyerna är inlästa, och senast 10.30 (då med länkar till restaurangernas egna menyer om inläsningen inte blev av). Klicka på stället du vill äta på och bekräfta. Ändrar du dig går det att byta fram till 11.30. |
+| **09.45** | Dagens menyer hämtas automatiskt från restaurangernas egna sidor: rätter, tillbehör och pris, ordagrant som de står där. |
+| **Runt 09.50–11.30** | Rösta. Röstningen öppnar när menyerna är inlästa, och senast 10.30 (då med länkar till restaurangernas egna menyer om inläsningen inte blev av). Klicka på stället du vill äta på och bekräfta. Ändrar du dig går det att byta fram till 11.30. |
 | **11.30** | Hjulet snurrar. Varje restaurang får en bit som är lika stor som dess andel av rösterna, så den populäraste har störst chans, men inget är avgjort i förväg. Alla ser samma hjul och samma vinnare. Har ingen röstat har alla lika stor chans. |
 | **Efteråt** | Alla menyer finns kvar under hjulet, med den valda restaurangen först. |
 
