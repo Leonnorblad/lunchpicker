@@ -30,6 +30,17 @@ Läs `docs/data/restaurants.json`. Varje rad har `id`, `name`, `menu_url` och ib
 **`link_only` hoppar du över helt.** Hämta inte deras sida och sök inte upp deras meny någon annanstans. Källans villkor tillåter inte att menyn visas här, så sidan länkar dit istället. `save_menu.py` lägger in dem själv.
 
 Ändra aldrig `restaurants.json`. `id` kopplar ihop menyn med dagens röster.
+
+**Finns `docs/data/menus/<datum>.json` redan: komplettera.** Rutinen körs två gånger varje morgon; den andra körningen
+fyller bara i det som saknades. Hämta då bara restaurangerna som har `"found": false` i filen. De som redan har en meny
+rör du inte: de står med i utkastet med `"dishes": []`, och då behåller `save_menu.py` den sparade menyn. Så ändras
+inget som folk redan röstar på.
+
+- Har alla restauranger (utom `link_only`) redan meny: säg det och sluta. Kör inga skript och committa ingenting.
+- Hittar du ingen ny meny: kör inga skript och committa ingenting.
+
+Ska en dag hämtas om från början (t.ex. efter ändrade regler), ta först bort dagens fil.
+
 ## 3. Ta fram menyn för varje restaurang
 
 Börja med menysidan, **ett anrop per restaurang** (flera anrop i samma meddelande går bra, de körs parallellt):

@@ -6,7 +6,7 @@ Inställningar för rutinen på claude.ai/code/routines (Desktop: Code → Routi
 |---|---|
 | Namn | Hämta lunchmenyer |
 | Repo | Leonnorblad/lunchpicker (Claude GitHub App måste vara installerad för att pushen ska gå igenom) |
-| Trigger | Schedule, cron `45 7,8 * * 1-5` (UTC). Rutinen hämtar 9.45 svensk tid året runt. Cron räknas alltid i UTC (rutinen har ingen tidszon), så den startar både 07.45 och 08.45 UTC, och prompten nedan släpper bara igenom starten som är mellan 09.30 och 10.30 i Stockholm. Den andra (8.45 vintertid, 10.45 sommartid) slutar direkt. Inget behöver ändras vid sommartid. Menyerna syns runt 09.50. Röstningen öppnar när de har kommit, och senast `voteOpens` (10.30) om körningen misslyckas. |
+| Trigger | Schedule, cron `45 7,8 * * 1-5` (UTC). Cron räknas alltid i UTC (rutinen har ingen tidszon), så körningarna blir 08.45 och 09.45 vintertid, 09.45 och 10.45 sommartid: 9.45 är alltid en av dem. Första körningen hämtar allt, den andra kompletterar det som saknas. Inget behöver ändras vid sommartid. Röstningen öppnar när första körningens menyer har kommit (ca fem minuter efter start), och senast `voteOpens` (10.30). |
 | Environment | Eget, med Network access = Custom (se nedan). Inga variabler, inget setup-skript. |
 | Connectors | Ta bort alla. Rutinen behöver bara GitHub, som redan ingår via repot. |
 
@@ -34,16 +34,10 @@ Lägger du till en restaurang i `docs/data/restaurants.json` måste dess domän 
 Kopiera texten nedan till rutinens Instructions.
 
 ```text
-Kör först bara detta kommando:
+Kör skillen /fetch-lunch-menus med argumentet "publicera".
 
-    TZ=Europe/Stockholm date +%H%M
-
-Rutinen startar två gånger varje vardag, 9.45 och antingen 8.45 eller 10.45 svensk tid
-(cron är i UTC och följer inte sommartid). Bara starten runt 9.45 ska göra något.
-Är talet mindre än 0930 eller större än 1030: svara "Inte 9.45 svensk tid, gör
-ingenting." och sluta direkt, utan att läsa filer, köra skillen eller committa.
-
-Annars: kör skillen /fetch-lunch-menus med argumentet "publicera".
+Rutinen körs två gånger varje vardagsmorgon. Finns dagens menyfil redan är det
+den andra körningen: komplettera bara det som saknas, enligt skillen.
 
 Det betyder: hämta dagens lunchmenyer (Stockholmstid) för restaurangerna i
 docs/data/restaurants.json, spara dem med scripts/save_menu.py och pusha
@@ -53,7 +47,8 @@ sidan från main.
 Klart är när något av detta gäller:
 - save_menu.py gick igenom och commiten "Menyer <datum>" finns på origin/main, eller
 - det är helg, eller
-- ingen restaurang hade någon meny. Committa då ingenting.
+- ingen restaurang hade någon meny, eller
+- dagens menyfil fanns redan och du hittade inga nya menyer. Committa då ingenting.
 
 Ändra inga andra filer än det save_menu.py skriver i docs/data/. Ändra inte
 skillen, skripten eller restaurants.json, även om något verkar trasigt: skriv

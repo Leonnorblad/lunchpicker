@@ -3,7 +3,7 @@
 window.LUNCH = {
   counterApi: "https://abacus.jasoncameron.dev",
   namespace: "ulriksdal-lunch-3n17fuma",
-  // Röstningen öppnar när rutinen har läst in dagens menyer (strax före 10), eller senast
+  // Röstningen öppnar när rutinen har läst in dagens menyer (första körningen, 8.45 eller 9.45), eller senast
   // voteOpens om inläsningen inte blev av. Då visas länkar till restaurangernas egna menyer.
   voteOpens: "10:30",
   spinAt: "11:30",

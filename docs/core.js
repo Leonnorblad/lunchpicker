@@ -10,7 +10,7 @@ const COLORS = ["#c4532f", "#2f6fb3", "#b9800f", "#c84a7a", "#7a52b8", "#3f8f4a"
 const SPIN_TURNS = 6;
 
 const $ = (id) => document.getElementById(id);
-const state = { restaurants: [], dates: [], date: null, phase: null, menus: {}, ready: new Set(), counts: {}, renderId: 0, pending: null, sending: false };
+const state = { restaurants: [], dates: [], date: null, phase: null, menus: {}, ready: new Set(), complete: new Set(), counts: {}, renderId: 0, pending: null, sending: false };
 
 // ---------- Testläge ----------
 // ?tid=11.29 låtsas att klockan är 11.29 idag och låter den gå vidare därifrån (?datum=2026-10-16 byter dag).
@@ -73,12 +73,18 @@ async function getJSON(url) {
   return response.json();
 }
 
-// fresh: hämta förbi GitHub Pages cache, för att se om dagens menyer har kommit.
+// fresh: hämta förbi GitHub Pages cache, för att se om dagens menyer har kommit eller kompletterats.
+// Misslyckas det behålls det som redan var laddat.
 function loadMenu(date, { fresh = false } = {}) {
+  const previous = state.menus[date];
   if (fresh) delete state.menus[date];
   state.menus[date] ??= getJSON(`data/menus/${date}.json${fresh ? `?t=${Date.now()}` : ""}`)
-    .then((menu) => { state.ready.add(date); return menu; })
-    .catch(() => null);
+    .then((menu) => {
+      state.ready.add(date);
+      if (menu.restaurants.every((r) => r.found || r.link_only)) state.complete.add(date);
+      return menu;
+    })
+    .catch(() => previous ?? null);
   return state.menus[date];
 }
 

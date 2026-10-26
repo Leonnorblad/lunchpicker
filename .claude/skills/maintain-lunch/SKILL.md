@@ -14,7 +14,7 @@ Sidan: https://leonnorblad.github.io/lunchpicker/ · Repo: `Leonnorblad/lunchpic
 ## Översikt
 
 ```
-vardagar 09.45      Claude Code-rutin (molnet) ─► skill fetch-lunch-menus
+vardagar 2 ggr      Claude Code-rutin (molnet) ─► skill fetch-lunch-menus   (andra gången: bara det som saknas)
                       ├─ scripts/archive_votes.py   avslutade dagars röster → docs/data/votes.json
                       ├─ scripts/page_text.py       hämtar varje menysida som text
                       ├─ Claude läser och skriver ett utkast
@@ -112,9 +112,10 @@ Restaurangernas källor och villkor just nu:
 ### Rutinen (molnet)
 
 Inställningarna finns i `.claude/routines/fetch-lunch-menus.md` och på claude.ai/code/routines (rutin-id `trig_01U6pBgKvECQMrfUtTkoXDmw`).
-Schema `45 7,8 * * 1-5` (UTC) = 9.45 svensk tid året runt. Rutinen har ingen tidszon, så den startar både 07.45 och
-08.45 UTC och promptens första steg släpper bara igenom starten mellan 09.30 och 10.30 i Stockholm; den andra slutar direkt.
-Inget behöver ändras vid sommartid. Menyerna syns runt 09.50.
+Schema `45 7,8 * * 1-5` (UTC). Rutinen har ingen tidszon, så det blir 08.45 och 09.45 vintertid, 09.45 och 10.45
+sommartid; inget behöver ändras vid sommartid. Första körningen hämtar allt. Den andra ser att dagens fil finns och hämtar
+bara restauranger med `found: false`; de andra står med `dishes: []` i utkastet och behålls av `save_menu.py`, så inget
+ändras som folk redan röstar på. Den committar bara om den hittar något nytt.
 Rutinen kör med Haiku (`claude-haiku-5-5`). Environment med Network access = Custom;
 domänlistan står i rutinfilen och måste innehålla varje restaurangs domän och `abacus.jasoncameron.dev`.
 Claude GitHub App måste vara installerad på repot, annars nekas pushen. Ändras prompten: uppdatera rutinfilen och rutinen
@@ -166,7 +167,8 @@ Läses **före** Abacus av både startsidan och statistiken (`loadCounts` i `cor
 - **Faser** (`phaseFor` i `core.js`): `upcoming` tills dagens menyfil har laddats (`state.ready`) eller klockan är `voteOpens`,
   sedan `voting` fram till `spinAt`, sedan `result`. Tidigare dagar är alltid `result`. Saknas menyfilen tittar sidan efter
   den en gång i minuten (`tick` i `app.js`, `loadMenu(datum, { fresh: true })` med `?t=` förbi GitHub Pages cache) och
-  visar menyerna direkt när de kommer, även under röstningen. Utan fil visas restaurangerna som rader med länk till deras meny.
+  visar menyerna direkt när de kommer, även under röstningen. Samma sak när filen finns men någon restaurang saknar meny
+  (`state.complete`): sidan visar kompletteringen när `fetched_at` ändras, och ett påbörjat val ligger kvar. Utan fil visas restaurangerna som rader med länk till deras meny.
 - **Hjulet är deterministiskt:** vinnaren räknas fram i varje webbläsare med `spinWheel(datum, restauranger, röster)`
   (`hash` + `seededRandom` på datum och röster). Alla ser samma resultat utan server.
   **Ändra aldrig `hash`, `seededRandom`, `spinWheel`, seed-strängen eller tårtbitarnas ordning.** Då byter gamla dagar vinnare,
@@ -245,6 +247,7 @@ Testa alltid både 375 px, ca 1000 px och 1280 px.
 ### Ändra hur menyer hämtas
 Ändra `.claude/skills/fetch-lunch-menus/SKILL.md`. Rutinen läser den från `main` vid varje körning, så pusha först.
 Testa med skillen lokalt (utan `publicera`) eller *Run now* på rutinen och läs loggen (RemoteTrigger `list_runs`/`get_run_log`).
+Skillen kompletterar bara om dagens fil redan finns: ta bort filen först för att hämta om hela dagen.
 
 ### Kolla hur rutinen har gått
 `git log origin/main --format='%ad %s' --date=iso` visar en `Menyer <datum>`-commit per körning som sparade något.

@@ -361,10 +361,15 @@ let lastMenuCheck = Date.now();
 function tick() {
   const today = stockholmNow().date;
   if (state.date !== today) return;
-  // Inga menyer än: titta en gång i minuten om de har kommit, och visa dem direkt (röstningen öppnar då)
-  if (state.phase !== "result" && !state.ready.has(today) && Date.now() - lastMenuCheck > 60_000) {
+  // Saknas menyer: titta en gång i minuten om de har kommit eller kompletterats, och visa dem direkt
+  // (röstningen öppnar när de första kommer)
+  if (state.phase !== "result" && !state.complete.has(today) && Date.now() - lastMenuCheck > 60_000) {
     lastMenuCheck = Date.now();
-    loadMenu(today, { fresh: true }).then((menu) => { if (menu && state.date === today) show(today); });
+    const before = state.menus[today];
+    loadMenu(today, { fresh: true }).then(async (menu) => {
+      const old = await before;
+      if (menu && menu.fetched_at !== old?.fetched_at && state.date === today) show(today);
+    });
   }
   const phase = phaseFor(today);
   if (phase !== state.phase) show(today, { live: state.phase === "voting" && phase === "result" });
