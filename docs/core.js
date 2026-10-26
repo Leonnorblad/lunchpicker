@@ -10,7 +10,7 @@ const COLORS = ["#c4532f", "#2f6fb3", "#b9800f", "#c84a7a", "#7a52b8", "#3f8f4a"
 const SPIN_TURNS = 6;
 
 const $ = (id) => document.getElementById(id);
-const state = { restaurants: [], dates: [], date: null, phase: null, menus: {}, counts: {}, renderId: 0, pending: null, sending: false };
+const state = { restaurants: [], dates: [], date: null, phase: null, menus: {}, ready: new Set(), counts: {}, renderId: 0, pending: null, sending: false };
 
 // ---------- Testläge ----------
 // ?tid=11.29 låtsas att klockan är 11.29 idag och låter den gå vidare därifrån (?datum=2026-10-16 byter dag).
@@ -43,13 +43,14 @@ const asDate = (iso) => new Date(`${iso}T12:00:00Z`);
 const isWeekday = (iso) => { const d = asDate(iso).getUTCDay(); return d >= 1 && d <= 5; };
 const clock = (hhmm) => hhmm.replace(":", ".");
 
+// Röstningen öppnar när dagens menyer är inlästa, eller senast voteOpens om inläsningen inte blev av.
 function phaseFor(date) {
   const now = stockholmNow();
   if (date < now.date) return "result";
   if (date > now.date) return "upcoming";
-  if (now.seconds < toSeconds(CFG.voteOpens)) return "upcoming";
-  if (now.seconds < toSeconds(CFG.spinAt)) return "voting";
-  return "result";
+  if (now.seconds >= toSeconds(CFG.spinAt)) return "result";
+  if (state.ready.has(date) || now.seconds >= toSeconds(CFG.voteOpens)) return "voting";
+  return "upcoming";
 }
 
 // ---------- Lagring i webbläsaren ----------
@@ -72,8 +73,12 @@ async function getJSON(url) {
   return response.json();
 }
 
-function loadMenu(date) {
-  state.menus[date] ??= getJSON(`data/menus/${date}.json`).catch(() => null);
+// fresh: hämta förbi GitHub Pages cache, för att se om dagens menyer har kommit.
+function loadMenu(date, { fresh = false } = {}) {
+  if (fresh) delete state.menus[date];
+  state.menus[date] ??= getJSON(`data/menus/${date}.json${fresh ? `?t=${Date.now()}` : ""}`)
+    .then((menu) => { state.ready.add(date); return menu; })
+    .catch(() => null);
   return state.menus[date];
 }
 

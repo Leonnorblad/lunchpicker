@@ -6,7 +6,7 @@ Inställningar för rutinen på claude.ai/code/routines (Desktop: Code → Routi
 |---|---|
 | Namn | Hämta lunchmenyer |
 | Repo | Leonnorblad/lunchpicker (Claude GitHub App måste vara installerad för att pushen ska gå igenom) |
-| Trigger | Schedule, cron `10 6,8 * * 1-5` (UTC). Första körningen 07.10 vintertid / 08.10 sommartid, alltid före omröstningen 09.00. Omkörningen två timmar senare (09.10 / 10.10) hämtar bara det som saknas, t.ex. när en restaurang lägger upp veckans meny sent på måndagen, och är klar långt före hjulet 11.30. Inte exakt på timmen, då kan starten bli flera minuter sen. |
+| Trigger | Schedule, cron `0 9 * * 1-5` (UTC) = 10.00 vintertid. **Sommartid (sista söndagen i mars): ändra till `0 8 * * 1-5`, och tillbaka till `0 9` sista söndagen i oktober.** Cron räknas i UTC. Kl. 10 har restaurangerna hunnit lägga upp veckans meny även på måndagar. Starten blir ofta några minuter sen och körningen tar ett par minuter, så menyerna syns runt 10.05. Röstningen öppnar när de har kommit, och senast `voteOpens` (10.30) om körningen misslyckas. |
 | Environment | Eget, med Network access = Custom (se nedan). Inga variabler, inget setup-skript. |
 | Connectors | Ta bort alla. Rutinen behöver bara GitHub, som redan ingår via repot. |
 
@@ -44,8 +44,7 @@ sidan från main.
 Klart är när något av detta gäller:
 - save_menu.py gick igenom och commiten "Menyer <datum>" finns på origin/main, eller
 - det är helg, eller
-- ingen restaurang hade någon meny, eller
-- dagens menyfil fanns redan och du hittade inga nya menyer. Committa då ingenting.
+- ingen restaurang hade någon meny. Committa då ingenting.
 
 Ändra inga andra filer än det save_menu.py skriver i docs/data/. Ändra inte
 skillen, skripten eller restaurants.json, även om något verkar trasigt: skriv

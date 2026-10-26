@@ -129,7 +129,7 @@ function renderMenus(date, restaurants, phase) {
   if (voting) status = mine
     ? `Du har röstat på ${mine.name}. Du kan byta fram till ${clock(CFG.spinAt)}.`
     : `Välj en restaurang och bekräfta. Röstningen stänger ${clock(CFG.spinAt)}.`;
-  else if (isToday) status = `Röstningen öppnar ${clock(CFG.voteOpens)}`;
+  else if (isToday) status = `Röstningen öppnar när dagens menyer är inlästa, senast ${clock(CFG.voteOpens)}`;
 
   // Klick väljer, knappen i listen längst ned bekräftar. Klick på det valda avmarkerar.
   const select = (id) => {
@@ -289,13 +289,14 @@ async function renderResult(date, restaurants, { live, renderId }) {
 
 async function show(date, { live = false } = {}) {
   const renderId = ++state.renderId;
+  renderHeader(date);
+  const menu = await loadMenu(date);
+  if (renderId !== state.renderId) return;
+  // Efter laddningen: om dagens menyer finns avgör när röstningen öppnar
   const phase = phaseFor(date);
   if (state.date !== date || phase !== "voting") state.pending = null;
   state.date = date;
   state.phase = phase;
-  renderHeader(date);
-  const menu = await loadMenu(date);
-  if (renderId !== state.renderId) return;
 
   const restaurants = restaurantsFor(menu);
   if (phase === "result") await renderResult(date, restaurants, { live, renderId });
@@ -355,9 +356,16 @@ function go(step) {
   if (i >= 0 && i < state.dates.length) location.hash = state.dates[i];
 }
 
+let lastMenuCheck = Date.now();
+
 function tick() {
   const today = stockholmNow().date;
   if (state.date !== today) return;
+  // Inga menyer än: titta en gång i minuten om de har kommit, och visa dem direkt (röstningen öppnar då)
+  if (state.phase !== "result" && !state.ready.has(today) && Date.now() - lastMenuCheck > 60_000) {
+    lastMenuCheck = Date.now();
+    loadMenu(today, { fresh: true }).then((menu) => { if (menu && state.date === today) show(today); });
+  }
   const phase = phaseFor(today);
   if (phase !== state.phase) show(today, { live: state.phase === "voting" && phase === "result" });
 }

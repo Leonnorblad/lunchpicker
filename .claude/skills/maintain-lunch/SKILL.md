@@ -14,14 +14,14 @@ Sidan: https://leonnorblad.github.io/lunchpicker/ · Repo: `Leonnorblad/lunchpic
 ## Översikt
 
 ```
-vardagar 06.10 UTC  Claude Code-rutin (molnet) ─► skill fetch-lunch-menus   (08.10 UTC igen: bara det som saknas)
+vardagar 10.00      Claude Code-rutin (molnet) ─► skill fetch-lunch-menus
                       ├─ scripts/archive_votes.py   avslutade dagars röster → docs/data/votes.json
                       ├─ scripts/page_text.py       hämtar varje menysida som text
                       ├─ Claude läser och skriver ett utkast
                       ├─ scripts/save_menu.py       kontrollerar, slår ihop, skriver docs/data/menus/<datum>.json
                       └─ git push origin HEAD:main  ─► GitHub Pages publicerar docs/ (~1 min)
 
-webbläsaren          docs/index.html   menyer · röstning 09.00–11.30 · hjulet 11.30
+webbläsaren          docs/index.html   menyer · röstning när menyerna är inlästa (senast 10.30)–11.30 · hjulet 11.30
                      docs/statistik.html  statistik (avstängd med showStats)
                      röster ─► Abacus-räknare (ingen server, ingen nyckel)
 ```
@@ -63,7 +63,7 @@ Ingen byggprocess, inga beroenden: statiska filer i `docs/`, vanlig JavaScript o
 |---|---|---|
 | `counterApi` | `https://abacus.jasoncameron.dev` | Räknartjänsten för röster. |
 | `namespace` | `ulriksdal-lunch-3n17fuma` | Prefix för alla räknare. **Byt för att nollställa alla röster.** Arkiverade dagar i `votes.json` påverkas inte. |
-| `voteOpens` | `"09:00"` | När röstningen öppnar (Stockholmstid). |
+| `voteOpens` | `"10:30"` | Senast när röstningen öppnar (Stockholmstid). Normalt öppnar den tidigare, så fort dagens menyfil finns. |
 | `spinAt` | `"11:30"` | När röstningen stänger och hjulet snurrar. Läses också av `archive_votes.py`. |
 | `showStats` | `false` | Statistiken av/på. Av: knappen döljs och `statistik.html` skickar till startsidan. Rösterna arkiveras ändå. |
 
@@ -112,10 +112,10 @@ Restaurangernas källor och villkor just nu:
 ### Rutinen (molnet)
 
 Inställningarna finns i `.claude/routines/fetch-lunch-menus.md` och på claude.ai/code/routines (rutin-id `trig_01U6pBgKvECQMrfUtTkoXDmw`).
-Schema `10 6,8 * * 1-5` (UTC): 07.10 vintertid, 08.10 sommartid, alltid före 09.00. Omkörningen två timmar senare
-hämtar bara restauranger med `found: false` i dagens fil och committar bara om den hittar något nytt; redan sparade menyer
-ändras aldrig under röstningen (de står med `dishes: []` i utkastet och behålls av `save_menu.py`). Rutinen kör med
-Haiku (`claude-haiku-5-5`). Environment med Network access = Custom;
+Schema `0 9 * * 1-5` (UTC) = 10.00 vintertid. **Cron är i UTC: vid sommartid (sista söndagen i mars) ändras det till
+`0 8 * * 1-5`, och tillbaka sista söndagen i oktober**, annars hämtas menyerna 11.00 och röstningen öppnar först 10.30
+utan rätter. Starten blir några minuter sen och körningen tar ett par minuter; menyerna syns runt 10.05.
+Rutinen kör med Haiku (`claude-haiku-5-5`). Environment med Network access = Custom;
 domänlistan står i rutinfilen och måste innehålla varje restaurangs domän och `abacus.jasoncameron.dev`.
 Claude GitHub App måste vara installerad på repot, annars nekas pushen. Ändras prompten: uppdatera rutinfilen och rutinen
 (RemoteTrigger `update`, eller på webben).
@@ -163,7 +163,10 @@ Läses **före** Abacus av både startsidan och statistiken (`loadCounts` i `cor
 - **Röstningen:** man klickar ett kort, bekräftar i raden längst ned och kan byta fram till `spinAt`. Byte = `hit` på nya,
   sedan `hit` på gamlas `_minus`. Misslyckas minus-anropet sparas det i `owed:<datum>` och skickas nästa gång, men bara under röstningen.
 - **Spärren** (en röst per webbläsare och dag) finns bara i webbläsaren. Det går att fuska, och det är medvetet godtaget.
-- **Faser** (`phaseFor` i `core.js`): före `voteOpens` = `upcoming`, fram till `spinAt` = `voting`, sedan `result`. Tidigare dagar är alltid `result`.
+- **Faser** (`phaseFor` i `core.js`): `upcoming` tills dagens menyfil har laddats (`state.ready`) eller klockan är `voteOpens`,
+  sedan `voting` fram till `spinAt`, sedan `result`. Tidigare dagar är alltid `result`. Saknas menyfilen tittar sidan efter
+  den en gång i minuten (`tick` i `app.js`, `loadMenu(datum, { fresh: true })` med `?t=` förbi GitHub Pages cache) och
+  visar menyerna direkt när de kommer, även under röstningen. Utan fil visas restaurangerna som rader med länk till deras meny.
 - **Hjulet är deterministiskt:** vinnaren räknas fram i varje webbläsare med `spinWheel(datum, restauranger, röster)`
   (`hash` + `seededRandom` på datum och röster). Alla ser samma resultat utan server.
   **Ändra aldrig `hash`, `seededRandom`, `spinWheel`, seed-strängen eller tårtbitarnas ordning.** Då byter gamla dagar vinnare,
@@ -204,8 +207,7 @@ Ta bort raden. Gamla menyfiler behåller den, och statistiken visar den fortfara
 `showStats: true` i `docs/config.js`. Inget annat behövs. Arkivet har samlats in hela tiden.
 
 ### Ändra tider
-`voteOpens`/`spinAt` i `config.js`. Ändra också rutinens schema om hämtningen inte längre hinner före `voteOpens`,
-eller omkörningen inte längre hinner före `spinAt`.
+`voteOpens`/`spinAt` i `config.js`. Ändra också rutinens schema om hämtningen inte längre hinner före `voteOpens`.
 
 ### Nollställa rösterna
 Byt `namespace` i `config.js`. Arkiverade dagar ligger kvar.
@@ -243,7 +245,6 @@ Testa alltid både 375 px, ca 1000 px och 1280 px.
 ### Ändra hur menyer hämtas
 Ändra `.claude/skills/fetch-lunch-menus/SKILL.md`. Rutinen läser den från `main` vid varje körning, så pusha först.
 Testa med skillen lokalt (utan `publicera`) eller *Run now* på rutinen och läs loggen (RemoteTrigger `list_runs`/`get_run_log`).
-Skillen hämtar bara det som saknas om dagens fil redan finns: ta bort filen först för att hämta om hela dagen.
 
 ### Kolla hur rutinen har gått
 `git log origin/main --format='%ad %s' --date=iso` visar en `Menyer <datum>`-commit per körning som sparade något.
@@ -261,7 +262,8 @@ python3 scripts/stamp_assets.py --check
 
 | URL | Visar |
 |---|---|
-| `/?tid=08.59.50` | Före röstningen, öppnar efter tio sekunder. |
+| `/?tid=10.29.50&datum=<vardag utan menyfil>` | Före röstningen utan menyer; öppnar efter tio sekunder (`voteOpens`) med länkrader. |
+| `/?tid=09.00` | En dag med menyfil: röstningen är öppen direkt, oavsett klockan. |
 | `/?tid=10.00` | Röstning. Röster i testläget går till ett eget namespace per sidladdning och påverkar inte de riktiga. |
 | `/?tid=11.29.40` | Rösta och se hjulet snurra kl 11.30 (räknar röster 4–12 s, snurrar 7 s). |
 | `&datum=2026-10-15` | En annan dag. |

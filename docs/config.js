@@ -3,7 +3,9 @@
 window.LUNCH = {
   counterApi: "https://abacus.jasoncameron.dev",
   namespace: "ulriksdal-lunch-3n17fuma",
-  voteOpens: "09:00",
+  // Röstningen öppnar när rutinen har läst in dagens menyer (strax efter 10), eller senast
+  // voteOpens om inläsningen inte blev av. Då visas länkar till restaurangernas egna menyer.
+  voteOpens: "10:30",
   spinAt: "11:30",
   // Statistiksidan (knappen uppe till höger och statistik.html). Rösterna arkiveras
   // varje morgon oavsett, så allt finns med när den slås på.
