@@ -8,7 +8,7 @@ innehåll tolkas inte: det gör modellen.
 
     python3 scripts/prepare.py [--date YYYY-MM-DD]
 
-Allt hamnar i <tmp>/lunch/<datum>/: en <id>.txt per restaurang, utkast.json och
+Allt hamnar i en ny mapp <tmp>/lunch/<datum>-<slump>/: en <id>.txt per restaurang, utkast.json och
 status.json (hämtningens utfall, läses av save_menu.py till commit-meddelandet).
 Bara standardbiblioteket.
 """
@@ -18,7 +18,6 @@ import concurrent.futures
 import datetime as dt
 import json
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -107,9 +106,9 @@ def main() -> int:
     todo = [r for r in restaurants if not r.get("link_only") and r["id"] not in found_before]
     mode = "komplettering" if previous else "första körningen"
 
-    work = Path(tempfile.gettempdir()) / "lunch" / day.isoformat()
-    shutil.rmtree(work, ignore_errors=True)
-    work.mkdir(parents=True)
+    # En egen mapp per körning, så att två körningar aldrig skriver i varandras filer
+    (Path(tempfile.gettempdir()) / "lunch").mkdir(exist_ok=True)
+    work = Path(tempfile.mkdtemp(prefix=f"{day}-", dir=Path(tempfile.gettempdir()) / "lunch"))
 
     with concurrent.futures.ThreadPoolExecutor() as pool:
         statuses = dict(zip([r["id"] for r in todo], pool.map(lambda r: fetch_restaurant(r, day, work), todo)))

@@ -78,8 +78,11 @@ def tidy(text: str) -> str:
 
 
 def tidy_description(text: str) -> str | None:
-    """Tillbehör: utan inledande "Serveras med"/"Med" och avslutande punkt, med versal först."""
-    text = re.sub(r"^(?:serveras med|med)\s+", "", tidy(text), flags=re.I).rstrip(". ")
+    """Tillbehör: utan inledande "Serveras med"/"Toppas med"/"Med", "serveras med"/"toppas med" mitt i blir
+    kommatecken ("Kålsallad serveras med rostad potatis" -> "Kålsallad, rostad potatis"), utan avslutande punkt,
+    med versal först."""
+    text = re.sub(r"^(?:serveras med|toppas med|med)\s+", "", tidy(text), flags=re.I)
+    text = re.sub(r",?\s+(?:serveras|toppas) med\s+", ", ", text, flags=re.I).rstrip(". ")
     return text[:1].upper() + text[1:] if text else None
 
 
@@ -379,7 +382,7 @@ def main() -> int:
             commit, lines = publish(draft, day, restaurants, fetches)
             print(f"Publicerat på main: {commit}\n")
             print("\n".join(lines))
-            print("\nKlart. Avsluta med rapporten: raderna ovan och det som var osäkert.")
+            print(f"\nKlart. Svara nu med exakt raderna ovan, från \"{lines[0]}\" till \"{lines[-1]}\", och ingenting före eller efter.")
             return 0
 
         result, outcome, _ = save(draft, day, restaurants)

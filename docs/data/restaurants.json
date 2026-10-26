@@ -4,7 +4,7 @@
     "name": "Reimers",
     "menu_url": "https://www.reimers.se/lunch/",
     "logo": "logos/reimers.png",
-    "notes": "Veckomeny med en rubrik per veckodag. Priset står i rubriken."
+    "notes": "Veckomeny med en rubrik per veckodag. Veckans rätter (\"Veckans sallad\", \"Veckans vegetariska\") står efter fredag och priset sist (\"Pris 145:-\")."
   },
   {
     "id": "matronan",
@@ -38,6 +38,6 @@
     "id": "bruket",
     "name": "Bruket",
     "menu_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se",
-    "notes": "Dagens datum står först (\"26 okt\" / \"Måndag\") och rätterna under rubriker som \"Gröna smaker\", \"Klassiska smaker\" och \"Världens smaker\". Varje rätt står två gånger. Raderna \"Klimatpåverkan\", \"Energifördelning …\", \"Andel av dagligt behov\" och \"Stäng\" hör inte till menyn. Resten av veckan står längre ned. Inget pris på sidan."
+    "notes": "Dagens datum står först (\"26 okt\" / \"Måndag\") och rätterna under rubriker som \"Gröna smaker\", \"Klassiska smaker\" och \"Världens smaker\". Rubriken är rättens label. Varje rätt står två gånger. Raderna \"Klimatpåverkan\", \"Energifördelning …\", \"Andel av dagligt behov\" och \"Stäng\" hör inte till menyn. Resten av veckan står längre ned. Sidan har inget pris: lämna price som null, utan kommentar."
   }
 ]

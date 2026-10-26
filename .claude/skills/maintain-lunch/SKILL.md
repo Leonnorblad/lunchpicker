@@ -15,7 +15,7 @@ Sidan: https://leonnorblad.github.io/lunchpicker/ · Repo: `Leonnorblad/lunchpic
 
 ```
 vardagar 2 ggr      Claude Code-rutin (molnet) ─► skill fetch-lunch-menus   (andra gången: bara det som saknas)
-                      1 scripts/prepare.py          läge, hämtar sidorna till <tmp>/lunch/<datum>/, tomt utkast
+                      1 scripts/prepare.py          läge, hämtar sidorna till <tmp>/lunch/<datum>-<slump>/, tomt utkast
                       2 Claude läser sidorna        fyller i rätterna i utkastet (det enda tolkningssteget)
                       3 scripts/save_menu.py --publicera
                           ├─ synkar main, arkiverar röster (archive_votes.py) → docs/data/votes.json
@@ -46,9 +46,9 @@ Ingen byggprocess, inga beroenden: statiska filer i `docs/`, vanlig JavaScript o
 | `docs/data/menus/<datum>.json` | En dags menyer. Skrivs bara av `save_menu.py`. |
 | `docs/data/votes.json` | Arkiv med avslutade dagars röster. Skrivs bara av `archive_votes.py` (som `save_menu.py --publicera` kör). |
 | `docs/logos/<id>.png` | Restaurangloggor, ca 128 px, kvadratiska. |
-| `scripts/prepare.py` | Steg 1 i hämtningen. Rör aldrig repot. Avgör läge (första körningen eller komplettering), hämtar sidorna för restauranger utan meny med `page_text.fetch()` och skriver hela texten till `<tmp>/lunch/<datum>/<id>.txt` (med `notes` överst), plus `utkast.json` och `status.json`. Visar dagens senaste commit-meddelande vid komplettering. Tolkar inget innehåll: veckodag och veckonummer i texten är bara ledtrådar. |
+| `scripts/prepare.py` | Steg 1 i hämtningen. Rör aldrig repot. Avgör läge (första körningen eller komplettering), hämtar sidorna för restauranger utan meny med `page_text.fetch()` och skriver hela texten till en ny mapp per körning, `<tmp>/lunch/<datum>-<slump>/<id>.txt` (med `notes` överst), plus `utkast.json` och `status.json`. Visar dagens senaste commit-meddelande vid komplettering. Tolkar inget innehåll: veckodag och veckonummer i texten är bara ledtrådar. |
 | `scripts/page_text.py` | `fetch(url)`: HTML blir text, PDF/bild sparas som fil, plus menylänkar. Som kommando: skriver ut en sida (modellens reservväg för länkar). |
-| `scripts/save_menu.py` | Steg 3. Kontrollerar utkastet, rättar mellanslag/skiljetecken och "Serveras med" (`tidy`), fyller i namn/länk från `restaurants.json`, behåller menyer som redan hittats idag (även restauranger som saknas i utkastet), skriver menyfilen och `index.json` (inte om inget ändrats). `--publicera`: kräver att bara `docs/data` är ändrat, byter till och synkar `main`, arkiverar röster, committar med loggen som meddelande (även tom commit) och pushar; avvisas pushen börjar den om ovanpå `origin/main`, högst tre gånger. `--check <fil>` kontrollerar bara formatet. |
+| `scripts/save_menu.py` | Steg 3. Kontrollerar utkastet, rättar mellanslag/skiljetecken, "Serveras med"/"Toppas med"/"Med" först och "serveras med"/"toppas med" mitt i tillbehören (blir kommatecken), punkt sist och versal först (`tidy`, `tidy_description`), fyller i namn/länk från `restaurants.json`, behåller menyer som redan hittats idag (även restauranger som saknas i utkastet), skriver menyfilen och `index.json` (inte om inget ändrats). `--publicera`: kräver att bara `docs/data` är ändrat, byter till och synkar `main`, arkiverar röster, committar med loggen som meddelande (även tom commit) och pushar; avvisas pushen börjar den om ovanpå `origin/main`, högst tre gånger. `--check <fil>` kontrollerar bara formatet. |
 | `scripts/stamp_assets.py` | Sätter `?v=<hash av innehållet>` på CSS/JS i `docs/*.html`, så att webbläsare inte kör gammal kod. `--check` kontrollerar. |
 | `scripts/archive_votes.py` | Läser Abacus för avslutade dagar som saknas i `votes.json` och sparar dem. `--dry-run` skriver inget. |
 | `.claude/skills/fetch-lunch-menus/SKILL.md` | Instruktionerna rutinen följer för att hämta menyer. |
@@ -269,6 +269,10 @@ Fördelningen: **skripten gör allt som är förbestämt** (datum, läge, hämtn
 git) och **modellen gör det som kräver förståelse** (läsa en sidas text, välja dagens rätter, dela rätt och tillbehör,
 typ och pris). Klipp aldrig ut menyn ur en sida med kod: sidorna ändrar layout. Skripten ska skriva ut vad som hände och
 vad nästa steg är, så att en liten modell kan följa dem.
+**Varje avvikelse från det förväntade beteendet hos Haiku ska rättas**, även när den är ofarlig: ett ord som ändrats,
+en uppdelning som skiljer sig mellan två körningar, ett extra kommando, en rapport med mer än skriptets rader. Rätta på
+rätt ställe: mekaniskt i skripten, sidspecifikt i `notes`, tolkning i skillen (en regel som går att följa steg för steg,
+och ett exempel i tabellen). Testa sedan mot ett facit (nedan) tills avvikelserna är noll, i flera körningar.
 Testa med skillen lokalt (utan `publicera`) eller *Run now* på rutinen och läs loggen (RemoteTrigger `list_runs`/`get_run_log`).
 Skillen kompletterar bara om dagens fil redan finns: ta bort filen först för att hämta om hela dagen.
 
@@ -316,7 +320,10 @@ En remsa överst visar testläget och den låtsade klockan.
 - Ändrar du skillen eller skripten: kör hela flödet med samma modell som rutinen i en sådan klon (på en `claude/`-gren),
   med rutinens prompt: `claude -p "<prompt>" --model claude-haiku-5-5 --allowedTools "Bash Read Write Edit Glob Grep
   WebFetch WebSearch Skill" --output-format stream-json --verbose > körning.jsonl`. Läs varje verktygsanrop: agenten ska
-  bara köra `prepare.py`, läsa filerna, skriva utkastet och köra `save_menu.py`. Jämför rätterna med textfilerna.
+  bara köra `prepare.py`, läsa filerna, skriva utkastet och köra `save_menu.py`, och sista svaret ska vara exakt
+  skriptets rader. **Facit:** skriv för hand den förväntade menyn för en dag (`label`, `name`, `description`, `type`,
+  `price` per rätt, enligt skillens regler, efter `tidy`) och jämför den sparade filen fält för fält. Kör minst två
+  gånger, både första körningen och en komplettering (lägg in dagens fil med en restaurang utan meny först).
 
 ## Publicera
 
