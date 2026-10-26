@@ -31,15 +31,31 @@ Läs `docs/data/restaurants.json`. Varje rad har `id`, `name`, `menu_url` och ib
 
 Ändra aldrig `restaurants.json`. `id` kopplar ihop menyn med dagens röster.
 
+**Finns `docs/data/menus/<datum>.json` redan** (rutinen kör en gång till senare på morgonen för att fylla i det som
+saknas) hämtar du bara restaurangerna som har `"found": false` där. De som redan har en meny lämnas orörda: de står kvar
+i utkastet med `"dishes": []`, så behåller `save_menu.py` den sparade menyn. Så ändras inget som folk redan röstar på.
+
+- Har alla restauranger (utom `link_only`) redan meny: säg det och sluta. Kör inget skript och committa ingenting.
+- Hittar du ingen ny meny: kör inga skript och committa ingenting. Rösterna arkiverades redan vid första körningen.
+
+Ska en dag hämtas om från början (t.ex. efter ändrade regler), ta först bort dagens fil.
+
 ## 3. Ta fram menyn för varje restaurang
 
-Restaurangerna är oberoende av varandra, så sidorna kan gärna hämtas parallellt. Börja med menysidan:
+Börja med menysidan, **ett anrop per restaurang** (flera anrop i samma meddelande går bra, de körs parallellt):
 
 ```bash
 python3 scripts/page_text.py "<menu_url>"
 ```
 
 Den skriver ut sidans text, och sist länkar som ser ut att leda till en meny. PDF:er och bilder sparas till en fil som du öppnar med Read.
+
+**Läs hela utskriften. Klipp den aldrig** med `head`, `tail`, `head -c` eller liknande, och hämta inte flera sidor i en loop
+med gemensam utskrift. Varje sida är bara några tusen tecken, och menyn står ofta sist (Sabis "Vecka 44" kommer efter all
+annan text, Brukets rätter efter öppettiderna). Avklippt text har gjort att menyer som fanns på sidan sparats som saknade.
+
+Innan du bestämmer att dagens meny saknas: leta i utskriften efter dagens veckodag och datum
+(`python3 scripts/page_text.py "<url>" | grep -n -i -E "måndag|26 okt|vecka"`). Hittar du dem, står menyn där.
 
 Hittar du inte dagens meny i texten, prova i den här ordningen och sluta när du har den:
 
@@ -84,6 +100,7 @@ Brukets sida (Mashie): dagens datum står först ("16 okt" / "Fredag") och följ
   | Sallad med fetaost, rostade betor, grönsaker och balsamicokräm | Sallad med fetaost | Rostade betor, grönsaker och balsamicokräm |
   | Ugnsbakad fetaost med tomat, oliver och citron serveras med smördegssnurra | Ugnsbakad fetaost med tomat, oliver och citron | Smördegssnurra |
   | Nattbakad Karre”ramen”-gari, pak choi, risnudlar, sojabönor, rättika & ägg | Nattbakad Karre ”ramen” | Gari, pak choi, risnudlar, sojabönor, rättika & ägg |
+  | Viltgryta med hjort, vildsvin, champinjoner, kantareller och potatismos | Viltgryta med hjort, vildsvin | Champinjoner, kantareller och potatismos |
   | Äppelpaj med tillbehör | Äppelpaj med tillbehör | (utelämna) |
 
   Orden i sig ändras aldrig, bara var raden delas. Är du osäker, låt raden vara hel i `name`.
@@ -95,10 +112,18 @@ Brukets sida (Mashie): dagens datum står först ("16 okt" / "Fredag") och följ
   - `vegetarisk`: inget kött, ingen fisk, inga skaldjur och ingen fågel (ost, ägg och mjölk går bra). Också när källan kallar rätten vegetarisk eller "veg".
   - `vegansk`: bara när källan själv säger veganskt/vegan, eller det är helt uppenbart att rätten saknar animaliska produkter. Är du osäker: `vegetarisk`.
   - Det som är huvudsaken i rätten avgör: en tunnbrödsrulle med chorizo är `kott`, en sallad med bacon som tillbehör också.
-  - Utelämna `type` bara när rätten har flera val av olika slag ("kyckling eller pannoumi"), är en efterrätt eller verkligen inte går att avgöra. Gissa aldrig: hellre ingen ikon än fel ikon.
+  - **Klassiska rätter som alltid har kött är `kott`, även när köttet inte står i namnet:** gulasch, kålpudding, kåldolmar,
+    lasagne, köttfärssås, bolognese, carbonara, pytt i panna, biff (stroganoff, à la Lindström, Rydberg), pannbiff,
+    wallenbergare, isterband, raggmunk med fläsk, ärtsoppa med fläsk. Är rätten uttryckligen en annan sort
+    ("Vegetarisk lasagne", "Havets wallenbergare", "Spenat- och fetaostlasagne") gäller det i stället.
+  - Utelämna `type` bara när rätten har flera val av olika slag ("kyckling eller pannoumi"), är en efterrätt eller
+    verkligen kan vara både med och utan kött (t.ex. "Indisk biryani", "Vårrullar" utan fyllning angiven). Hellre ingen
+    ikon än fel ikon, men en rätt från listan ovan ska alltid ha en.
 - `price` på restaurangen: ordinarie lunchpris i hela kronor. Leta efter det: det står ofta i rubriken ("Pris 144:-", "Dagens lunch 135 kr"), vid öppettiderna eller sist på sidan. Utelämna det bara om det verkligen inte står någonstans.
+  Står det "Från 140 kr" (Bra Mat No8) är 140 restaurangens pris, varje dag. Det är vad lunchen kostar som minst, och samma tolkning varje dag gör att priset inte hoppar.
 - `price` på en rätt: bara när just den rätten kostar något annat än ordinarie pris (t.ex. köttbullar 154 kr när lunchen annars är 144 kr), eller när sidan bara har pris per rätt. Ange då ordinarie pris på restaurangen som det vanligaste priset.
 - **Pris per kategori:** står priset per sorts rätt, ofta i en egen lista ("Dagens kött 129 kr", "Dagens fisk 139 kr", "Dagens veg 125 kr"), sätt `price` på varje dagens rätt efter dess `type` och utelämna restaurangens `price`. Sidan visar då spannet, t.ex. 125–139 kr. Sådana rader är priser, inte fast sortiment, även om de står i en "Hela veckan"-lista.
+  Varje dagens rätt ska ha ett pris. Finns bara kött, fisk och veg (Matronan), får en `fagel`-rätt kött-priset: den står på köttets plats i menyn.
 - `note`: visas för besökarna på sidan. Mycket kort, på svenska, och bara om restaurangen själv meddelar något avvikande ("Stängt idag", "Lunchen stängd tills vidare"). Tekniska saker, som en fel `menu_url`, en omdirigering eller en blockerad adress, skriver du bara i rapporten. Annars `null`.
 
 ## 4. Spara

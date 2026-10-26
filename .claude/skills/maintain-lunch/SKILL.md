@@ -14,7 +14,7 @@ Sidan: https://leonnorblad.github.io/lunchpicker/ · Repo: `Leonnorblad/lunchpic
 ## Översikt
 
 ```
-vardagar 06.10 UTC  Claude Code-rutin (molnet) ─► skill fetch-lunch-menus
+vardagar 06.10 UTC  Claude Code-rutin (molnet) ─► skill fetch-lunch-menus   (08.10 UTC igen: bara det som saknas)
                       ├─ scripts/archive_votes.py   avslutade dagars röster → docs/data/votes.json
                       ├─ scripts/page_text.py       hämtar varje menysida som text
                       ├─ Claude läser och skriver ett utkast
@@ -112,7 +112,10 @@ Restaurangernas källor och villkor just nu:
 ### Rutinen (molnet)
 
 Inställningarna finns i `.claude/routines/fetch-lunch-menus.md` och på claude.ai/code/routines (rutin-id `trig_01U6pBgKvECQMrfUtTkoXDmw`).
-Schema `10 6 * * 1-5` (UTC): 07.10 vintertid, 08.10 sommartid, alltid före 09.00. Environment med Network access = Custom;
+Schema `10 6,8 * * 1-5` (UTC): 07.10 vintertid, 08.10 sommartid, alltid före 09.00. Omkörningen två timmar senare
+hämtar bara restauranger med `found: false` i dagens fil och committar bara om den hittar något nytt; redan sparade menyer
+ändras aldrig under röstningen (de står med `dishes: []` i utkastet och behålls av `save_menu.py`). Rutinen kör med
+Haiku (`claude-haiku-5-5`). Environment med Network access = Custom;
 domänlistan står i rutinfilen och måste innehålla varje restaurangs domän och `abacus.jasoncameron.dev`.
 Claude GitHub App måste vara installerad på repot, annars nekas pushen. Ändras prompten: uppdatera rutinfilen och rutinen
 (RemoteTrigger `update`, eller på webben).
@@ -201,7 +204,8 @@ Ta bort raden. Gamla menyfiler behåller den, och statistiken visar den fortfara
 `showStats: true` i `docs/config.js`. Inget annat behövs. Arkivet har samlats in hela tiden.
 
 ### Ändra tider
-`voteOpens`/`spinAt` i `config.js`. Ändra också rutinens schema om hämtningen inte längre hinner före `voteOpens`.
+`voteOpens`/`spinAt` i `config.js`. Ändra också rutinens schema om hämtningen inte längre hinner före `voteOpens`,
+eller omkörningen inte längre hinner före `spinAt`.
 
 ### Nollställa rösterna
 Byt `namespace` i `config.js`. Arkiverade dagar ligger kvar.
@@ -239,6 +243,12 @@ Testa alltid både 375 px, ca 1000 px och 1280 px.
 ### Ändra hur menyer hämtas
 Ändra `.claude/skills/fetch-lunch-menus/SKILL.md`. Rutinen läser den från `main` vid varje körning, så pusha först.
 Testa med skillen lokalt (utan `publicera`) eller *Run now* på rutinen och läs loggen (RemoteTrigger `list_runs`/`get_run_log`).
+Skillen hämtar bara det som saknas om dagens fil redan finns: ta bort filen först för att hämta om hela dagen.
+
+### Kolla hur rutinen har gått
+`git log origin/main --format='%ad %s' --date=iso` visar en `Menyer <datum>`-commit per körning som sparade något.
+Räkna `found: false` i `docs/data/menus/*.json` och läs loggen för de dagarna (`list_runs`, `get_run_log`).
+Tidigare fel: rutinen klippte av utskriften från flera sidor i en loop (`head -c`), så att sista restaurangen försvann.
 
 ## Testa
 
