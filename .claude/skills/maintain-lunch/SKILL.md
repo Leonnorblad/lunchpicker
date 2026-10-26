@@ -1,6 +1,6 @@
 ---
 name: maintain-lunch
-description: Hur lunchsidan är byggd och hur den underhålls. Läs ALLTID innan du ändrar kod, konfiguration, design, data eller rutinen i det här repot. Beskriver filer, konfiguration, dataformat, röster och hjulet, vanliga ändringar, test och publicering.
+description: Hur lunchsidan är byggd och hur den underhålls. Läs ALLTID innan du ändrar kod, konfiguration, design, skills eller rutinen i det här repot (inte för att hämta dagens menyer: det är fetch-lunch-menus). Beskriver filer, konfiguration, dataformat, röster och hjulet, vanliga ändringar, test och publicering.
 ---
 
 # Underhåll av lunchsidan
@@ -15,11 +15,12 @@ Sidan: https://leonnorblad.github.io/lunchpicker/ · Repo: `Leonnorblad/lunchpic
 
 ```
 vardagar 2 ggr      Claude Code-rutin (molnet) ─► skill fetch-lunch-menus   (andra gången: bara det som saknas)
-                      ├─ scripts/archive_votes.py   avslutade dagars röster → docs/data/votes.json
-                      ├─ scripts/page_text.py       hämtar varje menysida som text
-                      ├─ Claude läser och skriver ett utkast
-                      ├─ scripts/save_menu.py       kontrollerar, slår ihop, skriver docs/data/menus/<datum>.json
-                      └─ git push origin HEAD:main  ─► GitHub Pages publicerar docs/ (~1 min)
+                      1 scripts/prepare.py          läge, hämtar sidorna till <tmp>/lunch/<datum>/, tomt utkast
+                      2 Claude läser sidorna        fyller i rätterna i utkastet (det enda tolkningssteget)
+                      3 scripts/save_menu.py --publicera
+                          ├─ synkar main, arkiverar röster (archive_votes.py) → docs/data/votes.json
+                          ├─ kontrollerar, slår ihop, skriver docs/data/menus/<datum>.json
+                          └─ commit (meddelandet = körningens logg) + push till main ─► GitHub Pages (~1 min)
 
 webbläsaren          docs/index.html   menyer · röstning när menyerna är inlästa (senast 10.30)–11.30 · hjulet 11.30
                      docs/statistik.html  statistik (avstängd med showStats)
@@ -43,10 +44,11 @@ Ingen byggprocess, inga beroenden: statiska filer i `docs/`, vanlig JavaScript o
 | `docs/data/restaurants.json` | Restaurangerna, se nedan. Ordningen styr färg och ordning på sidan. |
 | `docs/data/index.json` | `{"dates": [...]}` alla dagar som har en menyfil. Skrivs av `save_menu.py`. |
 | `docs/data/menus/<datum>.json` | En dags menyer. Skrivs bara av `save_menu.py`. |
-| `docs/data/votes.json` | Arkiv med avslutade dagars röster. Skrivs bara av `archive_votes.py`. |
+| `docs/data/votes.json` | Arkiv med avslutade dagars röster. Skrivs bara av `archive_votes.py` (som `save_menu.py --publicera` kör). |
 | `docs/logos/<id>.png` | Restaurangloggor, ca 128 px, kvadratiska. |
-| `scripts/page_text.py` | Hämtar en URL: HTML blir text, PDF/bild sparas som fil. Skriver ut slutlig `URL:` (efter omdirigering) och menylänkar. |
-| `scripts/save_menu.py` | Kontrollerar ett utkast, fyller i namn/länk från `restaurants.json`, behåller tidigare hittade menyer, skriver menyfilen och `index.json`. `--check <fil>` kontrollerar bara formatet. |
+| `scripts/prepare.py` | Steg 1 i hämtningen. Rör aldrig repot. Avgör läge (första körningen eller komplettering), hämtar sidorna för restauranger utan meny med `page_text.fetch()` och skriver hela texten till `<tmp>/lunch/<datum>/<id>.txt` (med `notes` överst), plus `utkast.json` och `status.json`. Visar dagens senaste commit-meddelande vid komplettering. Tolkar inget innehåll: veckodag och veckonummer i texten är bara ledtrådar. |
+| `scripts/page_text.py` | `fetch(url)`: HTML blir text, PDF/bild sparas som fil, plus menylänkar. Som kommando: skriver ut en sida (modellens reservväg för länkar). |
+| `scripts/save_menu.py` | Steg 3. Kontrollerar utkastet, rättar mellanslag/skiljetecken och "Serveras med" (`tidy`), fyller i namn/länk från `restaurants.json`, behåller menyer som redan hittats idag (även restauranger som saknas i utkastet), skriver menyfilen och `index.json` (inte om inget ändrats). `--publicera`: kräver att bara `docs/data` är ändrat, byter till och synkar `main`, arkiverar röster, committar med loggen som meddelande (även tom commit) och pushar; avvisas pushen börjar den om ovanpå `origin/main`, högst tre gånger. `--check <fil>` kontrollerar bara formatet. |
 | `scripts/stamp_assets.py` | Sätter `?v=<hash av innehållet>` på CSS/JS i `docs/*.html`, så att webbläsare inte kör gammal kod. `--check` kontrollerar. |
 | `scripts/archive_votes.py` | Läser Abacus för avslutade dagar som saknas i `votes.json` och sparar dem. `--dry-run` skriver inget. |
 | `.claude/skills/fetch-lunch-menus/SKILL.md` | Instruktionerna rutinen följer för att hämta menyer. |
@@ -82,8 +84,9 @@ Ingen byggprocess, inga beroenden: statiska filer i `docs/`, vanlig JavaScript o
 | `menu_url` | Restaurangens egen menysida. Tom = Claude söker på webben (sämre). |
 | `logo` | Valfri. `logos/<id>.png`. Utan logga visas initialen. |
 | `link_only` | Valfri `true`: menyn hämtas inte, sidan visar "Se dagens meny ↗" och restaurangen finns kvar i omröstningen. För källor som inte får läsas alls. |
+| `notes` | Valfri. Hur just den här sidan ser ut och ska läsas (var priset står, vad som är fast sortiment). `prepare.py` skriver den överst i sidans textfil, så modellen ser den precis när den behövs. Läses inte av sidan. |
 
-Restaurangernas källor och villkor just nu:
+Restaurangernas källor och villkor just nu (detaljerna för hur sidorna läses står i `notes`):
 
 | id | Källa | Notering |
 |---|---|---|
@@ -105,7 +108,7 @@ Restaurangernas källor och villkor just nu:
 | `core.js` | `SPIN_TURNS` | Varv hjulet snurrar i animationen. Påverkar inte vem som vinner. |
 | `style.css` | `:root`-variablerna | Designtokens. Mörkt läge finns i **två** block (systemets mörka läge och `data-theme="dark"`), ändra båda. |
 | `stats.js` | `WEEKDAYS` | Kolumnrubriker i statistiken. |
-| `save_menu.py` | `DISH_KEYS`, `ROW_KEYS`, `DISH_TYPES` | Tillåtna fält i utkastet, och tillåtna värden för `type`. |
+| `save_menu.py` | `DISH_KEYS`, `ROW_KEYS`, `DISH_TYPES` | Tillåtna fält i utkastet (`comment` hamnar bara i commit-meddelandet), och tillåtna värden för `type`. |
 | `app.js` | `DISH_TYPES` | Ikonerna för `type`: namn och SVG-banor (24×24, linjer). Samma nycklar som i `save_menu.py`. |
 | `archive_votes.py` | `PAUSE` | 0,4 s mellan anrop till Abacus. |
 
@@ -113,9 +116,10 @@ Restaurangernas källor och villkor just nu:
 
 Inställningarna finns i `.claude/routines/fetch-lunch-menus.md` och på claude.ai/code/routines (rutin-id `trig_01U6pBgKvECQMrfUtTkoXDmw`).
 Schema `45 7,8 * * 1-5` (UTC). Rutinen har ingen tidszon, så det blir 08.45 och 09.45 vintertid, 09.45 och 10.45
-sommartid; inget behöver ändras vid sommartid. Första körningen hämtar allt. Den andra ser att dagens fil finns och hämtar
-bara restauranger med `found: false`; de andra står med `dishes: []` i utkastet och behålls av `save_menu.py`, så inget
-ändras som folk redan röstar på. Den committar bara om den hittar något nytt.
+sommartid; inget behöver ändras vid sommartid. Första körningen hämtar allt. Den andra ser att dagens fil finns, och
+`prepare.py` tar bara med restauranger utan meny i utkastet; de andra behålls av `save_menu.py`, så inget ändras som folk
+redan röstar på. Varje körning committar, också när inget är nytt (tom commit med loggen). Publiceringen sker på `main`,
+så molnmiljöns kontroll av opushade commits på `claude/`-grenen blir tyst.
 Rutinen kör med Haiku (`claude-haiku-5-5`). Environment med Network access = Custom;
 domänlistan står i rutinfilen och måste innehålla varje restaurangs domän och `abacus.jasoncameron.dev`.
 Claude GitHub App måste vara installerad på repot, annars nekas pushen. Ändras prompten: uppdatera rutinfilen och rutinen
@@ -150,6 +154,20 @@ Claude GitHub App måste vara installerad på repot, annars nekas pushen. Ändra
 - `note` visas för besökarna. Bara sådant restaurangen själv meddelar ("Stängt idag"), aldrig tekniska problem.
 - Skriv **aldrig** menyfiler för hand. Gör ett utkast (formatet står överst i `save_menu.py`) och kör `save_menu.py`.
   Den flyttar också ett pris sist i beskrivningen, "(154 kr)", till rättens `price`.
+
+### Commit-meddelandet (körningens logg)
+
+`save_menu.py --publicera` skriver det, i samma format varje gång:
+
+```
+Menyer 2026-10-27, komplettering          (", komplettering", ": inget nytt" eller ": ingen meny hittades")
+
+Reimers: 4 rätter (från tidigare körning)
+Matronan: ingen meny – Sidan visar vecka 43        (efter – står modellens comment)
+Bruket: 3 rätter
+
+Röster: arkiverade 2026-10-26 (0 röster)
+```
 
 ### `docs/data/votes.json`
 
@@ -197,7 +215,8 @@ Allt går via `store` i `core.js` (utom `theme`), som är try/catch-skyddat och 
 3. Lägg till domänen i rutinens Allowed domains (på claude.ai och i `.claude/routines/fetch-lunch-menus.md`).
 4. Kontrollera att källan får återges. Annars `link_only`.
 5. Fler än sex restauranger: utöka `COLORS` och kör färgvalideringen (`dataviz`).
-6. Testa med `python3 scripts/page_text.py <menu_url>` och kör skillen lokalt utan `publicera`.
+6. Skriv `notes` om sidan har något speciellt (fast sortiment, var priset står).
+7. Testa med `python3 scripts/prepare.py --date <vardag>`, läs textfilen och kör skillen lokalt utan `publicera`.
 
 ### Ta bort en restaurang
 Ta bort raden. Gamla menyfiler behåller den, och statistiken visar den fortfarande för gamla dagar (grå färg).
@@ -246,13 +265,23 @@ Testa alltid både 375 px, ca 1000 px och 1280 px.
 
 ### Ändra hur menyer hämtas
 Ändra `.claude/skills/fetch-lunch-menus/SKILL.md`. Rutinen läser den från `main` vid varje körning, så pusha först.
+Fördelningen: **skripten gör allt som är förbestämt** (datum, läge, hämtning, mekaniska texträttningar, sparande, röster,
+git) och **modellen gör det som kräver förståelse** (läsa en sidas text, välja dagens rätter, dela rätt och tillbehör,
+typ och pris). Klipp aldrig ut menyn ur en sida med kod: sidorna ändrar layout. Skripten ska skriva ut vad som hände och
+vad nästa steg är, så att en liten modell kan följa dem.
 Testa med skillen lokalt (utan `publicera`) eller *Run now* på rutinen och läs loggen (RemoteTrigger `list_runs`/`get_run_log`).
 Skillen kompletterar bara om dagens fil redan finns: ta bort filen först för att hämta om hela dagen.
 
 ### Kolla hur rutinen har gått
-`git log origin/main --format='%ad %s' --date=iso` visar en `Menyer <datum>`-commit per körning som sparade något.
-Räkna `found: false` i `docs/data/menus/*.json` och läs loggen för de dagarna (`list_runs`, `get_run_log`).
-Tidigare fel: rutinen klippte av utskriften från flera sidor i en loop (`head -c`), så att sista restaurangen försvann.
+Commit-meddelandena är loggen, en per körning:
+
+```bash
+git fetch -q && git log origin/main --format='%ad%n%B' --date=format:'%F %R' --grep='^Menyer '
+```
+
+En vardag utan `Menyer <datum>`-commits betyder att körningen stoppade före `save_menu.py` (eller inte startade): läs
+då rutinens logg (RemoteTrigger `list_runs`, `get_run_log`). Tidigare fel: rutinen klippte av utskriften från flera
+sidor i en loop (`head -c`), så att sista restaurangen försvann. Nu läser modellen en fil per sida med Read.
 
 ## Testa
 
@@ -278,8 +307,16 @@ En remsa överst visar testläget och den låtsade klockan.
 - **Webbläsarcache:** `config.js` och andra filer cachas hårt. Efter ändringar: ladda om utan cache, eller använd den andra
   porten (`lunch-fresh`, 8001) för en ren cache.
 - Testa både ljust och mörkt läge och en mobilbredd (375 px).
-- Ändrar du `save_menu.py`: testa `build()` med ett utkast i Python (se tidigare tester: miss behåller tidigare träff,
-  ingen träff alls underkänns, okända fält underkänns, `link_only` i utkastet underkänns).
+- Ändrar du `save_menu.py`: testa `build()` med ett utkast i Python (miss behåller tidigare träff, restaurang som saknas i
+  utkastet behålls om den har meny och underkänns annars, ingen träff alls ger `NoMenus`, okända fält och `link_only` i
+  utkastet underkänns, `tidy`-rättningarna).
+- Ändrar du `--publicera`: testa aldrig mot GitHub. Klona repot `--bare` till en tillfällig mapp, klona den igen och kör
+  där: första körningen från en `claude/`-gren, komplettering, inget nytt, ingen meny alls, en ändrad fil utanför
+  `docs/data` (ska stoppa), och en push som avvisas (en `pre-push`-hook som låter en annan klon pusha först).
+- Ändrar du skillen eller skripten: kör hela flödet med samma modell som rutinen i en sådan klon (på en `claude/`-gren),
+  med rutinens prompt: `claude -p "<prompt>" --model claude-haiku-5-5 --allowedTools "Bash Read Write Edit Glob Grep
+  WebFetch WebSearch Skill" --output-format stream-json --verbose > körning.jsonl`. Läs varje verktygsanrop: agenten ska
+  bara köra `prepare.py`, läsa filerna, skriva utkastet och köra `save_menu.py`. Jämför rätterna med textfilerna.
 
 ## Publicera
 

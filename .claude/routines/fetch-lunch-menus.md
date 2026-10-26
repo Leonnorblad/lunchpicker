@@ -36,23 +36,13 @@ Kopiera texten nedan till rutinens Instructions.
 ```text
 Kör skillen /fetch-lunch-menus med argumentet "publicera".
 
-Rutinen körs två gånger varje vardagsmorgon. Finns dagens menyfil redan är det
-den andra körningen: komplettera bara det som saknas, enligt skillen.
+Rutinen körs två gånger varje vardagsmorgon. Skripten avgör om det är första
+körningen eller en komplettering och skriver ut vad du ska göra.
 
-Det betyder: hämta dagens lunchmenyer (Stockholmstid) för restaurangerna i
-docs/data/restaurants.json, spara dem med scripts/save_menu.py och pusha
-commiten direkt till main, inte till en claude/-gren. GitHub Pages publicerar
-sidan från main.
-
-Klart är när något av detta gäller:
-- save_menu.py gick igenom och commiten "Menyer <datum>" finns på origin/main, eller
-- det är helg, eller
-- ingen restaurang hade någon meny, eller
-- dagens menyfil fanns redan och du hittade inga nya menyer. Committa då ingenting.
-
-Ändra inga andra filer än det save_menu.py skriver i docs/data/. Ändra inte
-skillen, skripten eller restaurants.json, även om något verkar trasigt: skriv
-det i rapporten istället.
+Ändra inga filer själv utom utkastet som prepare.py skapar, och kör inga egna
+git-kommandon: save_menu.py --publicera committar och pushar. Ändra inte skillen,
+skripten eller restaurants.json, även om något verkar trasigt: skriv det i
+rapporten istället.
 
 Avsluta med skillens rapport.
 ```

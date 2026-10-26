@@ -3,35 +3,41 @@
     "id": "reimers",
     "name": "Reimers",
     "menu_url": "https://www.reimers.se/lunch/",
-    "logo": "logos/reimers.png"
+    "logo": "logos/reimers.png",
+    "notes": "Veckomeny med en rubrik per veckodag. Priset står i rubriken."
   },
   {
     "id": "matronan",
     "name": "Matronan",
     "menu_url": "https://www.matronan.se/",
-    "logo": "logos/matronan.png"
+    "logo": "logos/matronan.png",
+    "notes": "Veckomeny med tre rätter per dag i ordningen kött, fisk, veg. Priserna står i listan \"Hela Veckan\": Dagens kött, Dagens fisk och Dagens veg. Dagens första rätt får köttets pris även när den är fågel. Resten av \"Hela Veckan\" är fast sortiment och ska inte med."
   },
   {
     "id": "lilla-angel",
     "name": "Lilla Ängel",
     "menu_url": "https://www.lillaangel.com/frosunda/lunch/",
-    "logo": "logos/lilla-angel.png"
+    "logo": "logos/lilla-angel.png",
+    "notes": "Veckomeny utan veckonummer. \"Alltid på Lilla Ängel\" är fast sortiment och ska inte med."
   },
   {
     "id": "bra-mat-no8",
     "name": "Bra Mat No8",
     "menu_url": "https://www.bramat8.se/lunch",
-    "logo": "logos/bra-mat-no8.png"
+    "logo": "logos/bra-mat-no8.png",
+    "notes": "Visar både denna och nästa vecka: ta rätt vecka. \"Från 140 kr\" betyder att restaurangens pris är 140."
   },
   {
     "id": "sabis",
     "name": "Sabis Ulriksdal",
     "menu_url": "https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/",
-    "logo": "logos/sabis.png"
+    "logo": "logos/sabis.png",
+    "notes": "Veckomenyn står längst ned (\"Sabis Ulriksdal - Vecka N\"). Priset står efter varje rätt (\"144:-\"); de flesta kostar ordinarie pris."
   },
   {
     "id": "bruket",
     "name": "Bruket",
-    "menu_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se"
+    "menu_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se",
+    "notes": "Dagens datum står först (\"26 okt\" / \"Måndag\") och rätterna under rubriker som \"Gröna smaker\", \"Klassiska smaker\" och \"Världens smaker\". Varje rätt står två gånger. Raderna \"Klimatpåverkan\", \"Energifördelning …\", \"Andel av dagligt behov\" och \"Stäng\" hör inte till menyn. Resten av veckan står längre ned. Inget pris på sidan."
   }
 ]

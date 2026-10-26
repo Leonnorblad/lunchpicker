@@ -6,6 +6,8 @@ sökväg skrivs ut, så att de kan öppnas med Read. Länkar som ser ut att leda
 menyer (pdf, lunch, meny, vecka) listas sist. Bara standardbiblioteket.
 
     python3 scripts/page_text.py URL [--out KATALOG]
+
+prepare.py använder fetch() för att hämta alla restaurangers sidor.
 """
 
 import argparse
@@ -51,26 +53,22 @@ class TextParser(HTMLParser):
             self.parts.append(data)
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("url")
-    parser.add_argument("--out", default=tempfile.gettempdir(), help="var PDF/bilder sparas")
-    args = parser.parse_args()
-
-    request = urllib.request.Request(args.url, headers={"User-Agent": USER_AGENT})
+def fetch(url: str, out_dir: str) -> dict:
+    """Hämtar url. Ger final_url, status, content_type och antingen text (HTML) eller file (PDF/bild), samt links."""
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=30) as response:
         content_type = response.headers.get("content-type", "")
         body = response.read()
         final_url = response.geturl()
-
-    print(f"URL: {final_url}\nStatus: {response.status}\nTyp: {content_type}\n")
+        status = response.status
+    page = {"final_url": final_url, "status": status, "content_type": content_type, "text": None, "file": None, "links": []}
 
     if "pdf" in content_type or content_type.startswith("image/") or final_url.lower().endswith(".pdf"):
         suffix = ".pdf" if "pdf" in content_type or final_url.lower().endswith(".pdf") else "." + content_type.split("/")[1].split(";")[0]
-        path = Path(args.out) / f"meny-{hashlib.sha1(final_url.encode()).hexdigest()[:10]}{suffix}"
+        path = Path(out_dir) / f"meny-{hashlib.sha1(final_url.encode()).hexdigest()[:10]}{suffix}"
         path.write_bytes(body)
-        print(f"Sparad som fil, öppna med Read: {path}")
-        return 0
+        page["file"] = str(path)
+        return page
 
     # Teckenkodning från headern, annars från sidans <meta charset>
     header = re.search(r"charset=([\w-]+)", content_type)
@@ -84,13 +82,28 @@ def main() -> int:
     text_parser = TextParser(final_url)
     text_parser.feed(html)
     text = re.sub(r"[ \t\xa0]+", " ", "".join(text_parser.parts))
-    text = re.sub(r"\n\s*\n+", "\n", text).strip()
-    print(text)
-    if len(text) < 200:
-        print("\n[Väldigt lite text: sidan renderas troligen med JavaScript. Leta efter länkar nedan eller data i rå-HTML:en.]")
-    if text_parser.links:
+    page["text"] = re.sub(r"\n\s*\n+", "\n", text).strip()
+    page["links"] = text_parser.links[:30]
+    return page
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("url")
+    parser.add_argument("--out", default=tempfile.gettempdir(), help="var PDF/bilder sparas")
+    args = parser.parse_args()
+
+    page = fetch(args.url, args.out)
+    print(f"URL: {page['final_url']}\nStatus: {page['status']}\nTyp: {page['content_type']}\n")
+    if page["file"]:
+        print(f"Sparad som fil, öppna med Read: {page['file']}")
+        return 0
+    print(page["text"])
+    if len(page["text"]) < 200:
+        print("\n[Väldigt lite text: sidan renderas troligen med JavaScript. Leta efter länkar nedan.]")
+    if page["links"]:
         print("\nLänkar som kan leda till menyn:")
-        for link in text_parser.links[:30]:
+        for link in page["links"]:
             print(f"  {link}")
     return 0
 
