@@ -1,0 +1,195 @@
+{
+  "date": "2026-10-27",
+  "fetched_at": "2026-10-27T08:46:52+01:00",
+  "restaurants": [
+    {
+      "id": "reimers",
+      "name": "Reimers",
+      "source_url": "https://www.reimers.se/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Nattbakad fläsksida",
+          "description": "Ingefära, vitlök, sesamrostad potatis och chilikräm",
+          "type": "kott"
+        },
+        {
+          "label": null,
+          "name": "Stekt piggvar",
+          "description": "Kokt potatis, sparrissås och spenatsallad",
+          "type": "fisk"
+        },
+        {
+          "label": "Veckans sallad",
+          "name": "Inkokt lax",
+          "description": "Ingefära, sallad, grönsaker, friterade glasnudlar och soja & limedressing",
+          "type": "fisk"
+        },
+        {
+          "label": "Veckans vegetariska",
+          "name": "Medelhavsgryta med tofu",
+          "description": "Kikärtor, zucchini, lök, ris och örtkräm",
+          "type": "vegetarisk"
+        }
+      ],
+      "price": 145,
+      "note": null
+    },
+    {
+      "id": "matronan",
+      "name": "Matronan",
+      "source_url": "https://www.matronan.se/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Wallenbergare",
+          "description": "Mos, sprucken rödvinssås, rårörda lingon & ärtor",
+          "price": 129,
+          "type": "kott"
+        },
+        {
+          "label": null,
+          "name": "Råraka med skagen",
+          "description": "Picklad lök, citron & napolisallad",
+          "price": 139,
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Vegetarisk ljummen mozzarellasallad",
+          "description": "Bulgur, rostade rotsaker, avocado samt basilika-citronvinegrette",
+          "price": 125,
+          "type": "vegetarisk"
+        }
+      ],
+      "price": null,
+      "note": null
+    },
+    {
+      "id": "lilla-angel",
+      "name": "Lilla Ängel",
+      "source_url": "https://www.lillaangel.com/frosunda/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Laxburgare",
+          "description": "Morotssallad, stekt potatis och romansallad",
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Stekt fläskkarré",
+          "description": "Potatisgratäng, sparris och brunsås",
+          "type": "kott"
+        },
+        {
+          "label": "Veckans vegetariska alternativ",
+          "name": "Vegetarisk pasta med halloumi",
+          "description": null,
+          "type": "vegetarisk"
+        }
+      ],
+      "price": 135,
+      "note": null
+    },
+    {
+      "id": "bra-mat-no8",
+      "name": "Bra Mat No8",
+      "source_url": "https://www.bramat8.se/lunch",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Nattbakad karré",
+          "description": "Kålsallad smaksatt med citron och tranbär, rostad potatis och tomatsky",
+          "type": "kott"
+        },
+        {
+          "label": null,
+          "name": "Panerad fisk",
+          "description": "Lax- och räkröra och kokt potatis",
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Cannelloni med ricotta",
+          "description": "Spenat och soltorkad tomat, tomatsås och grana padano",
+          "type": "vegetarisk"
+        }
+      ],
+      "price": 140,
+      "note": null
+    },
+    {
+      "id": "sabis",
+      "name": "Sabis Ulriksdal",
+      "source_url": "https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Bondomelett",
+          "description": "Potatis, tomat, lök och paprika, tomatsallad",
+          "type": "vegetarisk"
+        },
+        {
+          "label": null,
+          "name": "Höstgryta på högrev",
+          "description": "Svamp och rödvin, potatismos",
+          "type": "kott"
+        },
+        {
+          "label": null,
+          "name": "Asiatiska fiskbiffar",
+          "description": "Misumajo, syrlig gurk och rättiks sallad och ris",
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Caesarsallad med svensk kyckling eller pannoumi",
+          "description": "Bacon, romansallad och grana padano"
+        },
+        {
+          "label": null,
+          "name": "Köttbullar på nöt och kalv",
+          "description": "Gräddsås, rårörda lingon, pressgurka och potatispuré",
+          "price": 154,
+          "type": "kott"
+        }
+      ],
+      "price": 144,
+      "note": null
+    },
+    {
+      "id": "bruket",
+      "name": "Bruket",
+      "source_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se",
+      "found": true,
+      "dishes": [
+        {
+          "label": "Gröna smaker",
+          "name": "Socca",
+          "description": "Kikärtor, fetaost, mandel & rökt paprikacrème",
+          "type": "vegetarisk"
+        },
+        {
+          "label": "Klassiska smaker",
+          "name": "Raggmunk med stekt fläsk",
+          "description": "Rårörda lingon",
+          "type": "kott"
+        },
+        {
+          "label": "Världens smaker",
+          "name": "Lättrimmad Sejfilé",
+          "description": "Gnocchi, grön sparris, basilikasås & Grana padano",
+          "type": "fisk"
+        }
+      ],
+      "price": null,
+      "note": null
+    }
+  ]
+}
