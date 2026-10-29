@@ -1,0 +1,195 @@
+{
+  "date": "2026-10-29",
+  "fetched_at": "2026-10-29T08:47:34+01:00",
+  "restaurants": [
+    {
+      "id": "reimers",
+      "name": "Reimers",
+      "source_url": "https://www.reimers.se/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": "Veckans sallad",
+          "name": "Inkokt lax",
+          "description": "Ingefära, sallad, grönsaker, friterade glasnudlar och soja & limedressing",
+          "type": "fisk"
+        },
+        {
+          "label": "Veckans vegetariska",
+          "name": "Medelhavsgryta med tofu",
+          "description": "Kikärtor, zucchini, lök, ris och örtkräm",
+          "type": "vegetarisk"
+        },
+        {
+          "label": null,
+          "name": "Kalvfärsbiff",
+          "description": "Ratatouille, örtris och kräm på Grana Padano",
+          "type": "kott"
+        },
+        {
+          "label": null,
+          "name": "Panerad kummel",
+          "description": "Broccolistomp och smörad vitvinssås",
+          "type": "fisk"
+        }
+      ],
+      "price": 145,
+      "note": null
+    },
+    {
+      "id": "matronan",
+      "name": "Matronan",
+      "source_url": "https://www.matronan.se/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Nattbakad högrev",
+          "description": "Potatisgratäng, bearnaise, rödvinssås & grönt",
+          "price": 129,
+          "type": "kott"
+        },
+        {
+          "label": null,
+          "name": "Pocherad kolja",
+          "description": "Stuvad spetskål, krossad potatis, tomater & rostade frön",
+          "price": 139,
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Vegetarisk lasagne",
+          "description": "Spenat & fetaost samt tomatsås",
+          "price": 125,
+          "type": "vegetarisk"
+        }
+      ],
+      "price": null,
+      "note": null
+    },
+    {
+      "id": "lilla-angel",
+      "name": "Lilla Ängel",
+      "source_url": "https://www.lillaangel.com/frosunda/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": "Veckans vegetariska alternativ",
+          "name": "Vegetarisk pasta med halloumi",
+          "description": null,
+          "type": "vegetarisk"
+        },
+        {
+          "label": null,
+          "name": "Lax- och torskryggstartar",
+          "description": "Vitkålssallad, kokt potatis och remouladsås",
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Fläskschnitzel",
+          "description": "Bacon, stekt potatis, citron och bearnaisesås",
+          "type": "kott"
+        }
+      ],
+      "price": 135,
+      "note": null
+    },
+    {
+      "id": "bra-mat-no8",
+      "name": "Bra Mat No8",
+      "source_url": "https://www.bramat8.se/lunch",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Italiensk kyckling",
+          "description": "Grädde, soltorkad tomat och grana padano, rostad potatis",
+          "type": "fagel"
+        },
+        {
+          "label": null,
+          "name": "Asiatisk fisk",
+          "description": "Grön curry och grönsaker, basmatiris",
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Marockansk gryta",
+          "description": "Aubergine, kikärtor, tomat och saffran, fetaostkräm och granatäppelsallad",
+          "type": "vegetarisk"
+        }
+      ],
+      "price": 140,
+      "note": null
+    },
+    {
+      "id": "sabis",
+      "name": "Sabis Ulriksdal",
+      "source_url": "https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Chili sin carne",
+          "description": "Nachos, tomat och bön sallad, gräddfil och ris",
+          "type": "vegetarisk"
+        },
+        {
+          "label": null,
+          "name": "Kyckling korma",
+          "description": "Mango rajta, koriander och kokt ris",
+          "type": "fagel"
+        },
+        {
+          "label": null,
+          "name": "Mandelbakad fisk",
+          "description": "Citronsås, ärtsallad och kokt potatis",
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Caesarsallad med svensk kyckling eller pannoumi",
+          "description": "Bacon, romansallad och grana padano"
+        },
+        {
+          "label": null,
+          "name": "Köttbullar på nöt och kalv",
+          "description": "Gräddsås, rårörda lingon, pressgurka och potatispuré",
+          "price": 154,
+          "type": "kott"
+        }
+      ],
+      "price": 144,
+      "note": null
+    },
+    {
+      "id": "bruket",
+      "name": "Bruket",
+      "source_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se",
+      "found": true,
+      "dishes": [
+        {
+          "label": "Gröna smaker",
+          "name": "Rotsellerischnitzel",
+          "description": "Ljummen potatis sallad, rostad lök & persiljesmör",
+          "type": "vegetarisk"
+        },
+        {
+          "label": "Klassiska smaker",
+          "name": "Ärtsoppa med fläsk",
+          "description": "Husets pannkakor med sylt och grädde",
+          "type": "kott"
+        },
+        {
+          "label": "Världens smaker",
+          "name": "Nattbakad Fläsksida",
+          "description": "Surkål, bratwurst, skysås, rostad potatis & senap",
+          "type": "kott"
+        }
+      ],
+      "price": null,
+      "note": null
+    }
+  ]
+}
