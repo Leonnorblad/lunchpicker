@@ -1,0 +1,143 @@
+{
+  "date": "2026-10-30",
+  "fetched_at": "2026-10-30T08:47:19+01:00",
+  "restaurants": [
+    {
+      "id": "reimers",
+      "name": "Reimers",
+      "source_url": "https://www.reimers.se/lunch/",
+      "found": false,
+      "dishes": [],
+      "price": 145,
+      "note": "Stängt"
+    },
+    {
+      "id": "matronan",
+      "name": "Matronan",
+      "source_url": "https://www.matronan.se/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Fried Chicken",
+          "description": "Bbq-sås, mango raja, rostad potatis & kålsallad",
+          "price": 129,
+          "type": "fagel"
+        },
+        {
+          "label": null,
+          "name": "Fiskgryta",
+          "description": "Saffransaioli, parmesan, handskalade räkor & krutonger",
+          "price": 139,
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Vegetarisk lasagne",
+          "description": "Spenat & fetaost samt tomatsås",
+          "price": 125,
+          "type": "vegetarisk"
+        }
+      ],
+      "price": null,
+      "note": null
+    },
+    {
+      "id": "lilla-angel",
+      "name": "Lilla Ängel",
+      "source_url": "https://www.lillaangel.com/frosunda/lunch/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Koljafilé",
+          "description": "Potatispuré, räkor och brynt smör",
+          "type": "fisk"
+        },
+        {
+          "label": null,
+          "name": "Grillad flankstek",
+          "description": "Klyftpotatis, rödvinssås och bearnaisesås",
+          "type": "kott"
+        },
+        {
+          "label": "Veckans vegetariska alternativ",
+          "name": "Vegetarisk pasta med halloumi",
+          "description": null,
+          "type": "vegetarisk"
+        }
+      ],
+      "price": 135,
+      "note": null
+    },
+    {
+      "id": "bra-mat-no8",
+      "name": "Bra Mat No8",
+      "source_url": "https://www.bramat8.se/lunch",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Nattbakad kalvtritip",
+          "description": "Chilibearnaise, rödvinssås och rostad potatis",
+          "type": "kott"
+        },
+        {
+          "label": null,
+          "name": "Norrloumiburgare",
+          "description": "Chipotledressing, krispsallad, tomat och picklad lök, rostad potatis",
+          "type": "vegetarisk"
+        },
+        {
+          "label": null,
+          "name": "Pasta",
+          "description": "Gräddig pestosås, kräftstjärtar och grana padano",
+          "type": "fisk"
+        },
+        {
+          "label": "Fredagsgottis",
+          "name": "Äppelpaj med tillbehör",
+          "description": null
+        }
+      ],
+      "price": 140,
+      "note": null
+    },
+    {
+      "id": "sabis",
+      "name": "Sabis Ulriksdal",
+      "source_url": "https://www.sabis.se/restauranger-cafeer/vara-publika-restauranger/sabis-ulriksdal/",
+      "found": true,
+      "dishes": [
+        {
+          "label": null,
+          "name": "Caesarsallad med svensk kyckling eller pannoumi",
+          "description": "Bacon, romansallad och grana padano"
+        },
+        {
+          "label": null,
+          "name": "Köttbullar på nöt och kalv",
+          "description": "Gräddsås, rårörda lingon, pressgurka och potatispuré",
+          "price": 154,
+          "type": "kott"
+        },
+        {
+          "label": null,
+          "name": "Kökets höst buffé",
+          "description": null
+        }
+      ],
+      "price": 144,
+      "note": null
+    },
+    {
+      "id": "bruket",
+      "name": "Bruket",
+      "source_url": "https://compass.mashie.matildaplatform.com/public/app/ncc+hk/b079ac04?country=se",
+      "found": false,
+      "dishes": [],
+      "price": null,
+      "note": "Restaurangen håller stängd hela dagen. Café är öppet till kl 12:00."
+    }
+  ]
+}
