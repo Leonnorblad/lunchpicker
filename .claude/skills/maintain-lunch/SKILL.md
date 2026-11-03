@@ -114,7 +114,8 @@ Restaurangernas källor och villkor just nu (detaljerna för hur sidorna läses 
 
 ### Rutinen (molnet)
 
-Inställningarna finns i `.claude/routines/fetch-lunch-menus.md` och på claude.ai/code/routines (rutin-id `trig_01U6pBgKvECQMrfUtTkoXDmw`).
+Inställningarna finns i `.claude/routines/fetch-lunch-menus.md` och på claude.ai/code/routines (rutin-id `trig_01U6pBgKvECQMrfUtTkoXDmw`;
+id:t byts om rutinen flyttas till ett annat konto, se "Flytta rutinen" i rutinfilen).
 Schema `45 7,8 * * 1-5` (UTC). Rutinen har ingen tidszon, så det blir 08.45 och 09.45 vintertid, 09.45 och 10.45
 sommartid; inget behöver ändras vid sommartid. Första körningen hämtar allt. Den andra ser att dagens fil finns, och
 `prepare.py` tar bara med restauranger utan meny i utkastet; de andra behålls av `save_menu.py`, så inget ändras som folk
@@ -122,7 +123,8 @@ redan röstar på. Varje körning committar, också när inget är nytt (tom com
 så molnmiljöns kontroll av opushade commits på `claude/`-grenen blir tyst.
 Rutinen kör med Haiku (`claude-haiku-5-5`). Environment med Network access = Custom;
 domänlistan står i rutinfilen och måste innehålla varje restaurangs domän och `abacus.jasoncameron.dev`.
-Claude GitHub App måste vara installerad på repot, annars nekas pushen. Ändras prompten: uppdatera rutinfilen och rutinen
+Claude GitHub App måste vara installerad på repot, och GitHub-användaren som är kopplad till Claude-kontot måste ha
+skrivrätt, annars nekas pushen. Ändras prompten: uppdatera rutinfilen och rutinen
 (RemoteTrigger `update`, eller på webben).
 
 ## Dataformat
